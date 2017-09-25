@@ -1772,6 +1772,8 @@ public:
 	 */
 	void Optimize(size_t n_max_iteration_num = 5, double f_min_dx_norm = .01) // throw(std::bad_alloc, std::runtime_error)
 	{
+	    Notify_LinearizationChange(); printf("Runing Notify_LinearizationChange() in FastL\n");
+
 		if(!RefreshLambdaR())
 			return;
 		// decide whether to optimize or not

@@ -34,7 +34,8 @@ SET(SLAM_BASE_LIBRARY_SOURCES
   Parser.cpp
   Tags.cpp
   Tga.cpp
-  Timer.cpp)
+  Timer.cpp
+  SE3_Types.cpp)
 
 # Build and install SLAM_base library.
 ADD_LIBRARY(${SLAM_BASE_LIBRARY_NAME} STATIC

@@ -12,6 +12,7 @@
 #include "slam/BaseTypes.h"
 #include "slam/3DSolverBase.h"
 #include "slam/Parser.h" // parsed types passed to constructors
+#include "slam/RobustUtils.h"
 
 /** \addtogroup se3
  *	@{
@@ -440,7 +441,8 @@ public:
 /**
  *	@brief SE(3) pose-landmark edge
  */
-class CEdgePoseLandmark3D : public CBaseEdgeImpl<CEdgePoseLandmark3D, MakeTypelist(CVertexPose3D, CVertexLandmark3D), 3> {
+class CEdgePoseLandmark3D : public CBaseEdgeImpl<CEdgePoseLandmark3D, MakeTypelist(CVertexPose3D, CVertexLandmark3D), 3, -1, CBaseEdge::Robust>,
+    public CRobustify_ErrorNorm_Default<const double*, CHuberLossd> {
 public:
 	/**
 	 *	@brief vertex initialization functor
@@ -477,13 +479,15 @@ public:
 		}
 	};
 
+	static double ROBUST_THRESH;
+
 public:
 	__GRAPH_TYPES_ALIGN_OPERATOR_NEW // imposed by the use of eigen, just copy this
 
 	/**
 	 *	@brief default constructor; has no effect
 	 */
-	inline CEdgePoseLandmark3D()
+	inline CEdgePoseLandmark3D() : CRobustify_ErrorNorm_Default(&ROBUST_THRESH)
 	{}
 
 	/**
@@ -496,8 +500,9 @@ public:
 	 */
 	template <class CSystem>
 	CEdgePoseLandmark3D(const CParserBase::TLandmark3D_XYZ &r_t_edge, CSystem &r_system)
-		:CBaseEdgeImpl<CEdgePoseLandmark3D, MakeTypelist(CVertexPose3D, CVertexLandmark3D), 3>(r_t_edge.m_n_node_0,
-		r_t_edge.m_n_node_1, r_t_edge.m_v_delta, r_t_edge.m_t_inv_sigma)
+		:CBaseEdgeImpl<CEdgePoseLandmark3D, MakeTypelist(CVertexPose3D, CVertexLandmark3D), 3, -1, CBaseEdge::Robust>(r_t_edge.m_n_node_0,
+		r_t_edge.m_n_node_1, r_t_edge.m_v_delta, r_t_edge.m_t_inv_sigma),
+		CRobustify_ErrorNorm_Default(&ROBUST_THRESH)
 	{
 		//fprintf(stderr, "%f %f %f\n", r_t_edge.m_v_delta(0), r_t_edge.m_v_delta(1), r_t_edge.m_v_delta(2));
 
@@ -530,10 +535,11 @@ public:
 	template <class CSystem>
 	CEdgePoseLandmark3D(size_t n_node0, size_t n_node1, const Eigen::Matrix<double, 3, 1> &r_v_delta,
 		const Eigen::Matrix<double, 3, 3> &r_t_inv_sigma, CSystem &r_system)
-		:CBaseEdgeImpl<CEdgePoseLandmark3D, MakeTypelist(CVertexPose3D, CVertexLandmark3D), 3>(n_node0,
-		n_node1, r_v_delta, r_t_inv_sigma)
+		:CBaseEdgeImpl<CEdgePoseLandmark3D, MakeTypelist(CVertexPose3D, CVertexLandmark3D), 3, -1, CBaseEdge::Robust>(n_node0,
+		n_node1, r_v_delta, r_t_inv_sigma),
+        CRobustify_ErrorNorm_Default(&ROBUST_THRESH)
 	{
-		//fprintf(stderr, "%f %f %f\n", r_t_edge.m_v_delta(0), r_t_edge.m_v_delta(1), r_t_edge.m_v_delta(2));
+		//fprintf(stderr, "%f %f %f\n", r_t_edge.m_v_delta(0), r_t_edge.m_v_delta(1), r_t_edg, -1, CBaseEdge::Robuste.m_v_delta(2));
 
 		m_p_vertex0 = &r_system.template r_Get_Vertex<CVertexPose3D>(n_node0, CInitializeNullVertex<>());
 		m_p_vertex1 = &r_system.template r_Get_Vertex<CVertexLandmark3D>(n_node1,
@@ -554,7 +560,7 @@ public:
 	inline void Update(const CParserBase::TLandmark3D_XYZ &r_t_edge)
 	{
 		CBaseEdgeImpl<CEdgePoseLandmark3D, MakeTypelist(CVertexPose3D, CVertexLandmark3D),
-			3>::Update(r_t_edge.m_v_delta, r_t_edge.m_t_inv_sigma);
+			3, -1, CBaseEdge::Robust>::Update(r_t_edge.m_v_delta, r_t_edge.m_t_inv_sigma);
 	}
 
 	/**

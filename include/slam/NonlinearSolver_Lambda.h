@@ -475,6 +475,8 @@ public:
 	 */
 	void Optimize(size_t n_max_iteration_num = 5, double f_min_dx_norm = .01) // throw(std::bad_alloc)
 	{
+      Notify_LinearizationChange(); printf("Runing Notify_LinearizationChange() in Lambda\n");
+
 		CTimerSampler timer(this->m_timer);
 
 		const size_t n_variables_size = this->m_r_system.n_VertexElement_Num();
