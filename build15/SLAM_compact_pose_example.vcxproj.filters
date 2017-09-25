@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\slam">
+      <UniqueIdentifier>{bccd43a1-8e3c-4bec-a79b-a56ac457fe2c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\slam_compact_pose_example\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\slam\2DSolverBase.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\3DSolverBase.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\BA_Types.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\BaseInterface.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\BaseTypes.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\BaseTypes_Binary.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\BaseTypes_Unary.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\BASolverBase.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\Bitmap.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\BlockMatrixBase.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\BlockMatrixTests.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\BlockMatrixVBR.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\ConfigSolvers.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\Debug.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\Derivatives.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\Distances.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\Eigenvalues.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\ErrorEval.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\FlatSystem.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\IncrementalPolicy.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\Integer.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\LinearSolver_CSparse.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\LinearSolver_CXSparse.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\LinearSolver_CholMod.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\LinearSolver_Schur.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\LinearSolver_UberBlock.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\LinearSolverTags.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\Marginals.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\MemUsage.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\NonlinearSolver_A.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\NonlinearSolver_Base.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\NonlinearSolver_FastL.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\NonlinearSolver_FastL_Base.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\NonlinearSolver_L.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\NonlinearSolver_Lambda.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\NonlinearSolver_Lambda_Base.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\NonlinearSolver_Lambda_DL.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\NonlinearSolver_Lambda_LM.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\NonlinearSolver_SPCG.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\OrderingMagic.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\ParseLoop.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\Parser.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\RobustUtils.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\ROCV_Types.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\SE2_Types.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\SE3_Types.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\Segregated.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\Self.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\Sim3_Types.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\Sim3SolverBase.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\SolverTraits.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\Tetris.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\Tga.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\Timer.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\Tuple.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\TypeList.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\TypeName.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\slam\Unused.h">
+      <Filter>Header Files\slam</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\include\slam\BlockMatrix.h">
+      <Filter>Header Files\slam</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\include\slam\BlockMatrixFBS.h">
+      <Filter>Header Files\slam</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\include\slam\BlockMatrixFBSUtil.h">
+      <Filter>Header Files\slam</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\include\slam\BlockMatrix.inl">
+      <Filter>Header Files\slam</Filter>
+    </None>
+    <None Include="..\include\slam\BlockMatrixFBS.inl">
+      <Filter>Header Files\slam</Filter>
+    </None>
+    <None Include="..\include\slam\Eigenvalues.inl">
+      <Filter>Header Files\slam</Filter>
+    </None>
+  </ItemGroup>
+</Project>

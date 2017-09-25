@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\BLAS">
+      <UniqueIdentifier>{f4900e1d-1c25-482f-be80-96569ab26b92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\LAPACK">
+      <UniqueIdentifier>{45134ad6-1f0d-4dd5-b1b8-cbadae231cba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\BLAS">
+      <UniqueIdentifier>{9936042c-0d6b-433b-99fc-255a4cc0a7fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\LAPACK">
+      <UniqueIdentifier>{50664124-888e-4e21-8037-293152f035d8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\eigen33\lapack\complex_double.cpp">
+      <Filter>Source Files\LAPACK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\eigen33\blas\complex_double.cpp">
+      <Filter>Source Files\BLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\eigen33\lapack\complex_single.cpp">
+      <Filter>Source Files\LAPACK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\eigen33\blas\complex_single.cpp">
+      <Filter>Source Files\BLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\eigen33\blas\double.cpp">
+      <Filter>Source Files\BLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\eigen33\lapack\double.cpp">
+      <Filter>Source Files\LAPACK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\eigen33\blas\single.cpp">
+      <Filter>Source Files\BLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\eigen33\lapack\single.cpp">
+      <Filter>Source Files\LAPACK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\eigen33\blas\xerbla.cpp">
+      <Filter>Source Files\BLAS</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\eigen33\eigen\lapack\lapack_common.h">
+      <Filter>Header Files\LAPACK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\eigen33\eigen\blas\BandTriangularSolver.h">
+      <Filter>Header Files\BLAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\eigen33\eigen\blas\common.h">
+      <Filter>Header Files\BLAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\eigen33\eigen\blas\GeneralRank1Update.h">
+      <Filter>Header Files\BLAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\eigen33\eigen\blas\level1_cplx_impl.h">
+      <Filter>Header Files\BLAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\eigen33\eigen\blas\level1_impl.h">
+      <Filter>Header Files\BLAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\eigen33\eigen\blas\level1_real_impl.h">
+      <Filter>Header Files\BLAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\eigen33\eigen\blas\level2_cplx_impl.h">
+      <Filter>Header Files\BLAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\eigen33\eigen\blas\level2_impl.h">
+      <Filter>Header Files\BLAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\eigen33\eigen\blas\level2_real_impl.h">
+      <Filter>Header Files\BLAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\eigen33\eigen\blas\level3_impl.h">
+      <Filter>Header Files\BLAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\eigen33\eigen\blas\PackedSelfadjointProduct.h">
+      <Filter>Header Files\BLAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\eigen33\eigen\blas\PackedTriangularMatrixVector.h">
+      <Filter>Header Files\BLAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\eigen33\eigen\blas\PackedTriangularSolverVector.h">
+      <Filter>Header Files\BLAS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\eigen33\eigen\blas\Rank2Update.h">
+      <Filter>Header Files\BLAS</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,415 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{999461D9-FEE4-4D9E-8226-58B4600F55F2}</ProjectGuid>
+    <RootNamespace>SLAM_plus_plus</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>14.0.25431.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\bin\$(Configuration)\</OutDir>
+    <IntDir>SLAM_plus_plus\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>..\bin\$(Configuration)64\</OutDir>
+    <IntDir>SLAM_plus_plus\$(Configuration)64\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\bin\$(Configuration)\</OutDir>
+    <IntDir>SLAM_plus_plus\$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>..\bin\$(Configuration)64\</OutDir>
+    <IntDir>SLAM_plus_plus\$(Configuration)64\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <GenerateManifest>true</GenerateManifest>
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 </AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__USE_NATIVE_CHOLESKY;CERES_NO_PROTOCOL_BUFFERS;__DISABLE_GPU;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3.lib;CxSparse.lib;eigen3.lib;cholmod.lib;SLAMpp_base.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>..\bin\$(Configuration);E:\my-projects\z_libs\g2o\trunk\lib\Debug;E:\my-projects\z_libs\boost\boost_1_50_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 </AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN64;DLONG;_DEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__LINEAR_SOLVER_OVERRIDE=3;CERES_NO_PROTOCOL_BUFFERS;__CXSPARSE_SHORT;__DISABLE_GPU;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3_64.lib;eigen3_64.lib;CxSparse_64.lib;CHOLMOD_64.lib;SLAMpp_base_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\$(Configuration)64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__USE_NATIVE_CHOLESKY;CERES_NO_PROTOCOL_BUFFERS;_SECURE_SCL=0;__DISABLE_GPU;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3.lib;CxSparse.lib;eigen3.lib;cholmod.lib;SLAMpp_base.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>..\bin\$(Configuration);E:\my-projects\z_libs\g2o\trunk\lib\Release;E:\my-projects\z_libs\boost\boost_1_50_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <LargeAddressAware />
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;EIGEN_VECTORIZE_SSE3;__LINEAR_SOLVER_OVERRIDE=3;__CXSPARSE_SHORT;CERES_NO_PROTOCOL_BUFFERS;_SECURE_SCL=0;__DISABLE_GPU;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader />
+      <PrecompiledHeaderFile />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3_64.lib;eigen3_64.lib;CxSparse_64.lib;CHOLMOD_64.lib;SLAMpp_base_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\bin\$(Configuration)64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration />
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\external\Ceres\internal\ceres\block_sparse_matrix.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\external\Ceres\internal\ceres\block_structure.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\external\Ceres\internal\ceres\linear_operator.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\external\Ceres\internal\ceres\miniglog\glog\logging.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\external\Ceres\internal\ceres\sparse_matrix.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\external\Ceres\internal\ceres\triplet_sparse_matrix.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\slam_app\BlockBench.cpp" />
+    <ClCompile Include="..\src\slam_app\BlockBenchImpl0.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\src\slam_app\BlockBenchImpl1.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\src\slam_app\BlockUnit.cpp" />
+    <ClCompile Include="..\src\slam_app\Covado.cpp" />
+    <ClCompile Include="..\src\slam_app\Main.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">slam/Config.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">slam/Config.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)$(TargetName)64.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">slam/Config.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">slam/Config.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)$(TargetName)64.pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <ClCompile Include="..\src\slam_app\Solve2DImpl.cpp" />
+    <ClCompile Include="..\src\slam_app\Solve2DPoseOnlyImpl.cpp" />
+    <ClCompile Include="..\src\slam_app\Solve3DImpl.cpp" />
+    <ClCompile Include="..\src\slam_app\Solve3DPoseOnlyImpl.cpp" />
+    <ClCompile Include="..\src\slam_app\SolveBAImpl.cpp" />
+    <ClCompile Include="..\src\slam_app\SolveBAIntrinsicsImpl.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\src\slam_app\SolveBAStereoImpl.cpp" />
+    <ClCompile Include="..\src\slam_app\SolveROCVImpl.cpp">
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+    <ClCompile Include="..\src\slam_app\SolveSpheronImpl.cpp" />
+    <ClCompile Include="3DJacs.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="DTL.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\external\Ceres\internal\ceres\block_sparse_matrix.h" />
+    <CustomBuild Include="..\external\Ceres\internal\ceres\block_structure.h" />
+    <CustomBuild Include="..\external\Ceres\internal\ceres\linear_operator.h" />
+    <CustomBuild Include="..\external\Ceres\internal\ceres\miniglog\glog\logging.h" />
+    <CustomBuild Include="..\external\Ceres\internal\ceres\sparse_matrix.h" />
+    <CustomBuild Include="..\external\Ceres\internal\ceres\triplet_sparse_matrix.h" />
+    <ClInclude Include="..\include\slam\2DSolverBase.h" />
+    <ClInclude Include="..\include\slam\3DSolverBase.h" />
+    <ClInclude Include="..\include\slam\BaseInterface.h" />
+    <ClInclude Include="..\include\slam\BaseTypes.h" />
+    <ClInclude Include="..\include\slam\BaseTypes_Binary.h" />
+    <ClInclude Include="..\include\slam\BaseTypes_Unary.h" />
+    <ClInclude Include="..\include\slam\BASolverBase.h" />
+    <ClInclude Include="..\include\slam\BA_Types.h" />
+    <ClInclude Include="..\include\slam\Bitmap.h" />
+    <CustomBuild Include="..\include\slam\BlockMatrix.h" />
+    <ClInclude Include="..\include\slam\BlockMatrixBase.h" />
+    <CustomBuild Include="..\include\slam\BlockMatrixFBS.h" />
+    <CustomBuild Include="..\include\slam\BlockMatrixFBSUtil.h" />
+    <ClInclude Include="..\include\slam\BlockMatrixTests.h" />
+    <ClInclude Include="..\include\slam\BlockMatrixVBR.h" />
+    <ClInclude Include="..\include\slam\ConfigSolvers.h" />
+    <ClInclude Include="..\include\slam\Debug.h" />
+    <ClInclude Include="..\include\slam\Derivatives.h" />
+    <ClInclude Include="..\include\slam\Distances.h" />
+    <ClInclude Include="..\include\slam\Eigenvalues.h" />
+    <ClInclude Include="..\include\slam\ErrorEval.h" />
+    <ClInclude Include="..\include\slam\FlatSystem.h" />
+    <ClInclude Include="..\include\slam\IncrementalPolicy.h" />
+    <ClInclude Include="..\include\slam\Integer.h" />
+    <ClInclude Include="..\include\slam\LinearSolverTags.h" />
+    <ClInclude Include="..\include\slam\LinearSolver_CholMod.h" />
+    <ClInclude Include="..\include\slam\LinearSolver_CSparse.h" />
+    <ClInclude Include="..\include\slam\LinearSolver_CXSparse.h" />
+    <ClInclude Include="..\include\slam\LinearSolver_Schur.h" />
+    <ClInclude Include="..\include\slam\LinearSolver_UberBlock.h" />
+    <ClInclude Include="..\include\slam\Marginals.h" />
+    <ClInclude Include="..\include\slam\MemUsage.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_A.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_Base.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_FastL.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_FastL_Base.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_L.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_Lambda.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_Lambda_Base.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_Lambda_DL.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_Lambda_LM.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_SPCG.h" />
+    <ClInclude Include="..\include\slam\OrderingMagic.h" />
+    <ClInclude Include="..\include\slam\ParseLoop.h" />
+    <ClInclude Include="..\include\slam\Parser.h" />
+    <ClInclude Include="..\include\slam\RobustUtils.h" />
+    <ClInclude Include="..\include\slam\ROCV_Types.h" />
+    <ClInclude Include="..\include\slam\SE2_Types.h" />
+    <ClInclude Include="..\include\slam\SE3_Types.h" />
+    <ClInclude Include="..\include\slam\Segregated.h" />
+    <ClInclude Include="..\include\slam\Self.h" />
+    <ClInclude Include="..\include\slam\Sim3SolverBase.h" />
+    <ClInclude Include="..\include\slam\Sim3_Types.h" />
+    <ClInclude Include="..\include\slam\SolverTraits.h" />
+    <ClInclude Include="..\include\slam\Tetris.h" />
+    <ClInclude Include="..\include\slam\Tga.h" />
+    <ClInclude Include="..\include\slam\Timer.h" />
+    <ClInclude Include="..\include\slam\Tuple.h" />
+    <ClInclude Include="..\include\slam\TypeList.h" />
+    <ClInclude Include="..\include\slam\TypeName.h" />
+    <ClInclude Include="..\include\slam\Unused.h" />
+    <ClInclude Include="..\include\slam_app\Config.h" />
+    <ClInclude Include="..\include\slam_app\IncBAParsePrimitives.h" />
+    <ClInclude Include="..\include\slam_app\Main.h" />
+    <ClInclude Include="..\include\slam_app\ParsePrimitives.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Cholmod.vcxproj">
+      <Project>{48adc413-9ee9-4e3e-8e66-c862aa2b06f0}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="CSparse3.vcxproj">
+      <Project>{a8289168-385d-4b64-9ef9-c9daaa99ea8c}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="CXSparse.vcxproj">
+      <Project>{9e10fa4d-eb3d-4fd9-ad51-1a431b0545d8}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="eigen3.vcxproj">
+      <Project>{fe594d71-3bf3-4bef-b15a-f3d5073c1a5e}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="SLAMpp_base.vcxproj">
+      <Project>{6be63eb2-83c2-46a2-9b65-ce78a52ec298}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\include\slam\BlockMatrix.inl" />
+    <None Include="..\include\slam\BlockMatrixFBS.inl" />
+    <None Include="..\include\slam\Eigenvalues.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

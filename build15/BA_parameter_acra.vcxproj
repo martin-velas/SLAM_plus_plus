@@ -1,0 +1,1201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_GlobEuclid|Win32">
+      <Configuration>Debug_GlobEuclid</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_GlobEuclid|x64">
+      <Configuration>Debug_GlobEuclid</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_GlobInvDepth|Win32">
+      <Configuration>Debug_GlobInvDepth</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_GlobInvDepth|x64">
+      <Configuration>Debug_GlobInvDepth</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_GlobInvDist|Win32">
+      <Configuration>Debug_GlobInvDist</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_GlobInvDist|x64">
+      <Configuration>Debug_GlobInvDist</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_LocEuclid|Win32">
+      <Configuration>Debug_LocEuclid</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_LocEuclid|x64">
+      <Configuration>Debug_LocEuclid</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_LocInvDepth|Win32">
+      <Configuration>Debug_LocInvDepth</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_LocInvDepth|x64">
+      <Configuration>Debug_LocInvDepth</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_LocInvDist|Win32">
+      <Configuration>Debug_LocInvDist</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_LocInvDist|x64">
+      <Configuration>Debug_LocInvDist</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_GlobEuclid|Win32">
+      <Configuration>Release_GlobEuclid</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_GlobEuclid|x64">
+      <Configuration>Release_GlobEuclid</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_GlobInvDepth|Win32">
+      <Configuration>Release_GlobInvDepth</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_GlobInvDepth|x64">
+      <Configuration>Release_GlobInvDepth</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_GlobInvDist|Win32">
+      <Configuration>Release_GlobInvDist</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_GlobInvDist|x64">
+      <Configuration>Release_GlobInvDist</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_LocEuclid|Win32">
+      <Configuration>Release_LocEuclid</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_LocEuclid|x64">
+      <Configuration>Release_LocEuclid</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_LocInvDepth|Win32">
+      <Configuration>Release_LocInvDepth</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_LocInvDepth|x64">
+      <Configuration>Release_LocInvDepth</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_LocInvDist|Win32">
+      <Configuration>Release_LocInvDist</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_LocInvDist|x64">
+      <Configuration>Release_LocInvDist</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>BA_parameterizations_acra</ProjectName>
+    <ProjectGuid>{BC82F2D9-46A6-4217-AA7A-0FB5EAF0A72B}</ProjectGuid>
+    <RootNamespace>BA_parameterizations_acra</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocInvDist|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocInvDepth|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocEuclid|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobInvDist|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobInvDepth|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobEuclid|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobInvDist|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobInvDepth|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobEuclid|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocInvDist|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocInvDepth|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocEuclid|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocInvDist|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocInvDepth|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocEuclid|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobInvDist|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobInvDepth|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobEuclid|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobInvDist|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobInvDepth|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobEuclid|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocInvDist|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocInvDepth|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocEuclid|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocInvDist|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocInvDepth|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocEuclid|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobInvDist|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobInvDepth|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobEuclid|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobInvDist|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobInvDepth|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobEuclid|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocInvDist|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocInvDepth|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocEuclid|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocInvDist|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocInvDepth|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocEuclid|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobInvDist|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobInvDepth|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobEuclid|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobInvDist|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobInvDepth|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobEuclid|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocInvDist|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocInvDepth|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocEuclid|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>14.0.25431.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocEuclid|Win32'">
+    <OutDir>$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocEuclid|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocInvDepth|Win32'">
+    <OutDir>$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocInvDepth|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocInvDist|Win32'">
+    <OutDir>$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocInvDist|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobEuclid|Win32'">
+    <OutDir>$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobEuclid|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobInvDepth|Win32'">
+    <OutDir>$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobInvDepth|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobInvDist|Win32'">
+    <OutDir>$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobInvDist|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobEuclid|Win32'">
+    <OutDir>$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobEuclid|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobInvDepth|Win32'">
+    <OutDir>$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobInvDepth|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobInvDist|Win32'">
+    <OutDir>$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobInvDist|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocEuclid|Win32'">
+    <OutDir>$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocEuclid|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocInvDepth|Win32'">
+    <OutDir>$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocInvDepth|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocInvDist|Win32'">
+    <OutDir>$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocInvDist|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocEuclid|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__USE_NATIVE_CHOLESKY;CERES_NO_PROTOCOL_BUFFERS;RUN_STANDALONE;LANDMARKS_LOCAL;LANDMARK_TYPE_XYZ;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalOptions>/bigobj /Zm500 </AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3.lib;CxSparse.lib;eigen3.lib;cholmod.lib;SLAMpp_base.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)$(Configuration).exe</OutputFile>
+      <AdditionalLibraryDirectories>..\bin\Debug;E:\my-projects\z_libs\g2o\trunk\lib\Debug;E:\my-projects\z_libs\boost\boost_1_50_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocEuclid|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 </AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN64;DLONG;_DEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__LINEAR_SOLVER_OVERRIDE=3;CERES_NO_PROTOCOL_BUFFERS;__CXSPARSE_SHORT;RUN_STANDALONE;LANDMARKS_LOCAL;LANDMARK_TYPE_XYZ;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3_64.lib;eigen3_64.lib;CxSparse_64.lib;CHOLMOD_64.lib;SLAMpp_base_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Debug64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocInvDepth|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__USE_NATIVE_CHOLESKY;CERES_NO_PROTOCOL_BUFFERS;RUN_STANDALONE;LANDMARKS_LOCAL;LANDMARK_TYPE_InvDepth;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalOptions>/bigobj /Zm500 </AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3.lib;CxSparse.lib;eigen3.lib;cholmod.lib;SLAMpp_base.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)$(Configuration).exe</OutputFile>
+      <AdditionalLibraryDirectories>..\bin\Debug;E:\my-projects\z_libs\g2o\trunk\lib\Debug;E:\my-projects\z_libs\boost\boost_1_50_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocInvDepth|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 </AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN64;DLONG;_DEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__LINEAR_SOLVER_OVERRIDE=3;CERES_NO_PROTOCOL_BUFFERS;__CXSPARSE_SHORT;RUN_STANDALONE;LANDMARKS_LOCAL;LANDMARK_TYPE_InvDepth;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3_64.lib;eigen3_64.lib;CxSparse_64.lib;CHOLMOD_64.lib;SLAMpp_base_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Debug64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocInvDist|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__USE_NATIVE_CHOLESKY;CERES_NO_PROTOCOL_BUFFERS;RUN_STANDALONE;LANDMARKS_LOCAL;LANDMARK_TYPE_InvDist;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalOptions>/bigobj /Zm500 </AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3.lib;CxSparse.lib;eigen3.lib;cholmod.lib;SLAMpp_base.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)$(Configuration).exe</OutputFile>
+      <AdditionalLibraryDirectories>..\bin\Debug;E:\my-projects\z_libs\g2o\trunk\lib\Debug;E:\my-projects\z_libs\boost\boost_1_50_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LocInvDist|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 </AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN64;DLONG;_DEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__LINEAR_SOLVER_OVERRIDE=3;CERES_NO_PROTOCOL_BUFFERS;__CXSPARSE_SHORT;RUN_STANDALONE;LANDMARKS_LOCAL;LANDMARK_TYPE_InvDist;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3_64.lib;eigen3_64.lib;CxSparse_64.lib;CHOLMOD_64.lib;SLAMpp_base_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Debug64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobEuclid|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__USE_NATIVE_CHOLESKY;CERES_NO_PROTOCOL_BUFFERS;RUN_STANDALONE;LANDMARKS_GLOBAL;LANDMARK_TYPE_XYZ;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalOptions>/bigobj /Zm500 </AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3.lib;CxSparse.lib;eigen3.lib;cholmod.lib;SLAMpp_base.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)$(Configuration).exe</OutputFile>
+      <AdditionalLibraryDirectories>..\bin\Debug;E:\my-projects\z_libs\g2o\trunk\lib\Debug;E:\my-projects\z_libs\boost\boost_1_50_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobEuclid|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 </AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN64;DLONG;_DEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__LINEAR_SOLVER_OVERRIDE=3;CERES_NO_PROTOCOL_BUFFERS;__CXSPARSE_SHORT;RUN_STANDALONE;LANDMARKS_GLOBAL;LANDMARK_TYPE_XYZ;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3_64.lib;eigen3_64.lib;CxSparse_64.lib;CHOLMOD_64.lib;SLAMpp_base_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Debug64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobInvDepth|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__USE_NATIVE_CHOLESKY;CERES_NO_PROTOCOL_BUFFERS;RUN_STANDALONE;LANDMARKS_GLOBAL;LANDMARK_TYPE_InvDepth;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalOptions>/bigobj /Zm500 </AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3.lib;CxSparse.lib;eigen3.lib;cholmod.lib;SLAMpp_base.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)$(Configuration).exe</OutputFile>
+      <AdditionalLibraryDirectories>..\bin\Debug;E:\my-projects\z_libs\g2o\trunk\lib\Debug;E:\my-projects\z_libs\boost\boost_1_50_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobInvDepth|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 </AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN64;DLONG;_DEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__LINEAR_SOLVER_OVERRIDE=3;CERES_NO_PROTOCOL_BUFFERS;__CXSPARSE_SHORT;RUN_STANDALONE;LANDMARKS_GLOBAL;LANDMARK_TYPE_InvDepth;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3_64.lib;eigen3_64.lib;CxSparse_64.lib;CHOLMOD_64.lib;SLAMpp_base_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Debug64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobInvDist|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__USE_NATIVE_CHOLESKY;CERES_NO_PROTOCOL_BUFFERS;RUN_STANDALONE;LANDMARKS_GLOBAL;LANDMARK_TYPE_InvDist;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/bigobj /Zm500 </AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3.lib;CxSparse.lib;eigen3.lib;cholmod.lib;SLAMpp_base.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)$(Configuration).exe</OutputFile>
+      <AdditionalLibraryDirectories>..\bin\Debug;E:\my-projects\z_libs\g2o\trunk\lib\Debug;E:\my-projects\z_libs\boost\boost_1_50_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_GlobInvDist|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 </AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN64;DLONG;_DEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__LINEAR_SOLVER_OVERRIDE=3;CERES_NO_PROTOCOL_BUFFERS;__CXSPARSE_SHORT;RUN_STANDALONE;LANDMARKS_GLOBAL;LANDMARK_TYPE_InvDist;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3_64.lib;eigen3_64.lib;CxSparse_64.lib;CHOLMOD_64.lib;SLAMpp_base_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Debug64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobEuclid|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__USE_NATIVE_CHOLESKY;CERES_NO_PROTOCOL_BUFFERS;_SECURE_SCL=0;RUN_STANDALONE;LANDMARKS_GLOBAL;LANDMARK_TYPE_XYZ;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3.lib;CxSparse.lib;eigen3.lib;cholmod.lib;SLAMpp_base.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)$(Configuration).exe</OutputFile>
+      <AdditionalLibraryDirectories>..\bin\Release;E:\my-projects\z_libs\g2o\trunk\lib\Release;E:\my-projects\z_libs\boost\boost_1_50_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobEuclid|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;EIGEN_VECTORIZE_SSE3;__LINEAR_SOLVER_OVERRIDE=3;__CXSPARSE_SHORT;CERES_NO_PROTOCOL_BUFFERS;_SECURE_SCL=0;RUN_STANDALONE;LANDMARKS_GLOBAL;LANDMARK_TYPE_XYZ;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3_64.lib;eigen3_64.lib;CxSparse_64.lib;CHOLMOD_64.lib;SLAMpp_base_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Release64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration />
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobInvDepth|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__USE_NATIVE_CHOLESKY;CERES_NO_PROTOCOL_BUFFERS;_SECURE_SCL=0;RUN_STANDALONE;LANDMARKS_GLOBAL;LANDMARK_TYPE_InvDepth;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3.lib;CxSparse.lib;eigen3.lib;cholmod.lib;SLAMpp_base.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)$(Configuration).exe</OutputFile>
+      <AdditionalLibraryDirectories>..\bin\Release;E:\my-projects\z_libs\g2o\trunk\lib\Release;E:\my-projects\z_libs\boost\boost_1_50_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobInvDepth|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;EIGEN_VECTORIZE_SSE3;__LINEAR_SOLVER_OVERRIDE=3;__CXSPARSE_SHORT;CERES_NO_PROTOCOL_BUFFERS;_SECURE_SCL=0;RUN_STANDALONE;LANDMARKS_GLOBAL;LANDMARK_TYPE_InvDepth;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3_64.lib;eigen3_64.lib;CxSparse_64.lib;CHOLMOD_64.lib;SLAMpp_base_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Release64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration />
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobInvDist|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__USE_NATIVE_CHOLESKY;CERES_NO_PROTOCOL_BUFFERS;_SECURE_SCL=0;RUN_STANDALONE;LANDMARKS_GLOBAL;LANDMARK_TYPE_InvDist;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3.lib;CxSparse.lib;eigen3.lib;cholmod.lib;SLAMpp_base.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)$(Configuration).exe</OutputFile>
+      <AdditionalLibraryDirectories>..\bin\Release;E:\my-projects\z_libs\g2o\trunk\lib\Release;E:\my-projects\z_libs\boost\boost_1_50_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_GlobInvDist|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;EIGEN_VECTORIZE_SSE3;__LINEAR_SOLVER_OVERRIDE=3;__CXSPARSE_SHORT;CERES_NO_PROTOCOL_BUFFERS;_SECURE_SCL=0;RUN_STANDALONE;LANDMARKS_GLOBAL;LANDMARK_TYPE_InvDist;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3_64.lib;eigen3_64.lib;CxSparse_64.lib;CHOLMOD_64.lib;SLAMpp_base_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Release64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration />
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocEuclid|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__USE_NATIVE_CHOLESKY;CERES_NO_PROTOCOL_BUFFERS;_SECURE_SCL=0;RUN_STANDALONE;LANDMARKS_LOCAL;LANDMARK_TYPE_XYZ;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3.lib;CxSparse.lib;eigen3.lib;cholmod.lib;SLAMpp_base.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)$(Configuration).exe</OutputFile>
+      <AdditionalLibraryDirectories>..\bin\Release;E:\my-projects\z_libs\g2o\trunk\lib\Release;E:\my-projects\z_libs\boost\boost_1_50_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocEuclid|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;EIGEN_VECTORIZE_SSE3;__LINEAR_SOLVER_OVERRIDE=3;__CXSPARSE_SHORT;CERES_NO_PROTOCOL_BUFFERS;_SECURE_SCL=0;RUN_STANDALONE;LANDMARKS_LOCAL;LANDMARK_TYPE_XYZ;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3_64.lib;eigen3_64.lib;CxSparse_64.lib;CHOLMOD_64.lib;SLAMpp_base_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Release64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration />
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocInvDepth|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__USE_NATIVE_CHOLESKY;CERES_NO_PROTOCOL_BUFFERS;_SECURE_SCL=0;RUN_STANDALONE;LANDMARKS_LOCAL;LANDMARK_TYPE_InvDepth;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3.lib;CxSparse.lib;eigen3.lib;cholmod.lib;SLAMpp_base.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)$(Configuration).exe</OutputFile>
+      <AdditionalLibraryDirectories>..\bin\Release;E:\my-projects\z_libs\g2o\trunk\lib\Release;E:\my-projects\z_libs\boost\boost_1_50_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocInvDepth|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;EIGEN_VECTORIZE_SSE3;__LINEAR_SOLVER_OVERRIDE=3;__CXSPARSE_SHORT;CERES_NO_PROTOCOL_BUFFERS;_SECURE_SCL=0;RUN_STANDALONE;LANDMARKS_LOCAL;LANDMARK_TYPE_InvDepth;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <StringPooling>true</StringPooling>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3_64.lib;eigen3_64.lib;CxSparse_64.lib;CHOLMOD_64.lib;SLAMpp_base_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Release64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration />
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocInvDist|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;__USE_NATIVE_CHOLESKY;CERES_NO_PROTOCOL_BUFFERS;_SECURE_SCL=0;RUN_STANDALONE;LANDMARKS_LOCAL;LANDMARK_TYPE_InvDist;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3.lib;CxSparse.lib;eigen3.lib;cholmod.lib;SLAMpp_base.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)$(Configuration).exe</OutputFile>
+      <AdditionalLibraryDirectories>..\bin\Release;E:\my-projects\z_libs\g2o\trunk\lib\Release;E:\my-projects\z_libs\boost\boost_1_50_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_LocInvDist|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../external/NIST_BLAS\INCLUDE;../external/Ceres\include;../external/Ceres\internal;../include/slam;../include;../include/eigen33;../include/cholmod/SuiteSparse;../include/cholmod;E:/my-projects/z_libs/g2o/trunk/;E:/my-projects/z_libs/g2o/trunk/build/;E:\my-projects\z_libs\gtsam\gtsam-2.0.0;E:\my-projects\z_libs\boost\boost_1_50_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;EIGEN_DONT_PARALLELIZE;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;EIGEN_VECTORIZE_SSE3;__LINEAR_SOLVER_OVERRIDE=3;__CXSPARSE_SHORT;CERES_NO_PROTOCOL_BUFFERS;_SECURE_SCL=0;RUN_STANDALONE;LANDMARKS_LOCAL;LANDMARK_TYPE_InvDist;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CSparse3_64.lib;eigen3_64.lib;CxSparse_64.lib;CHOLMOD_64.lib;SLAMpp_base_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Release64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration />
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\ba_parameter_acra\BAOptimizer.cpp" />
+    <ClCompile Include="..\src\ba_parameter_acra\MainL.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\ba_parameter_acra\BAOptimizer.h" />
+    <ClInclude Include="..\include\ba_parameter_acra\Sim3_ParsePrimitives.h" />
+    <ClInclude Include="..\include\slam\2DSolverBase.h" />
+    <ClInclude Include="..\include\slam\3DSolverBase.h" />
+    <ClInclude Include="..\include\slam\BaseInterface.h" />
+    <ClInclude Include="..\include\slam\BaseTypes.h" />
+    <ClInclude Include="..\include\slam\BaseTypes_Binary.h" />
+    <ClInclude Include="..\include\slam\BaseTypes_Unary.h" />
+    <ClInclude Include="..\include\slam\BASolverBase.h" />
+    <ClInclude Include="..\include\slam\BA_Types.h" />
+    <ClInclude Include="..\include\slam\Bitmap.h" />
+    <ClInclude Include="..\include\slam\BlockMatrixBase.h" />
+    <ClInclude Include="..\include\slam\BlockMatrixTests.h" />
+    <ClInclude Include="..\include\slam\BlockMatrixVBR.h" />
+    <ClInclude Include="..\include\slam\ConfigSolvers.h" />
+    <ClInclude Include="..\include\slam\Debug.h" />
+    <ClInclude Include="..\include\slam\Derivatives.h" />
+    <ClInclude Include="..\include\slam\Distances.h" />
+    <ClInclude Include="..\include\slam\Eigenvalues.h" />
+    <ClInclude Include="..\include\slam\ErrorEval.h" />
+    <ClInclude Include="..\include\slam\FlatSystem.h" />
+    <ClInclude Include="..\include\slam\IncrementalPolicy.h" />
+    <ClInclude Include="..\include\slam\Integer.h" />
+    <ClInclude Include="..\include\slam\LinearSolverTags.h" />
+    <ClInclude Include="..\include\slam\LinearSolver_CholMod.h" />
+    <ClInclude Include="..\include\slam\LinearSolver_CSparse.h" />
+    <ClInclude Include="..\include\slam\LinearSolver_CXSparse.h" />
+    <ClInclude Include="..\include\slam\LinearSolver_Schur.h" />
+    <ClInclude Include="..\include\slam\LinearSolver_UberBlock.h" />
+    <ClInclude Include="..\include\slam\Marginals.h" />
+    <ClInclude Include="..\include\slam\MemUsage.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_A.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_Base.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_FastL.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_FastL_Base.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_L.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_Lambda.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_Lambda_Base.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_Lambda_DL.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_Lambda_LM.h" />
+    <ClInclude Include="..\include\slam\NonlinearSolver_SPCG.h" />
+    <ClInclude Include="..\include\slam\OrderingMagic.h" />
+    <ClInclude Include="..\include\slam\ParseLoop.h" />
+    <ClInclude Include="..\include\slam\Parser.h" />
+    <ClInclude Include="..\include\slam\RobustUtils.h" />
+    <ClInclude Include="..\include\slam\ROCV_Types.h" />
+    <ClInclude Include="..\include\slam\SE2_Types.h" />
+    <ClInclude Include="..\include\slam\SE3_Types.h" />
+    <ClInclude Include="..\include\slam\Segregated.h" />
+    <ClInclude Include="..\include\slam\Self.h" />
+    <ClInclude Include="..\include\slam\Sim3SolverBase.h" />
+    <ClInclude Include="..\include\slam\Sim3_Types.h" />
+    <ClInclude Include="..\include\slam\SolverTraits.h" />
+    <ClInclude Include="..\include\slam\Tetris.h" />
+    <ClInclude Include="..\include\slam\Tga.h" />
+    <ClInclude Include="..\include\slam\Timer.h" />
+    <ClInclude Include="..\include\slam\Tuple.h" />
+    <ClInclude Include="..\include\slam\TypeList.h" />
+    <ClInclude Include="..\include\slam\TypeName.h" />
+    <ClInclude Include="..\include\slam\Unused.h" />
+    <CustomBuild Include="..\include\slam\BlockMatrixFBSUtil.h" />
+    <CustomBuild Include="..\include\slam\BlockMatrixFBS.h" />
+    <CustomBuild Include="..\include\slam\BlockMatrix.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Cholmod.vcxproj">
+      <Project>{48adc413-9ee9-4e3e-8e66-c862aa2b06f0}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="CSparse3.vcxproj">
+      <Project>{a8289168-385d-4b64-9ef9-c9daaa99ea8c}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="CXSparse.vcxproj">
+      <Project>{9e10fa4d-eb3d-4fd9-ad51-1a431b0545d8}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="eigen3.vcxproj">
+      <Project>{fe594d71-3bf3-4bef-b15a-f3d5073c1a5e}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="SLAMpp_base.vcxproj">
+      <Project>{6be63eb2-83c2-46a2-9b65-ce78a52ec298}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\include\slam\BlockMatrix.inl" />
+    <None Include="..\include\slam\BlockMatrixFBS.inl" />
+    <None Include="..\include\slam\Eigenvalues.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

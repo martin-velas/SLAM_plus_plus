@@ -1,0 +1,77 @@
+Changes from 2.2 to 2.3 (2017-10-15):
+
+* Added the 3DV demo and the dog leg (DL) solver
+
+Changes from 2.1 to 2.2 (2017-05-15):
+
+* Added robust functions.
+* Improved CMake support for Visual Studio 2015.
+* Added Eigen 3.3 and support for AVX instructions sets.
+* Added block LU decompositions.
+* Added the geometry module (P3P, PNP, five-point, Kabsch, etc.).
+* Improved the order of options in cmake-gui to reduce clutter.
+* Added Notify_LinearizationChange() to the solvers, to be able to do IRLS or
+  otherwise externally change the linearization point.
+* Noted how Sim(3) is slightly different from the representation used in Sophus.
+
+Changes from 1.5 to 2.1 (2016-08-09):
+
+* Added documentation groups.
+* Added edge constructors with implicit and explicit vertex initialization to make
+  it easier to write new edge types.
+* Injected 5D and 6D matrix and vertex types into the Eigen namespace.
+* Added nicer antialiased line rasterizer.
+* Added proper support for constant vertices.
+* Reduced memory usage in covariances calculation.
+* Added Eigenvalue calculation capabilities.
+* Added tools for error evaluation in SLAM implementations.
+* Added a tool fur calculating exact numbers of FLOPs in sparse matrix operations.
+* Added new BA examples.
+* Added support for Sim(3) types.
+* Optimized includes for faster builds (using Deheader).
+* Plenty of improvements to the block matrix class.
+
+Changes from 1.5 to 2.0 RC (2015-11-25):
+
+* Blazing-fast marginal covariance recovery. More details can be found at
+  https://sourceforge.net/p/slam-plus-plus/wiki/Fast%20Covariance%20Recovery/.
+* Added native support for hypergraphs (the current version supports hypergraphs,
+  but does not contain any hypergraph edge implementations).
+* Improved Lambda solver for faster bundle adjustment.
+* Support for GPU acceleration (experimental; need to enable that in CMake).
+
+Changes from 1.12 to 1.5 (2015-02-30):
+
+* The distortion parameter in BA (both mono and stereo) is scaled by focal
+  length in the internal representation. This is compensated for in the parser.
+
+Changes from 1.1 to 1.12 (2013-11-28):
+
+* Added small_online_example.
+
+Changes from 1.10 to 1.11 (2013-11-08):
+
+* Improved code documentation.
+* Improved parser design to support vertex initialization (for BA).
+* Changed CMakeLists.txt and added slam_small_example.
+
+Changes from 1.1 to 1.10 (2013-08-02):
+
+* Fixed some bugs in bundle adjustment.
+* Fixed some old typos.
+* Added more configuration options to CMakeLists.txt.
+* Prepared some stuff for Raspberry Pi.
+
+Changes from 1.01 to 1.1 (2013-06-24):
+
+* Added native block Cholesky implementation.
+* Added the fast L solver, which is described in our Rss 2013 paper.
+    * Note that it will not work with other than native Cholesky.
+
+
+Changes from 1.0 to 1.01 (2013-05-14):
+
+* Updated Cholmod to 2.1.2 and selected the fast supernodal analysis as default.
+* Updated METIS to 4.0.1, and selected it to be disabled by default as it was
+  causing problems while compiling on some Linux systems.
+* Disabled -march=native on Apple systems, as it was causing problems.

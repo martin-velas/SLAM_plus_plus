@@ -1,0 +1,523 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{48ADC413-9EE9-4E3E-8E66-C862AA2B06F0}</ProjectGuid>
+    <RootNamespace>Cholmod</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>14.0.25431.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\bin\$(Configuration)\</OutDir>
+    <IntDir>cholmod\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>..\bin\$(Configuration)64\</OutDir>
+    <IntDir>cholmod\$(Configuration)64\</IntDir>
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\bin\$(Configuration)\</OutDir>
+    <IntDir>cholmod\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>..\bin\$(Configuration)64\</OutDir>
+    <IntDir>cholmod\$(Configuration)64\</IntDir>
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../include/cholmod;../include/cholmod/AMD;../include/cholmod/CAMD;../include/cholmod/CCOLAMD;../include/cholmod/COLAMD;../include/cholmod/GKlib;../include/cholmod/METIS;../include/cholmod/CHOLMOD;../include/cholmod/SuiteSparse;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;USE_GKREGEX;__thread=;NPARTITION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalOptions>/bigobj /Zm500 </AdditionalOptions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../include/cholmod;../include/cholmod/AMD;../include/cholmod/CAMD;../include/cholmod/CCOLAMD;../include/cholmod/COLAMD;../include/cholmod/GKlib;../include/cholmod/METIS;../include/cholmod/CHOLMOD;../include/cholmod/SuiteSparse;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN64;_DEBUG;_LIB;DLONG;USE_GKREGEX;__thread=;NPARTITION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/bigobj /Zm500 </AdditionalOptions>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(ProjectName)_64.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../include/cholmod;../include/cholmod/AMD;../include/cholmod/CAMD;../include/cholmod/CCOLAMD;../include/cholmod/COLAMD;../include/cholmod/GKlib;../include/cholmod/METIS;../include/cholmod/CHOLMOD;../include/cholmod/SuiteSparse;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;USE_GKREGEX;__thread=;NPARTITION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../include/cholmod;../include/cholmod/AMD;../include/cholmod/CAMD;../include/cholmod/CCOLAMD;../include/cholmod/COLAMD;../include/cholmod/GKlib;../include/cholmod/METIS;../include/cholmod/CHOLMOD;../include/cholmod/SuiteSparse;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;DLONG;USE_GKREGEX;__thread=;NPARTITION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(ProjectName)_64.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\cholmod\AMD\amd_1.c" />
+    <ClCompile Include="..\src\cholmod\AMD\amd_2.c" />
+    <ClCompile Include="..\src\cholmod\AMD\amd_aat.c" />
+    <ClCompile Include="..\src\cholmod\AMD\amd_control.c" />
+    <ClCompile Include="..\src\cholmod\AMD\amd_defaults.c" />
+    <ClCompile Include="..\src\cholmod\AMD\amd_dump.c" />
+    <ClCompile Include="..\src\cholmod\AMD\amd_global.c" />
+    <ClCompile Include="..\src\cholmod\AMD\amd_info.c" />
+    <ClCompile Include="..\src\cholmod\AMD\amd_order.c" />
+    <ClCompile Include="..\src\cholmod\AMD\amd_postorder.c" />
+    <ClCompile Include="..\src\cholmod\AMD\amd_post_tree.c" />
+    <ClCompile Include="..\src\cholmod\AMD\amd_preprocess.c" />
+    <ClCompile Include="..\src\cholmod\AMD\amd_valid.c" />
+    <ClCompile Include="..\src\cholmod\CAMD\camd_1.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_2.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_aat.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_control.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_defaults.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_dump.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_global.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_info.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_order.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_postorder.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_preprocess.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_valid.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_1.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)long\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_2.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)long\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_aat.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)long\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_control.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)long\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_defaults.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)long\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_dump.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)long\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_info.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)long\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_order.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)long\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_postorder.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)long\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_preprocess.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)long\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_valid.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DLONG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)long\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)long\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CCOLAMD\ccolamd.c" />
+    <ClCompile Include="..\src\cholmod\CCOLAMD\ccolamd_global.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Check\cholmod_check.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Check\cholmod_read.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Check\cholmod_write.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_amd.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_analyze.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_colamd.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_etree.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_factorize.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_postorder.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_rcond.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_resymbol.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_rowcolcounts.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_rowfac.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_solve.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_spsolve.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_aat.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_add.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_band.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_change_factor.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_common.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_complex.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_copy.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_dense.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_error.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_factor.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_memory.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_sparse.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_transpose.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_triplet.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_version.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_drop.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_horzcat.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_norm.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_scale.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_sdmult.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_ssmult.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_submatrix.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_symmetry.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_vertcat.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Modify\cholmod_rowadd.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Modify\cholmod_rowdel.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Modify\cholmod_updown.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Partition\cholmod_camd.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Partition\cholmod_ccolamd.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Partition\cholmod_csymamd.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Partition\cholmod_metis.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Partition\cholmod_nesdis.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Supernodal\cholmod_super_numeric.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Supernodal\cholmod_super_solve.c" />
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Supernodal\cholmod_super_symbolic.c" />
+    <ClCompile Include="..\src\cholmod\COLAMD\colamd.c" />
+    <ClCompile Include="..\src\cholmod\COLAMD\colamd_global.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\b64.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\blas.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\csr.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\error.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\evaluate.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\fkvkselect.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\fs.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\getopt.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\gkregex.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\graph.c">
+      <AssemblerListingLocation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)gk\</AssemblerListingLocation>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)gk\</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)gk\</XMLDocumentationFileName>
+      <AssemblerListingLocation Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)gk\</AssemblerListingLocation>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)gk\</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)gk\</XMLDocumentationFileName>
+      <AssemblerListingLocation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)gk\</AssemblerListingLocation>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)gk\</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)gk\</XMLDocumentationFileName>
+      <AssemblerListingLocation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)gk\</AssemblerListingLocation>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)gk\</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)gk\</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\htable.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\io.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\itemsets.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\mcore.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\memory.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\omp.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\pdb.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\pqueue.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\random.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\rw.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\seq.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\sort.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\string.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\timers.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\tokenizer.c" />
+    <ClCompile Include="..\src\cholmod\GKlib\util.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)gklib\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)gklib\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)gklib\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)gklib\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\auxapi.c" />
+    <ClCompile Include="..\src\cholmod\METIS\balance.c" />
+    <ClCompile Include="..\src\cholmod\METIS\bucketsort.c" />
+    <ClCompile Include="..\src\cholmod\METIS\checkgraph.c" />
+    <ClCompile Include="..\src\cholmod\METIS\coarsen.c" />
+    <ClCompile Include="..\src\cholmod\METIS\compress.c" />
+    <ClCompile Include="..\src\cholmod\METIS\contig.c" />
+    <ClCompile Include="..\src\cholmod\METIS\debug.c" />
+    <ClCompile Include="..\src\cholmod\METIS\fm.c" />
+    <ClCompile Include="..\src\cholmod\METIS\fortran.c" />
+    <ClCompile Include="..\src\cholmod\METIS\frename.c" />
+    <ClCompile Include="..\src\cholmod\METIS\gklib.c" />
+    <ClCompile Include="..\src\cholmod\METIS\graph.c" />
+    <ClCompile Include="..\src\cholmod\METIS\initpart.c" />
+    <ClCompile Include="..\src\cholmod\METIS\kmetis.c" />
+    <ClCompile Include="..\src\cholmod\METIS\kwayfm.c" />
+    <ClCompile Include="..\src\cholmod\METIS\kwayrefine.c" />
+    <ClCompile Include="..\src\cholmod\METIS\mcutil.c" />
+    <ClCompile Include="..\src\cholmod\METIS\mesh.c" />
+    <ClCompile Include="..\src\cholmod\METIS\meshpart.c" />
+    <ClCompile Include="..\src\cholmod\METIS\minconn.c" />
+    <ClCompile Include="..\src\cholmod\METIS\mincover.c" />
+    <ClCompile Include="..\src\cholmod\METIS\mmd.c" />
+    <ClCompile Include="..\src\cholmod\METIS\ometis.c" />
+    <ClCompile Include="..\src\cholmod\METIS\options.c" />
+    <ClCompile Include="..\src\cholmod\METIS\parmetis.c" />
+    <ClCompile Include="..\src\cholmod\METIS\pmetis.c" />
+    <ClCompile Include="..\src\cholmod\METIS\refine.c" />
+    <ClCompile Include="..\src\cholmod\METIS\separator.c" />
+    <ClCompile Include="..\src\cholmod\METIS\sfm.c" />
+    <ClCompile Include="..\src\cholmod\METIS\srefine.c" />
+    <ClCompile Include="..\src\cholmod\METIS\stat.c" />
+    <ClCompile Include="..\src\cholmod\METIS\timing.c" />
+    <ClCompile Include="..\src\cholmod\METIS\util.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)metis\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)metis\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)metis\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)metis\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\wspace.c" />
+    <ClCompile Include="..\src\cholmod\SuiteSparse\SuiteSparse_config.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\cholmod\AMD\amd.h" />
+    <ClInclude Include="..\include\cholmod\AMD\amd_internal.h" />
+    <ClInclude Include="..\include\cholmod\CAMD\camd.h" />
+    <ClInclude Include="..\include\cholmod\CAMD\camd_internal.h" />
+    <ClInclude Include="..\include\cholmod\CCOLAMD\ccolamd.h" />
+    <ClInclude Include="..\include\cholmod\cholmod.h" />
+    <ClInclude Include="..\include\cholmod\cholmod_blas.h" />
+    <ClInclude Include="..\include\cholmod\cholmod_check.h" />
+    <ClInclude Include="..\include\cholmod\cholmod_cholesky.h" />
+    <ClInclude Include="..\include\cholmod\cholmod_complexity.h" />
+    <ClInclude Include="..\include\cholmod\cholmod_config.h" />
+    <ClInclude Include="..\include\cholmod\cholmod_core.h" />
+    <ClInclude Include="..\include\cholmod\cholmod_internal.h" />
+    <ClInclude Include="..\include\cholmod\cholmod_io64.h" />
+    <ClInclude Include="..\include\cholmod\cholmod_matrixops.h" />
+    <ClInclude Include="..\include\cholmod\cholmod_modify.h" />
+    <ClInclude Include="..\include\cholmod\cholmod_partition.h" />
+    <ClInclude Include="..\include\cholmod\cholmod_supernodal.h" />
+    <ClInclude Include="..\include\cholmod\cholmod_template.h" />
+    <ClInclude Include="..\include\cholmod\COLAMD\colamd.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\GKlib.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\gkregex.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\gk_arch.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\gk_defs.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\gk_externs.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\gk_getopt.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\gk_macros.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\gk_mkblas.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\gk_mkmemory.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\gk_mkpqueue.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\gk_mkpqueue2.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\gk_mkrandom.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\gk_mksort.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\gk_mkutils.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\gk_proto.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\gk_struct.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\gk_types.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\ms_inttypes.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\ms_stat.h" />
+    <ClInclude Include="..\include\cholmod\GKlib\ms_stdint.h" />
+    <ClInclude Include="..\include\cholmod\METIS\defs.h" />
+    <ClInclude Include="..\include\cholmod\METIS\gklib_defs.h" />
+    <ClInclude Include="..\include\cholmod\METIS\gklib_rename.h" />
+    <ClInclude Include="..\include\cholmod\METIS\macros.h" />
+    <ClInclude Include="..\include\cholmod\METIS\metis.h" />
+    <ClInclude Include="..\include\cholmod\METIS\metislib.h" />
+    <ClInclude Include="..\include\cholmod\METIS\proto.h" />
+    <ClInclude Include="..\include\cholmod\METIS\rename.h" />
+    <ClInclude Include="..\include\cholmod\METIS\stdheaders.h" />
+    <ClInclude Include="..\include\cholmod\METIS\struct.h" />
+    <ClInclude Include="..\include\cholmod\SuiteSparse\SuiteSparse_config.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,107 @@
+=== 3rd party software licenses ===
+
+This software uses Eigen (http://eigen.tuxfamily.org). Eigen is licensed
+under MPL2 (see http://www.mozilla.org/MPL/2.0).
+
+This software also uses SuiteSparse (http://cise.ufl.edu/research/sparse/SuiteSparse/)
+by Tim Davis. For more details, see file "SuiteSparse Readme.txt".
+
+As a dependence of CHOLMOD, METIS library is included
+(http://glaros.dtc.umn.edu/gkhome/views/metis), see file "METIS License.txt".
+
+=== License ===
+
+Copyright (c) 2012-2013, Lukas Polok & Viorela Ila & Marek Solony
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
+=== References (please cite these when using this software) ===
+
+V Ila, L Polok, M Solony and K Istenic, "Fast Incremental Bundle
+Adjustment with Covariance Recovery", proceedings of the International
+Conference on 3D Vision (3DV). Qingdao, China, 2017.
+
+L Polok and P Smrž, "Pivoting Strategy for Fast LU decomposition
+of Sparse Block Matrices", proceedings of the 25th High Performance
+Computing Symposium. Virginia Beach, USA, 2017.
+
+V Ila, L Polok, M Šolony and P Svoboda, "SLAM++. A Highly Efficient
+and Temporally Scalable Incremental SLAM Framework", The International
+Journal of Robotics Research, Online First, 2017, ISSN 1741-3176,
+DOI 10.1177/0278364917691110.
+
+L Polok, V Ila and P Smrž, "3D Reconstruction Quality Analysis and
+Its Acceleration on GPU Clusters," in proceedings of European Signal
+Processing Conference 2016. Budapest, Hungary, 2016.
+
+L Polok, V Lui, V Ila, T Drummond, R Mahony, "The Effect of Different
+Parameterisations in Incremental Structure from Motion," proceedings
+of the Australian Conference on Robotics and Automation. Australia, 2015.
+
+L Polok and P Smrz, "Increasing Double Precision Throughput on NVIDIA
+Maxwell GPUs," proceedings of the 24th High Performance Computing
+Symposium. Pasadena / Los Angeles, USA, 2016.
+
+S Pabst, H Kim, L Polok, V Ila, T Waine, A Hilton, J Clifford
+and P Smrz, "Jigsaw - Multi-Modal Big Data Management in Digital Film
+Production," SIGGRAPH (poster). Los Angeles, USA, 2015.
+
+L Polok, S Pabst, J Clifford, "A GPU-Accelerated Bundle Adjustment
+Solver," GPU Technology Conference 2015. San Diego, USA, 2015.
+
+M Solony, E Imre, V Ila, L Polok, H Kim and P Zemcik, "Fast and
+Accurate Refinement Method for 3D Reconstruction from Stereo Spherical
+Images," proceedings of the 10th International Conference on Computer
+Vision Theory and Applications. Berlin: Institute of Electrical and
+Electronics Engineers. Berlin, Germany, 2015.
+
+V Ila, L Polok, M Solony, P Zemcik, P Smrz, "Fast covariance recovery
+in incremental nonlinear least square solvers," proceedings of IEEE
+International Conference on Robotics and Automation (ICRA). Seatle,
+USA, 2015.
+
+L Polok, V Ila, P Smrz, "Fast Sparse Matrix Multiplication on GPU,"
+23rd High Performance Computing Symposium. Alexandria, USA, 2015
+
+L Polok, V Ila, P Smrz, "Fast Radix Sort for Sparse Linear Algebra
+on GPU," 22nd High Performance Computing Symposium. Tampa, USA, 2014
+
+L Polok, V Ila, M Solony, P Smrz and P Zemcik, "Incremental Block
+Cholesky Factorization for Nonlinear Least Squares in Robotics," in
+Proceedings of Robotics: Science and Systems 2013. MIT Press, 2013
+
+L Polok, M Solony, V Ila, P Smrz and P Zemcik, "Incremental Cholesky
+Factorization for Least Squares Problems in Robotics," in Proceedings
+of The 2013 IFAC Intelligent Autonomous Vehicles Symposium (IFAC). 2013.
+
+L Polok, M Solony, V Ila, P Zemcik, and P Smrz, "Efficient
+implementation for block matrix operations for nonlinear least squares
+problems in robotic applications," in Proceedings of the IEEE
+International Conference on Robotics and Automation. IEEE, 2013.
+
+L Polok, V Ila and P Smrz, "Cache Efficient Implementation for Block
+Matrix Operations," in Proceedings of the 21st High Performance
+Computing Symposium. ACM, 2013.
+
+=== Contact us ===
+
+If a need arises to contact the authors of this implementation, use:
+
+viorela.ila 'at' anu.edu.au or lukas 'at' lukas-polok.cz or
+isolony 'at' fit.vutbr.cz
