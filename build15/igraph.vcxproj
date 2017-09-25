@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7A79B6E1-595D-4934-9751-6B8FA4FB66AB}</ProjectGuid>
+    <RootNamespace>igraph</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>14.0.25431.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\bin\$(Configuration)\</OutDir>
+    <IntDir>igraph\$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>..\bin\$(Configuration)64\</OutDir>
+    <IntDir>igraph\$(Configuration)64\</IntDir>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\bin\$(Configuration)\</OutDir>
+    <IntDir>igraph\$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>..\bin\$(Configuration)64\</OutDir>
+    <IntDir>igraph\$(Configuration)64\</IntDir>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
+    <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../external/igraph/include/igraph;../external/igraph/src/igraph/plfit;../external/igraph/src/igraph;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../external/igraph/include/igraph;../external/igraph/src/igraph/plfit;../external/igraph/src/igraph;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(ProjectName)_64.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../external/igraph/include/igraph;../external/igraph/src/igraph/plfit;../external/igraph/src/igraph;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/MP /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../external/igraph/include/igraph;../external/igraph/src/igraph/plfit;../external/igraph/src/igraph;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(ProjectName)_64.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\external\igraph\src\igraph\adjlist.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\attributes.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\cliques.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\complex.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\cores.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\dqueue.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\heap.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\igraph_error.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\igraph_set.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\igraph_stack.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\interrupt.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\iterators.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\math.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\matrix.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\maximal_cliques.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\memory.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\other.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\plfit\error.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\plfit\gss.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\plfit\kolmogorov.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\plfit\lbfgs.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\plfit\options.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\plfit\plfit.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\plfit\zeta.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\progress.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\qsort.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\random.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\structure_generators.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\types.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\type_indexededgelist.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\vector.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\vector_ptr.c" />
+    <ClCompile Include="..\external\igraph\src\igraph\version.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\external\igraph\include\igraph\config.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_adjlist.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_arpack.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_array.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_array_pmt.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_attributes.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_bipartite.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_blas.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_centrality.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_cliques.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_cocitation.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_cohesive_blocks.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_community.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_complex.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_components.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_constants.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_constructors.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_conversion.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_datatype.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_dqueue.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_dqueue_pmt.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_eigen.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_epidemics.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_error.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_flow.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_foreign.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_games.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_graphlets.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_heap.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_heap_pmt.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_hrg.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_interface.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_interrupt.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_iterators.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_lapack.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_layout.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_matching.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_matrix.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_matrix_pmt.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_memory.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_microscopic_update.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_mixing.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_motifs.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_neighborhood.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_nongraph.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_operators.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_paths.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_pmt.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_pmt_off.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_progress.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_psumtree.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_qsort.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_random.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_revolver.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_scg.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_separators.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_sparsemat.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_spmatrix.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_stack.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_stack_pmt.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_statusbar.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_structural.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_strvector.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_threading.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_topology.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_transitivity.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_types.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_vector.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_vector_pmt.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_vector_ptr.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_vector_type.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_version.h" />
+    <ClInclude Include="..\external\igraph\include\igraph\igraph_visitor.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

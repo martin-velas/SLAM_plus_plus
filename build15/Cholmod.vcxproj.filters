@@ -1,0 +1,695 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\AMD">
+      <UniqueIdentifier>{192e8aab-c817-491b-baa4-fb3b0789c56d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CAMD">
+      <UniqueIdentifier>{29b01d43-4b2a-4ac9-a0e2-af7c2d5b7b27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CCOLAMD">
+      <UniqueIdentifier>{a51ed4e6-1c53-4a35-b130-908992475c6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\COLAMD">
+      <UniqueIdentifier>{8d4cafbc-a518-4b49-804f-776b654b7dce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CHOLMOD">
+      <UniqueIdentifier>{f97d43e0-27c8-46fd-95cc-795782834e95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CHOLMOD\Core">
+      <UniqueIdentifier>{90d7a25a-a6c7-4fff-b57a-aa4ca8912152}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CHOLMOD\Cholesky">
+      <UniqueIdentifier>{dad59ee3-8c93-421b-aa06-8346cafdb7e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CHOLMOD\MatrixOps">
+      <UniqueIdentifier>{9cd9aa67-ef3a-4678-8a7a-a54236e3e87d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CHOLMOD\Modify">
+      <UniqueIdentifier>{f8e34871-6843-4883-bec1-42833896acf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CHOLMOD\Partition">
+      <UniqueIdentifier>{a20d48d6-3d72-45d7-8ce6-593e2c59d5f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CHOLMOD\Supernodal">
+      <UniqueIdentifier>{cf58aea0-3898-4511-a924-606ae2a132c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CHOLMOD\Check">
+      <UniqueIdentifier>{a69f33cf-ccec-4391-84bc-170c2a098334}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SuiteSparse">
+      <UniqueIdentifier>{75f0a2e1-0795-4c90-abb0-6067fcc620d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\METIS">
+      <UniqueIdentifier>{1a6c5720-f4d2-4311-aed2-9fa249cd241e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GKlib">
+      <UniqueIdentifier>{f3649d6b-632f-480a-a714-389a70af22db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CAMD_DLONG">
+      <UniqueIdentifier>{1bc2ca68-bef9-41c2-99c5-2aae566959a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\AMD">
+      <UniqueIdentifier>{d56d4b5e-a8bd-4daa-90cf-55ec3f989840}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\CAMD">
+      <UniqueIdentifier>{c1c4fd68-4b2c-4a07-ad3d-07e66f4d488e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\CCOLAMD">
+      <UniqueIdentifier>{8c278e23-5637-4c36-aff0-23fae1a38e4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\COLAMD">
+      <UniqueIdentifier>{dd2e8109-3977-42ae-980d-fd3a2950b4a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SuiteSparse">
+      <UniqueIdentifier>{9d4a1373-daa9-4981-ae20-607c7eea05fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\METIS">
+      <UniqueIdentifier>{ef2bd056-8620-4926-868e-4d81dff7e494}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GKlib">
+      <UniqueIdentifier>{5c7368e1-a728-422d-9751-977d6de646e5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\cholmod\AMD\amd_1.c">
+      <Filter>Source Files\AMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\AMD\amd_2.c">
+      <Filter>Source Files\AMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\AMD\amd_aat.c">
+      <Filter>Source Files\AMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\AMD\amd_control.c">
+      <Filter>Source Files\AMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\AMD\amd_defaults.c">
+      <Filter>Source Files\AMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\AMD\amd_dump.c">
+      <Filter>Source Files\AMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\AMD\amd_global.c">
+      <Filter>Source Files\AMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\AMD\amd_info.c">
+      <Filter>Source Files\AMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\AMD\amd_order.c">
+      <Filter>Source Files\AMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\AMD\amd_post_tree.c">
+      <Filter>Source Files\AMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\AMD\amd_postorder.c">
+      <Filter>Source Files\AMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\AMD\amd_preprocess.c">
+      <Filter>Source Files\AMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\AMD\amd_valid.c">
+      <Filter>Source Files\AMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_1.c">
+      <Filter>Source Files\CAMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_2.c">
+      <Filter>Source Files\CAMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_aat.c">
+      <Filter>Source Files\CAMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_control.c">
+      <Filter>Source Files\CAMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_defaults.c">
+      <Filter>Source Files\CAMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_dump.c">
+      <Filter>Source Files\CAMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_global.c">
+      <Filter>Source Files\CAMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_info.c">
+      <Filter>Source Files\CAMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_order.c">
+      <Filter>Source Files\CAMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_postorder.c">
+      <Filter>Source Files\CAMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_preprocess.c">
+      <Filter>Source Files\CAMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD\camd_valid.c">
+      <Filter>Source Files\CAMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CCOLAMD\ccolamd.c">
+      <Filter>Source Files\CCOLAMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CCOLAMD\ccolamd_global.c">
+      <Filter>Source Files\CCOLAMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\COLAMD\colamd.c">
+      <Filter>Source Files\COLAMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\COLAMD\colamd_global.c">
+      <Filter>Source Files\COLAMD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_aat.c">
+      <Filter>Source Files\CHOLMOD\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_add.c">
+      <Filter>Source Files\CHOLMOD\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_band.c">
+      <Filter>Source Files\CHOLMOD\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_change_factor.c">
+      <Filter>Source Files\CHOLMOD\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_common.c">
+      <Filter>Source Files\CHOLMOD\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_complex.c">
+      <Filter>Source Files\CHOLMOD\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_copy.c">
+      <Filter>Source Files\CHOLMOD\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_dense.c">
+      <Filter>Source Files\CHOLMOD\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_error.c">
+      <Filter>Source Files\CHOLMOD\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_factor.c">
+      <Filter>Source Files\CHOLMOD\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_memory.c">
+      <Filter>Source Files\CHOLMOD\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_sparse.c">
+      <Filter>Source Files\CHOLMOD\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_transpose.c">
+      <Filter>Source Files\CHOLMOD\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_triplet.c">
+      <Filter>Source Files\CHOLMOD\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Core\cholmod_version.c">
+      <Filter>Source Files\CHOLMOD\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_amd.c">
+      <Filter>Source Files\CHOLMOD\Cholesky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_analyze.c">
+      <Filter>Source Files\CHOLMOD\Cholesky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_colamd.c">
+      <Filter>Source Files\CHOLMOD\Cholesky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_etree.c">
+      <Filter>Source Files\CHOLMOD\Cholesky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_factorize.c">
+      <Filter>Source Files\CHOLMOD\Cholesky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_postorder.c">
+      <Filter>Source Files\CHOLMOD\Cholesky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_rcond.c">
+      <Filter>Source Files\CHOLMOD\Cholesky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_resymbol.c">
+      <Filter>Source Files\CHOLMOD\Cholesky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_rowcolcounts.c">
+      <Filter>Source Files\CHOLMOD\Cholesky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_rowfac.c">
+      <Filter>Source Files\CHOLMOD\Cholesky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_solve.c">
+      <Filter>Source Files\CHOLMOD\Cholesky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Cholesky\cholmod_spsolve.c">
+      <Filter>Source Files\CHOLMOD\Cholesky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_drop.c">
+      <Filter>Source Files\CHOLMOD\MatrixOps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_horzcat.c">
+      <Filter>Source Files\CHOLMOD\MatrixOps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_norm.c">
+      <Filter>Source Files\CHOLMOD\MatrixOps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_scale.c">
+      <Filter>Source Files\CHOLMOD\MatrixOps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_sdmult.c">
+      <Filter>Source Files\CHOLMOD\MatrixOps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_ssmult.c">
+      <Filter>Source Files\CHOLMOD\MatrixOps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_submatrix.c">
+      <Filter>Source Files\CHOLMOD\MatrixOps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_symmetry.c">
+      <Filter>Source Files\CHOLMOD\MatrixOps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\MatrixOps\cholmod_vertcat.c">
+      <Filter>Source Files\CHOLMOD\MatrixOps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Modify\cholmod_rowadd.c">
+      <Filter>Source Files\CHOLMOD\Modify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Modify\cholmod_rowdel.c">
+      <Filter>Source Files\CHOLMOD\Modify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Modify\cholmod_updown.c">
+      <Filter>Source Files\CHOLMOD\Modify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Partition\cholmod_camd.c">
+      <Filter>Source Files\CHOLMOD\Partition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Partition\cholmod_ccolamd.c">
+      <Filter>Source Files\CHOLMOD\Partition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Partition\cholmod_csymamd.c">
+      <Filter>Source Files\CHOLMOD\Partition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Partition\cholmod_metis.c">
+      <Filter>Source Files\CHOLMOD\Partition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Partition\cholmod_nesdis.c">
+      <Filter>Source Files\CHOLMOD\Partition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Supernodal\cholmod_super_numeric.c">
+      <Filter>Source Files\CHOLMOD\Supernodal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Supernodal\cholmod_super_solve.c">
+      <Filter>Source Files\CHOLMOD\Supernodal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Supernodal\cholmod_super_symbolic.c">
+      <Filter>Source Files\CHOLMOD\Supernodal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Check\cholmod_check.c">
+      <Filter>Source Files\CHOLMOD\Check</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Check\cholmod_read.c">
+      <Filter>Source Files\CHOLMOD\Check</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CHOLMOD\Check\cholmod_write.c">
+      <Filter>Source Files\CHOLMOD\Check</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\SuiteSparse\SuiteSparse_config.c">
+      <Filter>Source Files\SuiteSparse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\auxapi.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\balance.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\bucketsort.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\checkgraph.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\coarsen.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\compress.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\contig.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\debug.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\fm.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\fortran.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\frename.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\gklib.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\graph.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\initpart.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\kmetis.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\kwayfm.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\kwayrefine.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\mcutil.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\mesh.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\meshpart.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\minconn.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\mincover.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\mmd.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\ometis.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\options.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\parmetis.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\pmetis.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\refine.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\separator.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\sfm.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\srefine.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\stat.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\timing.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\util.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\METIS\wspace.c">
+      <Filter>Source Files\METIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\b64.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\blas.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\csr.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\error.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\evaluate.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\fkvkselect.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\fs.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\getopt.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\gkregex.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\graph.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\htable.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\io.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\itemsets.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\mcore.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\memory.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\omp.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\pdb.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\pqueue.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\random.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\rw.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\seq.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\sort.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\string.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\timers.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\tokenizer.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\GKlib\util.c">
+      <Filter>Source Files\GKlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_1.c">
+      <Filter>Source Files\CAMD_DLONG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_2.c">
+      <Filter>Source Files\CAMD_DLONG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_aat.c">
+      <Filter>Source Files\CAMD_DLONG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_control.c">
+      <Filter>Source Files\CAMD_DLONG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_defaults.c">
+      <Filter>Source Files\CAMD_DLONG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_dump.c">
+      <Filter>Source Files\CAMD_DLONG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_info.c">
+      <Filter>Source Files\CAMD_DLONG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_order.c">
+      <Filter>Source Files\CAMD_DLONG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_postorder.c">
+      <Filter>Source Files\CAMD_DLONG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_preprocess.c">
+      <Filter>Source Files\CAMD_DLONG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cholmod\CAMD_DLONG\camd_valid.c">
+      <Filter>Source Files\CAMD_DLONG</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\cholmod\cholmod.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\cholmod_blas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\cholmod_check.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\cholmod_cholesky.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\cholmod_complexity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\cholmod_config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\cholmod_core.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\cholmod_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\cholmod_io64.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\cholmod_matrixops.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\cholmod_modify.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\cholmod_partition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\cholmod_supernodal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\cholmod_template.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\AMD\amd.h">
+      <Filter>Header Files\AMD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\AMD\amd_internal.h">
+      <Filter>Header Files\AMD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\CAMD\camd.h">
+      <Filter>Header Files\CAMD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\CAMD\camd_internal.h">
+      <Filter>Header Files\CAMD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\CCOLAMD\ccolamd.h">
+      <Filter>Header Files\CCOLAMD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\COLAMD\colamd.h">
+      <Filter>Header Files\COLAMD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\SuiteSparse\SuiteSparse_config.h">
+      <Filter>Header Files\SuiteSparse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\METIS\defs.h">
+      <Filter>Header Files\METIS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\METIS\gklib_defs.h">
+      <Filter>Header Files\METIS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\METIS\gklib_rename.h">
+      <Filter>Header Files\METIS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\METIS\macros.h">
+      <Filter>Header Files\METIS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\METIS\metis.h">
+      <Filter>Header Files\METIS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\METIS\metislib.h">
+      <Filter>Header Files\METIS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\METIS\proto.h">
+      <Filter>Header Files\METIS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\METIS\rename.h">
+      <Filter>Header Files\METIS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\METIS\stdheaders.h">
+      <Filter>Header Files\METIS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\METIS\struct.h">
+      <Filter>Header Files\METIS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\gk_arch.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\gk_defs.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\gk_externs.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\gk_getopt.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\gk_macros.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\gk_mkblas.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\gk_mkmemory.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\gk_mkpqueue.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\gk_mkpqueue2.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\gk_mkrandom.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\gk_mksort.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\gk_mkutils.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\gk_proto.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\gk_struct.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\gk_types.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\GKlib.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\gkregex.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\ms_inttypes.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\ms_stat.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\cholmod\GKlib\ms_stdint.h">
+      <Filter>Header Files\GKlib</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

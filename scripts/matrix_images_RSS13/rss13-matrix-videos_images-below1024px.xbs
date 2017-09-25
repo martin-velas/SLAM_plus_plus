@@ -1,0 +1,4 @@
+resize( 1 quick 200% 200% 0 1 0 )
+resize( 1 lanczos 1024 1024 -1 1 0 )
+settings( 0 1 0 0 0 0 0 )
+output( png 0 6 )

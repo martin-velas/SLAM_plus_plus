@@ -1,0 +1,27 @@
+Note that config.h was slightly modified to apply the following lines only if built using Visual Studio:
+
+#if defined(_MSC_VER) && !defined(__MWERKS__)
+#pragma warning (disable:4244)
+
+#define strcasecmp _stricmp
+
+#if _MSC_VER < 1900
+#define snprintf igraph_i_snprintf
+#define isnan _isnan
+#endif // _MSC_VER < 1900
+#define finite _finite
+#define hypot _hypot
+#include <float.h>
+
+/* To turn off some warnings about fscanf, strcpy etc */
+#define _CRT_SECURE_NO_WARNINGS 1
+#endif // _MSC_VER && !__MWERKS__
+
+The following two lines were added at the end, to avoid the g++ error:
+"expected '=', ',', ';', 'asm' or '__attribute__' before 'igraph_interruption_handler_t'".
+
+#undef IGRAPH_THREAD_LOCAL
+#define IGRAPH_THREAD_LOCAL
+
+Additionally, igraph_error.h was modified to include config.h, otherwise g++ gave:
+"expected '=', ',', ';', 'asm' or '__attribute__' before 'igraph_interruption_handler_t'".

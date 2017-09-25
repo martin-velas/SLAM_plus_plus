@@ -1,0 +1,16 @@
+.directory td.entry {
+	white-space: normal;
+	/*width: 50%;*/
+	min-width: 512px;
+}
+
+.code-span {
+	background-color: #FBFCFD;
+	border: 1px solid #C4CFE5;
+}
+
+/*.formulaInl {
+	transform: scale(0.5, 0.5);
+	-ms-transform: scale(0.5, 0.5);
+	-webkit-transform: scale(0.5, 0.5);
+}*/ /* does not work properly, leaves space around the formulas */
