@@ -153,7 +153,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <StringPooling>true</StringPooling>
-      <AdditionalOptions>/bigobj /Zm500 /MP /FS</AdditionalOptions>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>CSparse3.lib;CxSparse.lib;eigen3.lib;cholmod.lib;SLAMpp_base.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -182,7 +182,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <StringPooling>true</StringPooling>
-      <AdditionalOptions>/bigobj /Zm500 /MP /FS</AdditionalOptions>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>CSparse3_64.lib;eigen3_64.lib;CxSparse_64.lib;CHOLMOD_64.lib;SLAMpp_base_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -223,7 +223,6 @@
   <ItemGroup>
     <ClInclude Include="..\include\slam\2DSolverBase.h" />
     <ClInclude Include="..\include\slam\3DSolverBase.h" />
-    <ClInclude Include="..\include\slam\BAMarginals.h" />
     <ClInclude Include="..\include\slam\BaseInterface.h" />
     <ClInclude Include="..\include\slam\BaseTypes.h" />
     <ClInclude Include="..\include\slam\BaseTypes_Binary.h" />

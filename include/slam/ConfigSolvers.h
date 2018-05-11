@@ -43,7 +43,7 @@
 #include "slam/NonlinearSolver_A.h"
 #include "slam/NonlinearSolver_Lambda.h"
 #include "slam/NonlinearSolver_Lambda_LM.h"
-//#include "slam/NonlinearSolver_Lambda_DL.h" // not yet in v2.2
+#include "slam/NonlinearSolver_Lambda_DL.h"
 #include "slam/NonlinearSolver_FastL.h"
 // hint - disable or enable solvers at will
 

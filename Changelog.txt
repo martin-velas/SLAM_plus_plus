@@ -1,3 +1,7 @@
+Changes from 2.2 to 2.3 (2017-10-15):
+
+* Added the 3DV demo and the dog leg (DL) solver
+
 Changes from 2.1 to 2.2 (2017-05-15):
 
 * Added robust functions.

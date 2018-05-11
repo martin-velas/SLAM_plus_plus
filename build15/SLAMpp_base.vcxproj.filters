@@ -232,9 +232,6 @@
     <ClInclude Include="..\include\slam\TypeName.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\slam\BAMarginals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\include\slam\BlockMatrix.inl">

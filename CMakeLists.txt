@@ -2,7 +2,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
 IF(COMMAND cmake_policy)
 	CMAKE_POLICY(SET CMP0003 NEW)
 	CMAKE_POLICY(SET CMP0012 NEW) # silence the FindOpenMP if(true) warning
-	#CMAKE_POLICY(SET CMP0014 OLD) # working on a secret project, are we? this helps to get rid of warnings
+	CMAKE_POLICY(SET CMP0014 OLD) # working on a secret project, are we? this helps to get rid of warnings
 ENDIF(COMMAND cmake_policy)
 
 PROJECT(SLAM_plus_plus)

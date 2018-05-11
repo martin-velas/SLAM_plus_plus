@@ -766,7 +766,7 @@ public:
 		// make sure the dimensionality is correct (might not be)
 		// this fails with const vertices, for obvious reasons. with the thunk tables this can be safely removed.
 
-#ifdef CVPR_DUMP_REPROJECTION_ERROR // defined from the CMake commandline
+#ifdef THREEDV_DUMP_REPROJECTION_ERROR // defined from the CMake commandline
 		Eigen::Vector2d v_error;
 		CSim3Jacobians::Project_P2C_LocalXYZ_Self(m_p_vertex0->r_v_State(), m_p_camera->v_Intrinsics(), v_error);
 		v_error -= m_v_measurement;
@@ -774,7 +774,7 @@ public:
 		if(v_error.norm() > 5000)
 			m_t_sigma_inv *= 0.0; // "disable" this edge
 		// debug - see magnitudes of the errors
-#endif // CVPR_DUMP_REPROJECTION_ERROR
+#endif // THREEDV_DUMP_REPROJECTION_ERROR
 	}
 
 	/**
@@ -897,7 +897,7 @@ public:
 		// make sure the dimensionality is correct (might not be)
 		// this fails with const vertices, for obvious reasons. with the thunk tables this can be safely removed.
 
-#ifdef CVPR_DUMP_REPROJECTION_ERROR // defined from the CMake commandline
+#ifdef THREEDV_DUMP_REPROJECTION_ERROR // defined from the CMake commandline
 		Eigen::Vector2d v_error;
 		CSim3Jacobians::Project_P2C_LocalXYZ_Other(m_vertex_ptr.Get<0>()->r_v_State(), // landmark
 			m_vertex_ptr.Get<1>()->r_v_State(), m_vertex_ptr.Get<1>()->v_Intrinsics(), // observing camera and its intrinsics
@@ -907,7 +907,7 @@ public:
 		if(v_error.norm() > 5000)
 			m_t_sigma_inv *= 0.0; // "disable" this edge
 		// debug - see magnitudes of the errors
-#endif // CVPR_DUMP_REPROJECTION_ERROR
+#endif // THREEDV_DUMP_REPROJECTION_ERROR
 	}
 
 	/**
@@ -2279,7 +2279,7 @@ public:
 		// make sure the dimensionality is correct (might not be)
 		// this fails with const vertices, for obvious reasons. with the thunk tables this can be safely removed.
 
-#ifdef CVPR_DUMP_REPROJECTION_ERROR // defined from the CMake commandline
+#ifdef THREEDV_DUMP_REPROJECTION_ERROR // defined from the CMake commandline
 		Eigen::Vector2d v_error;
 		CSim3Jacobians::Project_P2C_LocalXYZ_Other(m_vertex_ptr.Get<0>()->r_v_State(), // landmark
 			m_vertex_ptr.Get<1>()->r_v_State(), m_vertex_ptr.Get<1>()->v_Intrinsics(), // observing camera and its intrinsics
@@ -2289,7 +2289,7 @@ public:
 		if(v_error.norm() > 5000)
 			m_t_sigma_inv *= 0.0; // "disable" this edge
 		// debug - see magnitudes of the errors
-#endif // CVPR_DUMP_REPROJECTION_ERROR
+#endif // THREEDV_DUMP_REPROJECTION_ERROR
 	}
 
 	/**
@@ -2528,7 +2528,7 @@ public:
 		// make sure the dimensionality is correct (might not be)
 		// this fails with const vertices, for obvious reasons. with the thunk tables this can be safely removed.
 
-#ifdef CVPR_DUMP_REPROJECTION_ERROR // defined from the CMake commandline
+#ifdef THREEDV_DUMP_REPROJECTION_ERROR // defined from the CMake commandline
 		Eigen::Vector2d v_error;
 		CSim3Jacobians::Project_P2C_LocalXYZ_Other(m_vertex_ptr.Get<0>()->r_v_State(), // landmark
 			m_vertex_ptr.Get<1>()->r_v_State(), m_vertex_ptr.Get<1>()->v_Intrinsics(), // observing camera and its intrinsics
@@ -2538,7 +2538,7 @@ public:
 		if(v_error.norm() > 5000)
 			m_t_sigma_inv *= 0.0; // "disable" this edge
 		// debug - see magnitudes of the errors
-#endif // CVPR_DUMP_REPROJECTION_ERROR
+#endif // THREEDV_DUMP_REPROJECTION_ERROR
 	}
 
 	/**

@@ -223,9 +223,6 @@
     <ClInclude Include="..\include\slam\Unused.h">
       <Filter>Header Files\slam</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\slam\BAMarginals.h">
-      <Filter>Header Files\slam</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\include\slam\BlockMatrix.h">

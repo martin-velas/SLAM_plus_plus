@@ -42,7 +42,7 @@ $ make
 
 Will finish the building process. You should now be able to run by typing:
 
-$ ../bin/SLAM_plus_plus --help 
+$ ../bin/slam_plus_plus --help 
 
 You can also use fast parallel build, like this:
 
@@ -78,6 +78,10 @@ Data can be downloaded from SourceForge, at:
 http://sourceforge.net/projects/slam-plus-plus/files/data/
 
 === References (please cite these if using this software) ===
+
+V Ila, L Polok, M Solony and K Istenic, "Fast Incremental Bundle
+Adjustment with Covariance Recovery", proceedings of the International
+Conference on 3D Vision (3DV). Qingdao, China, 2017.
 
 L Polok and P Smrž, "Pivoting Strategy for Fast LU decomposition
 of Sparse Block Matrices", proceedings of the 25th High Performance

@@ -1321,7 +1321,7 @@ public:
 			{
 				const csi *__restrict p_copy_end = ((b_output_diagonal)? ((b_upper_triangular)?
 					Ai + (p1 + n_add_nnz) : Ai + p_transpose_col_off[i]) : p_diag); // either reuse p_transpose_col_off if we have it or use n_add_nnz if we don't
-#if defined(_DEBUG) && defined(_MSC_VER) && !defined(__MWERKS__) && _MSC_VER >= 1700
+#if defined(_DEBUG) && defined(_MSC_VER) && !defined(__MWERKS__) && _MSC_VER >= 1600
 				// visual studio 2015 is giving a hard time with this warning; personally I dont like having
 				// two versions of the code for debug / release but there seems to be no other (portable) way
 				stdext::checked_array_iterator<const csi*> Ai_checked(Ai + p1, p2 - p1); // make sure we only access inside this col

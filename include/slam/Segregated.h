@@ -342,11 +342,11 @@ public:
 	/**
 	 *	@brief constant iterator type
 	 */
-#if defined(__SEGREGATED_MAKE_CHECKED_ITERATORS) && defined(_MSC_VER) && !defined(__MWERKS__) && _MSC_VER >= 1400 && _MSC_VER < 1700 // not sure if the max _MSC_VER is low enough; if you get errors on the line below, decrement it
+#if defined(__SEGREGATED_MAKE_CHECKED_ITERATORS) && defined(_MSC_VER) && !defined(__MWERKS__) && _MSC_VER >= 1400 && _MSC_VER < 1600 // not sure if the max _MSC_VER is low enough; if you get errors on the line below, decrement it
 	class CConstIterator : public std::_Ranit<_Ty, ptrdiff_t, const _Ty*, const _Ty&> { // MSVC secure iterator bullshit
-#else // __SEGREGATED_MAKE_CHECKED_ITERATORS && _MSC_VER && !__MWERKS__ && _MSC_VER >= 1400 && _MSC_VER < 1700
+#else // __SEGREGATED_MAKE_CHECKED_ITERATORS && _MSC_VER && !__MWERKS__ && _MSC_VER >= 1400 && _MSC_VER < 1600
 	class CConstIterator {
-#endif // __SEGREGATED_MAKE_CHECKED_ITERATORS && _MSC_VER && !__MWERKS__ && _MSC_VER >= 1400 && _MSC_VER < 1700
+#endif // __SEGREGATED_MAKE_CHECKED_ITERATORS && _MSC_VER && !__MWERKS__ && _MSC_VER >= 1400 && _MSC_VER < 1600
 	friend class fap_base;
 	public:
 		typedef _Ty value_type; /**< @brief data type being accessed */
@@ -359,9 +359,9 @@ public:
 #elif defined(_MSC_VER) && !defined(__MWERKS__) && _MSC_VER >= 1400
 		typedef std::random_access_iterator_tag iterator_category; /**< @brief iterator category (MSVC) */
 #if defined(__SEGREGATED_MAKE_CHECKED_ITERATORS) && _SECURE_SCL
-#if _MSC_VER < 1700 // not sure if the max _MSC_VER is low enough; if you get errors on the line below, decrement it
+#if _MSC_VER < 1600 // not sure if the max _MSC_VER is low enough; if you get errors on the line below, decrement it
 		typedef std::_Range_checked_iterator_tag _Checked_iterator_category; /**< @brief checked iterator category (MSVC 90) */
-#else //  _MSC_VER < 1700
+#else //  _MSC_VER < 1600
 #if 0
 		typedef pointer _Unchecked_type; /**< @brief unchecked iterator type, marks a checked iterator (VS 2015) */
 
@@ -412,7 +412,7 @@ public:
 			return *this; // pointer to the element
 		}
 #endif // 0
-#endif //  _MSC_VER < 1700
+#endif //  _MSC_VER < 1600
 #endif // __SEGREGATED_MAKE_CHECKED_ITERATORS && _SECURE_SCL
 #else // _MSC_VER && !__MWERKS__ && _MSC_VER >= 1400
 		typedef std::random_access_iterator_tag iterator_category; /**< @brief iterator category (*nix) */
@@ -697,9 +697,9 @@ public:
 #if defined(_MSC_VER) && !defined(__MWERKS__) && _MSC_VER >= 1400
 		typedef std::random_access_iterator_tag iterator_category; /**< @brief iterator category (MSVC) */
 #if defined(__SEGREGATED_MAKE_CHECKED_ITERATORS) && _SECURE_SCL
-#if _MSC_VER < 1700 // not sure if the max _MSC_VER is low enough; if you get errors on the line below, decrement it
+#if _MSC_VER < 1600 // not sure if the max _MSC_VER is low enough; if you get errors on the line below, decrement it
 		typedef std::_Range_checked_iterator_tag _Checked_iterator_category; /**< @brief checked iterator category (MSVC 90) */
-#else //  _MSC_VER < 1700
+#else //  _MSC_VER < 1600
 #if 0
 		typedef pointer _Unchecked_type; /**< @brief unchecked iterator type, marks a checked iterator (VS 2015) */
 
@@ -750,7 +750,7 @@ public:
 			return *this; // pointer to the element
 		}
 #endif // 0
-#endif //  _MSC_VER < 1700
+#endif //  _MSC_VER < 1600
 #endif // __SEGREGATED_MAKE_CHECKED_ITERATORS && _SECURE_SCL
 #endif // _MSC_VER && !__MWERKS__ && _MSC_VER >= 1400
 	public:

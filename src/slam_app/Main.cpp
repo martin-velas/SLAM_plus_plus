@@ -21,7 +21,6 @@ int n_dummy_param = 0;
 /**< @brief a dummy parameter, used as a convenient commandline input, intended for debugging / testing */
 
 #include "slam_app/Main.h"
-#include "slam/SE3_Types.h"
 
 /**
  *	@def p_s_Number_Suffix
@@ -665,8 +664,7 @@ void PrintHelp()
 		"--iBA-save-intermediates|-iBAsi    enables saving of intermediate solutions at\n"
 		"                  every step in incremental BA (disabled by default)\n"
 		"--iBA-save-matrices|-iBAsm    enables saving of system matrices at every step in\n"
-		"                  incremental BA (disabled by default)\n"
-	    "--robust-outlier-thresh    threshold for outlier detection\n");
+		"                  incremental BA (disabled by default)\n");
 }
 
 void TCommandLineArgs::Defaults()
@@ -804,10 +802,8 @@ bool TCommandLineArgs::Parse(int n_arg_num, const char **p_arg_list)
 			f_final_optimization_threshold = atof(p_arg_list[++ i]);
 		else if(!strcmp(p_arg_list[i], "--dogleg-step-size") || !strcmp(p_arg_list[i], "-dlss"))
 			f_dogleg_step_size = atof(p_arg_list[++ i]);
-        else if(!strcmp(p_arg_list[i], "--dogleg-step-threshold") || !strcmp(p_arg_list[i], "-dlst"))
-            f_dogleg_step_threshold = atof(p_arg_list[++ i]);
-        else if(!strcmp(p_arg_list[i], "--robust-outlier-thresh"))
-            CEdgePoseLandmark3D::ROBUST_THRESH = atof(p_arg_list[++ i]);
+		else if(!strcmp(p_arg_list[i], "--dogleg-step-threshold") || !strcmp(p_arg_list[i], "-dlst"))
+			f_dogleg_step_threshold = atof(p_arg_list[++ i]);
 		else if(!strcmp(p_arg_list[i], "--omp-set-num-threads"))
 			n_omp_threads = atol(p_arg_list[++ i]);
 		else if(!strcmp(p_arg_list[i], "--omp-set-dynamic"))

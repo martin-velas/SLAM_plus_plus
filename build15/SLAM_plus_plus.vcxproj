@@ -145,7 +145,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalOptions>/bigobj /Zm500 /MP /FS</AdditionalOptions>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
       <Optimization>Full</Optimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -184,7 +184,7 @@
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
     <ClCompile>
-      <AdditionalOptions>/bigobj /Zm500 /MP /FS</AdditionalOptions>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -318,7 +318,6 @@
     <CustomBuild Include="..\external\Ceres\internal\ceres\triplet_sparse_matrix.h" />
     <ClInclude Include="..\include\slam\2DSolverBase.h" />
     <ClInclude Include="..\include\slam\3DSolverBase.h" />
-    <ClInclude Include="..\include\slam\BAMarginals.h" />
     <ClInclude Include="..\include\slam\BaseInterface.h" />
     <ClInclude Include="..\include\slam\BaseTypes.h" />
     <ClInclude Include="..\include\slam\BaseTypes_Binary.h" />

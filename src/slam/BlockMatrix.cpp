@@ -10479,7 +10479,7 @@ bool CUberBlockMatrix::LUTo(CUberBlockMatrix &r_L, CUberBlockMatrix &r_U, size_t
 
 				_ASSERTE(!col_pattern[n_row_j]);
 				col_pattern[n_row_j].flip(); // set this output to one
-				r_t_dest_col_U.block_list.push_back(TColumn::TBlockEntry(n_row_j, 0)); // add it to the list
+				r_t_dest_col_U.block_list.push_back(TColumn::TBlockEntry(n_row_j, (double*)0)); // add it to the list
 				dense_col.middleRows(n_row_j_org, n_row_j_height) =
 					_TyConstMatrixXdRef(r_t_col.block_list[j].second, n_row_j_height, n_col_k_width);
 				// stream in new data (if sparse, not neccessarily all the blocks would be nonzero)
@@ -10493,7 +10493,7 @@ bool CUberBlockMatrix::LUTo(CUberBlockMatrix &r_L, CUberBlockMatrix &r_U, size_t
 
 				_ASSERTE(!col_pattern[n_row_j]);
 				col_pattern[n_row_j].flip(); // set this output to one
-				r_t_dest_col_L.block_list.push_back(TColumn::TBlockEntry(n_row_j, 0)); // add it to the list
+				r_t_dest_col_L.block_list.push_back(TColumn::TBlockEntry(n_row_j, (double*)0)); // add it to the list
 				dense_col.middleRows(n_row_j_org, n_row_j_height) =
 					_TyConstMatrixXdRef(r_t_col.block_list[j].second, n_row_j_height, n_col_k_width);
 				// stream in new data (if sparse, not neccessarily all the blocks would be nonzero)
@@ -10514,12 +10514,12 @@ bool CUberBlockMatrix::LUTo(CUberBlockMatrix &r_L, CUberBlockMatrix &r_U, size_t
 				dense_col.middleRows(n_row_p_org, n_row_p_height) =
 					_TyConstMatrixXdRef(r_t_col.block_list[j].second, n_row_j_height, n_col_k_width);
 				if(n_row_p < k)
-					r_t_dest_col_U.block_list.push_back(TColumn::TBlockEntry(n_row_p, 0)); // add it to the list
+					r_t_dest_col_U.block_list.push_back(TColumn::TBlockEntry(n_row_p, (double*)0)); // add it to the list
 				else if(!b_partial_interblock_pivoting || n_row_p > k)
-					r_t_dest_col_L.block_list.push_back(TColumn::TBlockEntry(n_row_p, 0)); // add it to the list
+					r_t_dest_col_L.block_list.push_back(TColumn::TBlockEntry(n_row_p, (double*)0)); // add it to the list
 				else {
 					r_t_dest_col_L.block_list.insert(r_t_dest_col_L.block_list.begin(),
-						TColumn::TBlockEntry(n_row_p, 0)); // add it to *the front* of the list (we assume L is unordered, except that the natural pivot is always the first)
+						TColumn::TBlockEntry(n_row_p, (double*)0)); // add it to *the front* of the list (we assume L is unordered, except that the natural pivot is always the first)
 				}
 				// stream in new data (if sparse, not neccessarily all the blocks would be nonzero)
 			}
@@ -10573,7 +10573,7 @@ bool CUberBlockMatrix::LUTo(CUberBlockMatrix &r_L, CUberBlockMatrix &r_U, size_t
 						col_pattern[n_row_i].flip(); // set this output to one
 						r_t_dest_col_U.block_list.insert(std::lower_bound(r_t_dest_col_U.block_list.begin(),
 							r_t_dest_col_U.block_list.end(), n_row_i, CCompareBlockRow()),
-							TColumn::TBlockEntry(n_row_i, 0)); // add it to the list
+							TColumn::TBlockEntry(n_row_i, (double*)0)); // add it to the list
 						++ m; // we just added one block worth of fill-in in the current column of U, will need to process it as well
 						// t_odo - use lower_bound to add it to a sorted location; we have added it below i though so no need to track that change
 
@@ -10589,9 +10589,9 @@ bool CUberBlockMatrix::LUTo(CUberBlockMatrix &r_L, CUberBlockMatrix &r_U, size_t
 						col_pattern[n_row_i].flip(); // set this output to one
 						if(b_partial_interblock_pivoting && n_row_i == k) {
 							r_t_dest_col_L.block_list.insert(r_t_dest_col_L.block_list.begin(),
-								TColumn::TBlockEntry(n_row_i, 0)); // add it to the front of the list // todo - is this needed? will sort the list below anyways
+								TColumn::TBlockEntry(n_row_i, (double*)0)); // add it to the front of the list // todo - is this needed? will sort the list below anyways
 						} else
-							r_t_dest_col_L.block_list.push_back(TColumn::TBlockEntry(n_row_i, 0)); // add it to the list (unsorted)
+							r_t_dest_col_L.block_list.push_back(TColumn::TBlockEntry(n_row_i, (double*)0)); // add it to the list (unsorted)
 						_ASSERTE(n_row_j != n_row_i); // otherwise would alias
 						ik_block.noalias() = -ij_block * jk_block; // new block
 					} else {
@@ -10623,7 +10623,7 @@ bool CUberBlockMatrix::LUTo(CUberBlockMatrix &r_L, CUberBlockMatrix &r_U, size_t
 		bool b_had_empty_col = false;
 		if(r_t_dest_col_L.block_list.empty() || // either completely empty
 		   (!b_partial_interblock_pivoting && r_t_dest_col_L.block_list.front().first != k)) { // or missing a diagonal block while not inter-block pivoting (would not be able to use the off-diag block as a pivot then)
-			r_t_dest_col_L.block_list.insert(r_t_dest_col_L.block_list.begin(), TColumn::TBlockEntry(k, 0)); // put it to front (to maintain ordered L if not inter-block pivoting)
+			r_t_dest_col_L.block_list.insert(r_t_dest_col_L.block_list.begin(), TColumn::TBlockEntry(k, (double*)0)); // put it to front (to maintain ordered L if not inter-block pivoting)
 			dense_col.middleRows(n_col_k_org, n_col_k_width).setZero();
 			_ASSERTE(!col_pattern[k]);
 			col_pattern[k].flip(); // !!

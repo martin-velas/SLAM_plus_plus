@@ -34,16 +34,6 @@ int LU_Test(CUberBlockMatrix &lambda, bool b_clflush, bool b_no_FBS, bool b_coun
 	bool b_intrablock_full_piv = true, bool b_interblock_part_piv = true,
 	double f_min_piv_gain = 0, int n_amd_type = 2, bool b_symperm = true)
 {
-	//bool b_block_bench_style_a = false;
-	//bool b_Eigen_full_piv = false;
-	;
-	;
-	//int n_block_size = 3;
-	;
-	;
-	;
-	// test configuration
-
 	printf("b_clflush = %s\n", (b_clflush)? "true" : "false");
 	printf("b_no_FBS = %s\n", (b_no_FBS)? "true" : "false");
 	printf("b_count_FLOPs = %s\n", (b_count_FLOPs)? "true" : "false");
@@ -372,9 +362,18 @@ int main(int n_arg_num, const char **p_arg_list)
 	printf("done (needs %.2f MB)\n", lambda.n_Allocation_Size_NoLastPage() / 1048576.0); fflush(stdout);
 	// load lambda (from BA)
 
+	printf("debug: block sizes in lambda: ");
+	fbs_ut::CDummyAlgSpecializer::TBSMix t_block_sizes =
+		fbs_ut::CDummyAlgSpecializer::t_BlockSize_Mixture(lambda);
+	fbs_ut::CDummyAlgSpecializer::Print_BlockSizes(t_block_sizes);
+	printf("\n");
+	// debug - see block sizes
+
 	if(!b_test_LU_only)
-		lambda.t_GetBlock_Log(0, 0) += Eigen::MatrixXd::Identity(6, 6) * 10000;
+		lambda.t_GetBlock_Log(0, 0).diagonal().array() += /*Eigen::MatrixXd::Identity(6, 6) **/ 10000; // just add to the diagonal, will work with any size
 	// hack - raise the first block to avoid not pos def in SC
+	// note that this is only needed to handle all 3rd party datasets. there is no such offset applied in SLAM++ solver
+	// the alternative would be to use modified Cholesky or LDL^T instead, then positive-definiteness is not required
 
 	{
 		const char *p_s_filename_pat = "lambda_raw";
@@ -391,7 +390,7 @@ int main(int n_arg_num, const char **p_arg_list)
 			remove(p_s_filename); // avoid keeping images from previous runs, would get confusing
 		sprintf(p_s_filename, "sc_0.0_%s_SS_AA.tga", p_s_filename_pat);
 		if(!p_mat || !CDebug::Dump_SparseMatrix_Subsample_AA(p_s_filename,
-		   p_mat, 0, /*640*/8192, b_symmetric))
+		   p_mat, 0, 640/*8192*/, b_symmetric))
 			remove(p_s_filename); // avoid keeping images from previous runs, would get confusing
 		cs_spfree(p_mat);
 	}
@@ -473,23 +472,58 @@ int main(int n_arg_num, const char **p_arg_list)
 	double f_schur_perm_time = 0;
 	timer.Accum_DiffSample(f_schur_perm_time);
 
-	typedef MakeTypelist_Safe((Eigen::Matrix<double, 6, 6>)) SC_BlockSizes;
-	typedef MakeTypelist_Safe((Eigen::Matrix<double, 6, 6>)) A_BlockSizes;
+	std::sort(t_block_sizes.begin(), t_block_sizes.end());
+	const bool b_use_FBS36 = (t_block_sizes.size() == 4 &&
+		t_block_sizes[0] == std::make_pair(size_t(3), size_t(3)) &&
+		t_block_sizes[1] == std::make_pair(size_t(3), size_t(6)) &&
+		t_block_sizes[2] == std::make_pair(size_t(6), size_t(3)) &&
+		t_block_sizes[3] == std::make_pair(size_t(6), size_t(6))) ||
+		(t_block_sizes.size() == 1 && t_block_sizes[0] == std::make_pair(size_t(6), size_t(6))) ||
+		(t_block_sizes.size() == 1 && t_block_sizes[0] == std::make_pair(size_t(3), size_t(3)));
+	const bool b_use_FBS37 = (t_block_sizes.size() == 4 &&
+		t_block_sizes[0] == std::make_pair(size_t(3), size_t(3)) &&
+		t_block_sizes[1] == std::make_pair(size_t(3), size_t(7)) &&
+		t_block_sizes[2] == std::make_pair(size_t(7), size_t(3)) &&
+		t_block_sizes[3] == std::make_pair(size_t(7), size_t(7))) ||
+		(t_block_sizes.size() == 1 && t_block_sizes[0] == std::make_pair(size_t(7), size_t(7)));
+	if(!b_use_FBS36 && !b_use_FBS37) {
+		fprintf(stderr, "error: could not choose an appropriate block mixture, unable to continue\n");
+		return -1;
+	}
+	// decide which specialization to use (this would have been better handled by wrapping
+	// the rest of main() in fbs_ut::CDummyAlgSpecializer::CData::Run(). this was originally only
+	// written for 6D poses and 3D landmarks so it was not an issue before. 3DV 2017 added Sim(3)
+	// poses and support was needed here as well. too lazy to rewrite the whole thing properlys)
+
+	typedef MakeTypelist_Safe((Eigen::Matrix<double, 6, 6>)) SC_BlockSizes36;
+	typedef MakeTypelist_Safe((Eigen::Matrix<double, 6, 6>)) A_BlockSizes36;
+	typedef MakeTypelist_Safe((Eigen::Matrix<double, 7, 7>)) SC_BlockSizes37;
+	typedef MakeTypelist_Safe((Eigen::Matrix<double, 7, 7>)) A_BlockSizes37;
+	//typedef MakeTypelist_Safe((Eigen::Matrix<double, 6, 6>, Eigen::Matrix<double, 7, 7>, Eigen::Matrix<double, 6, 7>, Eigen::Matrix<double, 7, 6>)) SC_BlockSizes; // Cholesky needs all size combinations, new ones might come into existence via fill-in
+	//typedef MakeTypelist_Safe((Eigen::Matrix<double, 6, 6>, Eigen::Matrix<double, 7, 7>/*, Eigen::Matrix<double, 6, 7>, Eigen::Matrix<double, 7, 6>*/)) A_BlockSizes; // should be fine without
 	typedef MakeTypelist_Safe((Eigen::Matrix<double, 3, 3>)) D_BlockSizes;
-	typedef MakeTypelist_Safe((Eigen::Matrix<double, 6, 3>)) U_BlockSizes;
-	typedef MakeTypelist_Safe((Eigen::Matrix<double, 3, 6>)) V_BlockSizes;
+	//typedef MakeTypelist_Safe((Eigen::Matrix<double, 6, 3>, Eigen::Matrix<double, 7, 3>)) U_BlockSizes;
+	//typedef MakeTypelist_Safe((Eigen::Matrix<double, 3, 6>, Eigen::Matrix<double, 3, 7>)) V_BlockSizes;
+	typedef MakeTypelist_Safe((Eigen::Matrix<double, 6, 3>)) U_BlockSizes36;
+	typedef MakeTypelist_Safe((Eigen::Matrix<double, 3, 6>)) V_BlockSizes36;
+	typedef MakeTypelist_Safe((Eigen::Matrix<double, 7, 3>)) U_BlockSizes37;
+	typedef MakeTypelist_Safe((Eigen::Matrix<double, 3, 7>)) V_BlockSizes37;
 	typedef MakeTypelist_Safe((Eigen::Matrix<double, 3, 3>)) SC2_BlockSizes;
-	// block sizes for simple BA problems
+	// block sizes for simple BA problems (landmarks are 3x3, poses are 6x6 or 7x7)
 
 	printf("\ncalculating SC ...\n"); fflush(stdout);
 	CUberBlockMatrix Dinv;
 	Dinv.InverseOf_Symmteric_FBS<D_BlockSizes>(D);
-	CUberBlockMatrix U_Dinv;
-	U_Dinv.ProductOf_FBS<U_BlockSizes, D_BlockSizes>(U, Dinv);
-	CUberBlockMatrix U_Dinv_V;
-	U_Dinv_V.ProductOf_FBS<U_BlockSizes, V_BlockSizes>(U_Dinv, V, true); // only the upper triangle is needed
-	CUberBlockMatrix SC = A;
-	U_Dinv_V.AddTo_FBS<SC_BlockSizes>(SC, -1);
+	CUberBlockMatrix U_Dinv, U_Dinv_V,  SC = A;
+	if(b_use_FBS36) {
+		U_Dinv.ProductOf_FBS<U_BlockSizes36, D_BlockSizes>(U, Dinv);
+		U_Dinv_V.ProductOf_FBS<U_BlockSizes36, V_BlockSizes36>(U_Dinv, V, true); // only the upper triangle is needed
+		U_Dinv_V.AddTo_FBS<SC_BlockSizes36>(SC, -1);
+	} else {
+		U_Dinv.ProductOf_FBS<U_BlockSizes37, D_BlockSizes>(U, Dinv);
+		U_Dinv_V.ProductOf_FBS<U_BlockSizes37, V_BlockSizes37>(U_Dinv, V, true); // only the upper triangle is needed
+		U_Dinv_V.AddTo_FBS<SC_BlockSizes37>(SC, -1);
+	}
 	// ...
 
 	double f_schur_time = 0;
@@ -546,7 +580,8 @@ int main(int n_arg_num, const char **p_arg_list)
 	CUberBlockMatrix SC_perm;
 	SC.Permute_UpperTriangular_To(SC_perm, p_SC_ord, n_SC_ord_size, true);
 	CUberBlockMatrix S;
-	if(!S.CholeskyOf_FBS<SC_BlockSizes>(SC_perm)) {
+	if((b_use_FBS36 && !S.CholeskyOf_FBS<SC_BlockSizes36>(SC_perm)) ||
+	   (!b_use_FBS36 && !S.CholeskyOf_FBS<SC_BlockSizes37>(SC_perm))) {
 		fprintf(stderr, "error: SC_perm is not pos def; unable to continue\n");
 		return -1;
 	}
@@ -633,8 +668,13 @@ int main(int n_arg_num, const char **p_arg_list)
 			// unit basis matrix
 
 			for(size_t i = 0, n = S_bases.n_BlockColumn_Num(); i < n; ++ i) { // t_odo - do this in parallel (probably explicit matrix reduction rather than locking)
-				sc_margs_detail::Calculate_UpperTriangularTransposeSolve_Bases_FBS<SC_BlockSizes>(S_bases,
-					S, p_St, i, S_dense_basis, workspace);
+				if(b_use_FBS36) {
+					sc_margs_detail::Calculate_UpperTriangularTransposeSolve_Bases_FBS<SC_BlockSizes36>(S_bases,
+						S, p_St, i, S_dense_basis, workspace);
+				} else {
+					sc_margs_detail::Calculate_UpperTriangularTransposeSolve_Bases_FBS<SC_BlockSizes37>(S_bases,
+						S, p_St, i, S_dense_basis, workspace);
+				}
 				// use a function
 
 				/*size_t w = S_bases.n_BlockColumn_Column_Num(i); // t_odo - FBS it
@@ -652,8 +692,13 @@ int main(int n_arg_num, const char **p_arg_list)
 
 				for(size_t c = 0; c < 6/*w* /; ++ c) {
 					//S.UpperTriangularTranspose_Solve(&U_Dinv_i_permd.col(c)(0), U_Dinv_i_permd.rows(), p_dep_col, n_dep_col_num);
-					S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes>(&S_dense_basis.col(c)(0),
-						S_dense_basis.rows(), p_dep_col, n_dep_col_num);
+					if(b_use_FBS36) {
+						S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes36>(&S_dense_basis.col(c)(0),
+							S_dense_basis.rows(), p_dep_col, n_dep_col_num);
+					} else {
+						S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes37>(&S_dense_basis.col(c)(0),
+							S_dense_basis.rows(), p_dep_col, n_dep_col_num);
+					}
 				}
 				// sparse sparse UTTSolve
 
@@ -737,14 +782,22 @@ int main(int n_arg_num, const char **p_arg_list)
 
 			for(size_t c = 0; c < 3/*w* /; ++ c) {
 				//S.UpperTriangularTranspose_Solve(&U_Dinv_i_permd.col(c)(0), U_Dinv_i_permd.rows(), p_dep_col, n_dep_col_num);
-				S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes>(&U_Dinv_i_permd.col(c)(0),
-					U_Dinv_i_permd.rows(), p_dep_col, n_dep_col_num);
+				if(b_use_FBS36) {
+					S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes36>(&U_Dinv_i_permd.col(c)(0),
+						U_Dinv_i_permd.rows(), p_dep_col, n_dep_col_num);
+				} else {
+					S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes37>(&U_Dinv_i_permd.col(c)(0),
+						U_Dinv_i_permd.rows(), p_dep_col, n_dep_col_num);
+				}
 			}
 			// sparse sparse UTTSolve
 
 #ifdef _DEBUG
 			CUberBlockMatrix SinvT_U_Dinv_i_perm;
-			SinvT_U_Dinv_i_perm.ProductOf_FBS<SC_BlockSizes, U_BlockSizes>(S_bases, U_Dinv_i_perm);
+			if(b_use_FBS36)
+				SinvT_U_Dinv_i_perm.ProductOf_FBS<SC_BlockSizes36, U_BlockSizes36>(S_bases, U_Dinv_i_perm);
+			else
+				SinvT_U_Dinv_i_perm.ProductOf_FBS<SC_BlockSizes37, U_BlockSizes37>(S_bases, U_Dinv_i_perm);
 			// gets a sparse matrix, the size of U_Dinv_i_perm
 
 			Eigen::MatrixXd SinvT_U_Dinv_i_permd;
@@ -762,7 +815,10 @@ int main(int n_arg_num, const char **p_arg_list)
 			// grab a single column of U_Dinv_perm (via reference)
 
 			CUberBlockMatrix SinvT_U_Dinv_i_perm;
-			SinvT_U_Dinv_i_perm.ProductOf_FBS<SC_BlockSizes, U_BlockSizes>(S_bases, U_Dinv_i_perm);
+			if(b_use_FBS36)
+				SinvT_U_Dinv_i_perm.ProductOf_FBS<SC_BlockSizes36, U_BlockSizes36>(S_bases, U_Dinv_i_perm);
+			else
+				SinvT_U_Dinv_i_perm.ProductOf_FBS<SC_BlockSizes37, U_BlockSizes37>(S_bases, U_Dinv_i_perm);
 			// gets a sparse matrix, the size of U_Dinv_i_perm
 		}
 
@@ -793,8 +849,13 @@ int main(int n_arg_num, const char **p_arg_list)
 
 			for(size_t c = 0; c < 3/*w* /; ++ c) {
 				//S.UpperTriangularTranspose_Solve(&U_Dinv_i_permd.col(c)(0), U_Dinv_i_permd.rows(), p_dep_col, n_dep_col_num);
-				S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes>(&U_Dinv_i_permd.col(c)(0),
-					U_Dinv_i_permd.rows(), p_dep_col, n_dep_col_num);
+				if(b_use_FBS36) {
+					S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes36>(&U_Dinv_i_permd.col(c)(0),
+						U_Dinv_i_permd.rows(), p_dep_col, n_dep_col_num);
+				} else {
+					S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes37>(&U_Dinv_i_permd.col(c)(0),
+						U_Dinv_i_permd.rows(), p_dep_col, n_dep_col_num);
+				}
 			}
 			// sparse sparse UTTSolve
 
@@ -835,19 +896,28 @@ int main(int n_arg_num, const char **p_arg_list)
 			// grab a single column of U_Dinv_perm (via reference)
 
 			CUberBlockMatrix SinvT_U_Dinv_i_perm;
-			SinvT_U_Dinv_i_perm.ProductOf_FBS<SC_BlockSizes, U_BlockSizes>(S_bases, U_Dinv_i_perm);
+			if(b_use_FBS36)
+				SinvT_U_Dinv_i_perm.ProductOf_FBS<SC_BlockSizes36, U_BlockSizes36>(S_bases, U_Dinv_i_perm);
+			else
+				SinvT_U_Dinv_i_perm.ProductOf_FBS<SC_BlockSizes37, U_BlockSizes37>(S_bases, U_Dinv_i_perm);
 			// gets a sparse matrix, the size of U_Dinv_i_perm
 
 #if 0
 			CUberBlockMatrix lm_i_cov_ii;
-			SinvT_U_Dinv_i_perm.PreMultiplyWithSelfTransposeTo_FBS<U_BlockSizes>(lm_i_cov_ii);
+			if(b_use_FBS36)
+				SinvT_U_Dinv_i_perm.PreMultiplyWithSelfTransposeTo_FBS<U_BlockSizes36>(lm_i_cov_ii);
+			else
+				SinvT_U_Dinv_i_perm.PreMultiplyWithSelfTransposeTo_FBS<U_BlockSizes37>(lm_i_cov_ii);
 			// calculate stuff
 
 			sp_lm_inv_serial.t_GetBlock_Log(i, i) += lm_i_cov_ii.t_GetBlock_Log(0, 0);
 			// ATA: 1.237 sec on ff6, 31.101 sec on venice
 #else // 0
 			CUberBlockMatrix::_TyMatrixXdRef t_lminv_ii = sp_lm_inv_serial.t_GetBlock_Log(i, i);
-			sc_margs_detail::BlockVector_PreMultiplyWithSelfTranspose_Add_FBS<U_BlockSizes>(t_lminv_ii, SinvT_U_Dinv_i_perm);
+			if(b_use_FBS36)
+				sc_margs_detail::BlockVector_PreMultiplyWithSelfTranspose_Add_FBS<U_BlockSizes36>(t_lminv_ii, SinvT_U_Dinv_i_perm);
+			else
+				sc_margs_detail::BlockVector_PreMultiplyWithSelfTranspose_Add_FBS<U_BlockSizes37>(t_lminv_ii, SinvT_U_Dinv_i_perm);
 			// about 6x cheaper FBS version of that
 			// ATA: 0.194 sec on ff6, 5.413 sec on venice
 #endif // 0
@@ -936,8 +1006,13 @@ int main(int n_arg_num, const char **p_arg_list)
 
 				for(size_t c = 0; c < 6/*w* /; ++ c) {
 					//S.UpperTriangularTranspose_Solve(&U_Dinv_i_permd.col(c)(0), U_Dinv_i_permd.rows(), p_dep_col, n_dep_col_num);
-					S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes>(&S_dense_basis.col(c)(0),
-						S_dense_basis.rows(), p_dep_col, n_dep_col_num);
+					if(b_use_FBS36) {
+						S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes36>(&S_dense_basis.col(c)(0),
+							S_dense_basis.rows(), p_dep_col, n_dep_col_num);
+					} else {
+						S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes37>(&S_dense_basis.col(c)(0),
+							S_dense_basis.rows(), p_dep_col, n_dep_col_num);
+					}
 				}
 				// sparse sparse UTTSolve
 
@@ -1035,8 +1110,13 @@ int main(int n_arg_num, const char **p_arg_list)
 			const int _n = int(n);
 			#pragma omp for schedule(dynamic, 1) // t_odo - dynamic schedule? each column will likely have a different cost (todo - build histograms)
 			for(int i = 0; i < _n; ++ i) {
-				sc_margs_detail::Calculate_UpperTriangularTransposeSolve_Bases_FBS<SC_BlockSizes>(S_bases_thr,
-					S, p_St_thr, i, S_dense_basis, workspace);
+				if(b_use_FBS36) {
+					sc_margs_detail::Calculate_UpperTriangularTransposeSolve_Bases_FBS<SC_BlockSizes36>(S_bases_thr,
+						S, p_St_thr, i, S_dense_basis, workspace);
+				} else {
+					sc_margs_detail::Calculate_UpperTriangularTransposeSolve_Bases_FBS<SC_BlockSizes37>(S_bases_thr,
+						S, p_St_thr, i, S_dense_basis, workspace);
+				}
 				// use the nice function instead
 
 				/*size_t w = S.n_BlockColumn_Column_Num(i); // t_odo - FBS it
@@ -1055,8 +1135,13 @@ int main(int n_arg_num, const char **p_arg_list)
 
 				for(size_t c = 0; c < 6/*w* /; ++ c) {
 					//S.UpperTriangularTranspose_Solve(&U_Dinv_i_permd.col(c)(0), U_Dinv_i_permd.rows(), p_dep_col, n_dep_col_num);
-					S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes>(&S_dense_basis.col(c)(0),
-						S_dense_basis.rows(), p_dep_col, n_dep_col_num);
+					if(b_use_FBS36) {
+						S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes36>(&S_dense_basis.col(c)(0),
+							S_dense_basis.rows(), p_dep_col, n_dep_col_num);
+					} else {
+						S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes37>(&S_dense_basis.col(c)(0),
+							S_dense_basis.rows(), p_dep_col, n_dep_col_num);
+					}
 				}
 				// sparse sparse UTTSolve
 
@@ -1177,8 +1262,13 @@ int main(int n_arg_num, const char **p_arg_list)
 				// can do that before converting it to a dense matrix
 
 				//S.UpperTriangularTranspose_Solve(&U_Dinv_i_permd.col(c)(0), U_Dinv_i_permd.rows(), p_dep_col, n_dep_col_num);
-				S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes>(&U_Dinv_i_permd.col(c)(0),
-					U_Dinv_i_permd.rows(), p_dep_col, n_dep_col_num);
+				if(b_use_FBS36) {
+					S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes36>(&U_Dinv_i_permd.col(c)(0),
+						U_Dinv_i_permd.rows(), p_dep_col, n_dep_col_num);
+				} else {
+					S.UpperTriangularTranspose_Solve_FBS<SC_BlockSizes37>(&U_Dinv_i_permd.col(c)(0),
+						U_Dinv_i_permd.rows(), p_dep_col, n_dep_col_num);
+				}
 				// sparse sparse UTTSolve
 			}
 			if(n_dep_col_num < U_Dinv_i_perm.n_BlockRow_Num()) {
@@ -1217,11 +1307,17 @@ int main(int n_arg_num, const char **p_arg_list)
 			// grab a single column of U_Dinv_perm (via reference)
 
 			CUberBlockMatrix SinvT_U_Dinv_i_perm;
-			SinvT_U_Dinv_i_perm.ProductOf_FBS<SC_BlockSizes, U_BlockSizes>(S_bases, U_Dinv_i_perm);
+			if(b_use_FBS36)
+				SinvT_U_Dinv_i_perm.ProductOf_FBS<SC_BlockSizes36, U_BlockSizes36>(S_bases, U_Dinv_i_perm);
+			else
+				SinvT_U_Dinv_i_perm.ProductOf_FBS<SC_BlockSizes37, U_BlockSizes37>(S_bases, U_Dinv_i_perm);
 			// gets a sparse matrix, the size of U_Dinv_i_perm
 
 			CUberBlockMatrix::_TyMatrixXdRef t_lminv_ii = sp_lm_inv.t_GetBlock_Log(i, i);
-			sc_margs_detail::BlockVector_PreMultiplyWithSelfTranspose_Add_FBS<U_BlockSizes>(t_lminv_ii, SinvT_U_Dinv_i_perm);
+			if(b_use_FBS36)
+				sc_margs_detail::BlockVector_PreMultiplyWithSelfTranspose_Add_FBS<U_BlockSizes36>(t_lminv_ii, SinvT_U_Dinv_i_perm);
+			else
+				sc_margs_detail::BlockVector_PreMultiplyWithSelfTranspose_Add_FBS<U_BlockSizes37>(t_lminv_ii, SinvT_U_Dinv_i_perm);
 #endif // 0
 		}
 
@@ -1252,8 +1348,13 @@ int main(int n_arg_num, const char **p_arg_list)
 	CUberBlockMatrix rcs_cov;
 	{
 		CUberBlockMatrix margs_ordered;
-		CMarginals::Calculate_DenseMarginals_Recurrent_FBS<SC_BlockSizes>(margs_ordered, S,
-			SC_ord, mpart_Diagonal, false);
+		if(b_use_FBS36) {
+			CMarginals::Calculate_DenseMarginals_Recurrent_FBS<SC_BlockSizes36>(margs_ordered, S,
+				SC_ord, mpart_Diagonal, false);
+		} else {
+			CMarginals::Calculate_DenseMarginals_Recurrent_FBS<SC_BlockSizes37>(margs_ordered, S,
+				SC_ord, mpart_Diagonal, false);
+		}
 
 		margs_ordered.Permute_UpperTriangular_To(rcs_cov, SC_ord.p_Get_Ordering(),
 			SC_ord.n_Ordering_Size(), false); // no share! the original will be deleted
@@ -1282,11 +1383,16 @@ int main(int n_arg_num, const char **p_arg_list)
 	double f_lambda_perm_time = 0;
 	timer.Accum_DiffSample(f_lambda_perm_time);
 
-	typedef CConcatTypelist<CConcatTypelist<SC_BlockSizes, U_BlockSizes>::_TyResult,
-		CConcatTypelist<V_BlockSizes, D_BlockSizes>::_TyResult>::_TyResult Lambda_BlockSizes;
+	/*typedef CConcatTypelist<CConcatTypelist<SC_BlockSizes, U_BlockSizes>::_TyResult,
+		CConcatTypelist<V_BlockSizes, D_BlockSizes>::_TyResult>::_TyResult Lambda_BlockSizes;*/
+	typedef CConcatTypelist<CConcatTypelist<SC_BlockSizes36, U_BlockSizes36>::_TyResult,
+		CConcatTypelist<V_BlockSizes36, D_BlockSizes>::_TyResult>::_TyResult Lambda_BlockSizes36;
+	typedef CConcatTypelist<CConcatTypelist<SC_BlockSizes37, U_BlockSizes37>::_TyResult,
+		CConcatTypelist<V_BlockSizes37, D_BlockSizes>::_TyResult>::_TyResult Lambda_BlockSizes37;
 
 	CUberBlockMatrix R;
-	if(!R.CholeskyOf_FBS<Lambda_BlockSizes>(lambda_amd)) {
+	if((b_use_FBS36 && !R.CholeskyOf_FBS<Lambda_BlockSizes36>(lambda_amd)) ||
+	   (!b_use_FBS36 && !R.CholeskyOf_FBS<Lambda_BlockSizes37>(lambda_amd))) {
 		fprintf(stderr, "error: got not pos def when factorizing lambda\n");
 		return -1;
 	}
@@ -1307,7 +1413,7 @@ int main(int n_arg_num, const char **p_arg_list)
 			remove(p_s_filename); // avoid keeping images from previous runs, would get confusing
 		sprintf(p_s_filename, "sc_0.1_%s_SS_AA.tga", p_s_filename_pat);
 		if(!p_mat || !CDebug::Dump_SparseMatrix_Subsample_AA(p_s_filename,
-		   p_mat, 0, /*640*/1024, b_symmetric))
+		   p_mat, 0, 640/*1024*/, b_symmetric))
 			remove(p_s_filename); // avoid keeping images from previous runs, would get confusing
 
 		p_s_filename_pat = "Chol_lambda";
@@ -1319,7 +1425,7 @@ int main(int n_arg_num, const char **p_arg_list)
 			remove(p_s_filename); // avoid keeping images from previous runs, would get confusing
 		sprintf(p_s_filename, "sc_0.1_%s_SS_AA.tga", p_s_filename_pat);
 		if(!p_mat || !CDebug::Dump_SparseMatrix_Subsample_AA(p_s_filename,
-		   p_mat2, 0, /*640*/1024, b_symmetric))
+		   p_mat2, 0, 640/*1024*/, b_symmetric))
 			remove(p_s_filename); // avoid keeping images from previous runs, would get confusing
 
 		p_s_filename_pat = "Chol_lambda_with-fill";
@@ -1330,7 +1436,7 @@ int main(int n_arg_num, const char **p_arg_list)
 			remove(p_s_filename); // avoid keeping images from previous runs, would get confusing
 		sprintf(p_s_filename, "sc_0.1_%s_SS_AA.tga", p_s_filename_pat);
 		if(!p_mat || !CDebug::Dump_SparseMatrix_Subsample_AA(p_s_filename,
-		   p_mat2, p_mat, /*640*/1024, b_symmetric))
+		   p_mat2, p_mat, 640/*1024*/, b_symmetric))
 			remove(p_s_filename); // avoid keeping images from previous runs, would get confusing
 
 		cs_spfree(p_mat);
@@ -1344,8 +1450,13 @@ int main(int n_arg_num, const char **p_arg_list)
 	CUberBlockMatrix margs_recursive;
 	{
 		CUberBlockMatrix margs_ordered;
-		CMarginals::Calculate_DenseMarginals_Recurrent_FBS<Lambda_BlockSizes>(margs_ordered, R,
-			lam_ord, mpart_Diagonal, false);
+		if(b_use_FBS36) {
+			CMarginals::Calculate_DenseMarginals_Recurrent_FBS<Lambda_BlockSizes36>(margs_ordered, R,
+				lam_ord, mpart_Diagonal, false);
+		} else {
+			CMarginals::Calculate_DenseMarginals_Recurrent_FBS<Lambda_BlockSizes37>(margs_ordered, R,
+				lam_ord, mpart_Diagonal, false);
+		}
 		// calculate the thing
 
 		timer.Accum_DiffSample(f_lambda_recformula_time);
@@ -1520,14 +1631,21 @@ int main(int n_arg_num, const char **p_arg_list)
 			timer.Accum_DiffSample(f_schur2_perm_time);
 
 			CUberBlockMatrix Ainv_perm;
-			Ainv_perm.InverseOf_Symmteric_FBS<A_BlockSizes>(A_perm, true); // this would fill in the matrix
+			if(b_use_FBS36)
+				Ainv_perm.InverseOf_Symmteric_FBS<A_BlockSizes36>(A_perm, true); // this would fill in the matrix
+			else
+				Ainv_perm.InverseOf_Symmteric_FBS<A_BlockSizes37>(A_perm, true); // this would fill in the matrix
 			Ainv_perm.PermuteTo(Ainv, p_inv_vertex_order, A_ord.n_Ordering_Size(), true, true, false); // don't share, will be deleted // need to use full ordering to also get the lower parts of the blocks (in case the matrix is block block diagonal)
 			// ordering transcends inverse, can permute to block diagonal form, invert, and permute back for simplicity
 		}
-		CUberBlockMatrix V_Ainv;
-		V_Ainv.ProductOf_FBS<V_BlockSizes, A_BlockSizes>(V, Ainv);
-		CUberBlockMatrix V_Ainv_U;
-		V_Ainv.MultiplyToWith_FBS<V_BlockSizes, U_BlockSizes>(V_Ainv_U, U, true); // only the upper triangle is needed
+		CUberBlockMatrix V_Ainv, V_Ainv_U;
+		if(b_use_FBS36) {
+			V_Ainv.ProductOf_FBS<V_BlockSizes36, A_BlockSizes36>(V, Ainv);
+			V_Ainv.MultiplyToWith_FBS<V_BlockSizes36, U_BlockSizes36>(V_Ainv_U, U, true); // only the upper triangle is needed
+		} else {
+			V_Ainv.ProductOf_FBS<V_BlockSizes37, A_BlockSizes37>(V, Ainv);
+			V_Ainv.MultiplyToWith_FBS<V_BlockSizes37, U_BlockSizes37>(V_Ainv_U, U, true); // only the upper triangle is needed
+		}
 		/*CUberBlockMatrix*/ SC2 = D;
 		V_Ainv_U.AddTo_FBS<SC2_BlockSizes>(SC2, -1);
 		// ...
@@ -1583,7 +1701,7 @@ int main(int n_arg_num, const char **p_arg_list)
 				remove(p_s_filename); // avoid keeping images from previous runs, would get confusing
 			sprintf(p_s_filename, "sc_8.1_%s_SS_AA.tga", p_s_filename_pat);
 			if(!p_mat || !CDebug::Dump_SparseMatrix_Subsample_AA(p_s_filename,
-			   p_mat, 0, /*640*/8192, b_symmetric))
+			   p_mat, 0, 640/*8192*/, b_symmetric))
 				remove(p_s_filename); // avoid keeping images from previous runs, would get confusing
 			cs_spfree(p_mat);
 		}
@@ -1708,7 +1826,7 @@ int main(int n_arg_num, const char **p_arg_list)
 				remove(p_s_filename); // avoid keeping images from previous runs, would get confusing
 			sprintf(p_s_filename, "sc_8.2_%s_SS_AA.tga", p_s_filename_pat);
 			if(!p_mat || !CDebug::Dump_SparseMatrix_Subsample_AA(p_s_filename,
-			   p_mat, 0, /*640*/8192, b_symmetric))
+			   p_mat, 0, 640/*8192*/, b_symmetric))
 				remove(p_s_filename); // avoid keeping images from previous runs, would get confusing
 			cs_spfree(p_mat);
 		}
@@ -1719,8 +1837,13 @@ int main(int n_arg_num, const char **p_arg_list)
 		double f_SC2_recformula_time = 0;
 		{
 			CUberBlockMatrix margs_ordered;
-			CMarginals::Calculate_DenseMarginals_Recurrent_FBS<Lambda_BlockSizes>(margs_ordered, S2,
-				SC2_ord, mpart_Diagonal, false);
+			if(b_use_FBS36) {
+				CMarginals::Calculate_DenseMarginals_Recurrent_FBS<Lambda_BlockSizes36>(margs_ordered, S2,
+					SC2_ord, mpart_Diagonal, false);
+			} else {
+				CMarginals::Calculate_DenseMarginals_Recurrent_FBS<Lambda_BlockSizes37>(margs_ordered, S2,
+					SC2_ord, mpart_Diagonal, false);
+			}
 			// calculate the thing
 
 			timer.Accum_DiffSample(f_SC2_recformula_time);
@@ -1802,7 +1925,7 @@ int main(int n_arg_num, const char **p_arg_list)
 				remove(p_s_filename); // avoid keeping images from previous runs, would get confusing
 			sprintf(p_s_filename, "sc_" PRIsize "_%s_SS_AA.tga", i, p_matrix_list[i].p_s_filename);
 			if(!p_mat || !CDebug::Dump_SparseMatrix_Subsample_AA(p_s_filename,
-			   p_mat, 0, /*640*/8192, p_matrix_list[i].b_symmetric))
+			   p_mat, 0, 640/*8192*/, p_matrix_list[i].b_symmetric))
 				remove(p_s_filename); // avoid keeping images from previous runs, would get confusing
 
 			/*{

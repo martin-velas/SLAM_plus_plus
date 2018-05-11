@@ -163,7 +163,7 @@
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalOptions>/bigobj /Zm500 /MP /FS</AdditionalOptions>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>CSparse3.lib;CxSparse.lib;eigen3.lib;cholmod.lib;SLAMpp_base.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -180,7 +180,7 @@
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
     <ClCompile>
-      <AdditionalOptions>/bigobj /Zm500 /MP /FS</AdditionalOptions>
+      <AdditionalOptions>/bigobj /Zm500 /MP</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -211,7 +211,6 @@
   <ItemGroup>
     <ClInclude Include="..\include\slam\2DSolverBase.h" />
     <ClInclude Include="..\include\slam\3DSolverBase.h" />
-    <ClInclude Include="..\include\slam\BAMarginals.h" />
     <ClInclude Include="..\include\slam\BaseInterface.h" />
     <ClInclude Include="..\include\slam\BaseTypes.h" />
     <ClInclude Include="..\include\slam\BaseTypes_Binary.h" />

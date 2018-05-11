@@ -19,6 +19,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\ba_marginals_example\BAMarginals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\slam\2DSolverBase.h">
       <Filter>Header Files\slam</Filter>
     </ClInclude>
@@ -191,9 +194,6 @@
       <Filter>Header Files\slam</Filter>
     </ClInclude>
     <ClInclude Include="..\include\slam\Unused.h">
-      <Filter>Header Files\slam</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\slam\BAMarginals.h">
       <Filter>Header Files\slam</Filter>
     </ClInclude>
   </ItemGroup>

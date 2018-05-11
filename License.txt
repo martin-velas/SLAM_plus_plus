@@ -33,6 +33,10 @@ DEALINGS IN THE SOFTWARE.
 
 === References (please cite these when using this software) ===
 
+V Ila, L Polok, M Solony and K Istenic, "Fast Incremental Bundle
+Adjustment with Covariance Recovery", proceedings of the International
+Conference on 3D Vision (3DV). Qingdao, China, 2017.
+
 L Polok and P Smrž, "Pivoting Strategy for Fast LU decomposition
 of Sparse Block Matrices", proceedings of the 25th High Performance
 Computing Symposium. Virginia Beach, USA, 2017.
