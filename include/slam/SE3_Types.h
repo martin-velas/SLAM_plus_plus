@@ -9,6 +9,7 @@
 #ifndef __SE3_TYPES_INCLUDED
 #define __SE3_TYPES_INCLUDED
 
+#include "slam/RobustUtils.h"
 #include "slam/BaseTypes.h"
 #include "slam/3DSolverBase.h"
 #include "slam/Parser.h" // parsed types passed to constructors
@@ -124,8 +125,10 @@ public:
 /**
  *	@brief SE(3) pose-pose edge
  */
-class CEdgePose3D : public CBaseEdgeImpl<CEdgePose3D, MakeTypelist(CVertexPose3D, CVertexPose3D), 6> {
+class CEdgePose3D : public CBaseEdgeImpl<CEdgePose3D, MakeTypelist(CVertexPose3D, CVertexPose3D), 6, 6, CBaseEdge::Robust>,
+		public CRobustify_ErrorNorm_Default<CCTFraction<30, 100>, CHuberLossd> {
 public:
+	typedef CBaseEdgeImpl<CEdgePose3D, MakeTypelist(CVertexPose3D, CVertexPose3D), 6, 6, CBaseEdge::Robust> _TyBase; /**< @brief base class */
 	/**
 	 *	@brief vertex initialization functor
 	 *	Calculates vertex position from the first vertex and an XYT edge.
@@ -178,7 +181,7 @@ public:
 	 */
 	template <class CSystem>
 	CEdgePose3D(const CParserBase::TEdge3D &r_t_edge, CSystem &r_system)
-		:CBaseEdgeImpl<CEdgePose3D, MakeTypelist(CVertexPose3D, CVertexPose3D), 6>(r_t_edge.m_n_node_0,
+		:_TyBase(r_t_edge.m_n_node_0,
 		r_t_edge.m_n_node_1, r_t_edge.m_v_delta, r_t_edge.m_t_inv_sigma)
 	{
 		//fprintf(stderr, "%f %f %f\n", r_t_edge.m_v_delta(0), r_t_edge.m_v_delta(1), r_t_edge.m_v_delta(2));
@@ -212,7 +215,7 @@ public:
 	template <class CSystem>
 	CEdgePose3D(size_t n_node0, size_t n_node1, const Eigen::Matrix<double, 6, 1> &r_v_delta,
 		const Eigen::Matrix<double, 6, 6> &r_t_inv_sigma, CSystem &r_system)
-		:CBaseEdgeImpl<CEdgePose3D, MakeTypelist(CVertexPose3D, CVertexPose3D), 6>(n_node0,
+		:_TyBase(n_node0,
 		n_node1, r_v_delta, r_t_inv_sigma)
 	{
 		//fprintf(stderr, "%f %f %f\n", r_t_edge.m_v_delta(0), r_t_edge.m_v_delta(1), r_t_edge.m_v_delta(2));
@@ -237,8 +240,7 @@ public:
 	 */
 	inline void Update(const CParserBase::TEdge3D &r_t_edge)
 	{
-		CBaseEdgeImpl<CEdgePose3D, MakeTypelist(CVertexPose3D, CVertexPose3D),
-			6>::Update(r_t_edge.m_v_delta, r_t_edge.m_t_inv_sigma);
+		_TyBase::Update(r_t_edge.m_v_delta, r_t_edge.m_t_inv_sigma);
 	}
 
 	/**
@@ -249,8 +251,7 @@ public:
 	 */
 	inline void Update(const Eigen::Matrix<double, 6, 1> &r_v_delta, const Eigen::Matrix<double, 6, 6> &r_t_inv_sigma) // for some reason this needs to be here, although the base already implements this
 	{
-		CBaseEdgeImpl<CEdgePose3D, MakeTypelist(CVertexPose3D, CVertexPose3D),
-			6>::Update(r_v_delta, r_t_inv_sigma);
+		_TyBase::Update(r_v_delta, r_t_inv_sigma);
 	}
 
 	/**
