@@ -901,6 +901,64 @@ public:
 	};
 
 	/**
+	 *  @brief Spline measurement base class
+	 */
+	struct TEdgeSpline3D : public CParseEntity {
+	  size_t m_n_node_0; /**< @brief (zero-based) index of the first (origin) node */
+	  size_t m_n_node_1; /**< @brief (zero-based) index of the second (endpoint) node */
+	  size_t m_n_node_2; /**< @brief (zero-based) index of the second (endpoint) node */
+	  size_t m_n_node_3; /**< @brief (zero-based) index of the second (endpoint) node */
+	  size_t m_n_node_4; /**< @brief (zero-based) index of the second (endpoint) node */
+	  Eigen::Matrix<double, 6, 1> m_v_delta; /**< @brief dealte measurement (also called "z") */
+	  Eigen::Matrix<double, 6, 6> m_t_inv_sigma; /**< @brief inverse sigma matrix, elements are not square roots */
+
+	  /**
+	   *  @brief default constructor
+	   *
+	   *  @param[in] n_node_0 is (zero-based) index of the first
+	   *  @param[in] n_node_1 is (zero-based) index of the second
+	   *  @param[in] n_node_2 is (zero-based) index of the third
+	   *  @param[in] n_node_3 is (zero-based) index of the fourth
+	   *  @param[in] f_delta is delta x position
+	   *  @endcode
+	   */
+	  inline TEdgeSpline3D(size_t n_node_0, size_t n_node_1, size_t n_node_2, size_t n_node_3, size_t n_node_4,
+	    double f_delta, const double *p_matrix_diag_6)
+	    :m_n_node_0(n_node_0), m_n_node_1(n_node_1), m_n_node_2(n_node_2), m_n_node_3(n_node_3), m_n_node_4(n_node_4)
+	  {
+	    m_v_delta << f_delta, 0, 0, 0, 0, 0;
+	    // no constructor for 1-valued vector
+
+	    m_t_inv_sigma <<  // todo: this is hardcoded now, maybe parse it from file?
+	      p_matrix_diag_6[0], 0, 0, 0, 0, 0,
+	      0, p_matrix_diag_6[1], 0, 0, 0, 0,
+	      0, 0, p_matrix_diag_6[2], 0, 0, 0,
+	      0, 0, 0, p_matrix_diag_6[3], 0, 0,
+	      0, 0, 0, 0, p_matrix_diag_6[4], 0,
+	      0, 0, 0, 0, 0, p_matrix_diag_6[5];
+	    // fill the matrix
+	  }
+
+	  /**
+	   *  @brief override constructor
+	   *
+	   *  @param[in] n_node_0 is (zero-based) index of the first (origin) node
+	   *  @param[in] n_node_1 is (zero-based) index of the second (endpoint) node
+	   *  @param[in] edge is vector containing position and AXIS-ANGLE representation of rotation
+	   *  @param[in] info is 6x6 information matrix
+	   *    containing the inverse sigma matrix, elements are not square roots
+	   */
+	  inline TEdgeSpline3D(size_t n_node_0, size_t n_node_1, size_t n_node_2, size_t n_node_3, size_t n_node_4,
+	      const Eigen::Matrix<double, 6, 1> &edge,
+	      const Eigen::Matrix<double, 6, 6> &info)
+	    :m_n_node_0(n_node_0), m_n_node_1(n_node_1), m_n_node_2(n_node_2), m_n_node_3(n_node_3), m_n_node_4(n_node_4),
+	     m_v_delta(edge), m_t_inv_sigma(info)
+	  {}
+
+	  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+	};
+
+	/**
 	 *	@brief a simple callback class, to be used by the parser
 	 *	@note This has the disadvantage of having to be modified after adding a new
 	 *		parsed types, and having to rewrite all implementations of this. This is
@@ -1037,6 +1095,12 @@ public:
 		 *	@param[in] r_t_edge is the measurement to be appended
 		 */
 		virtual void AppendSystem(const TUnaryFactor3D &r_t_edge) = 0;
+
+		/**
+		 *  @brief appends the system with an odometry measurement
+		 *  @param[in] r_t_edge is the measurement to be appended
+		 */
+		virtual void AppendSystem(const TEdgeSpline3D &r_t_edge) = 0;
 	};
 
 protected:
@@ -1304,5 +1368,6 @@ public:
 };
 
 /** @} */ // end of group
+
 
 #endif // !__GRAPH_PARSER_INCLUDED

@@ -685,4 +685,183 @@ public:
 
 /** @} */ // end of group
 
+
+/**
+ *  @brief BSpline 5xpose edge
+ */
+class CBSplineEdge : public CBaseEdgeImpl<CBSplineEdge, MakeTypelist(CVertexPose3D, CVertexPose3D, CVertexPose3D, CVertexPose3D, CVertexPose3D), 6, 6> {
+
+public:
+  typedef CBaseEdgeImpl<CBSplineEdge, MakeTypelist(CVertexPose3D, CVertexPose3D, CVertexPose3D, CVertexPose3D, CVertexPose3D), 6, 6> _TyBase; /**< @brief base class */
+
+public:
+  __GRAPH_TYPES_ALIGN_OPERATOR_NEW // imposed by the use of eigen, just copy this
+
+  /**
+   *  @brief default constructor; has no effect
+   */
+  inline CBSplineEdge()
+  {}
+
+  template <class CSystem>
+  CBSplineEdge(const CParserBase::TEdgeSpline3D &r_t_edge, CSystem &r_system)
+    :_TyBase(typename _TyBase::_TyVertexIndexTuple(r_t_edge.m_n_node_0, r_t_edge.m_n_node_1,
+        r_t_edge.m_n_node_2, r_t_edge.m_n_node_3, r_t_edge.m_n_node_4),
+    r_t_edge.m_v_delta, r_t_edge.m_t_inv_sigma)
+  {
+    m_vertex_ptr.Get<0>() = &r_system.template r_Get_Vertex<CVertexPose3D>(r_t_edge.m_n_node_0, CInitializeNullVertex<CVertexPose3D>());
+    m_vertex_ptr.Get<1>() = &r_system.template r_Get_Vertex<CVertexPose3D>(r_t_edge.m_n_node_1, CInitializeNullVertex<CVertexPose3D>());
+    m_vertex_ptr.Get<2>() = &r_system.template r_Get_Vertex<CVertexPose3D>(r_t_edge.m_n_node_2, CInitializeNullVertex<CVertexPose3D>());
+    m_vertex_ptr.Get<3>() = &r_system.template r_Get_Vertex<CVertexPose3D>(r_t_edge.m_n_node_3, CInitializeNullVertex<CVertexPose3D>());
+    m_vertex_ptr.Get<4>() = &r_system.template r_Get_Vertex<CVertexPose3D>(r_t_edge.m_n_node_4, CInitializeNullVertex<CVertexPose3D>());
+    // get vertices (initialize if required)
+  }
+
+  /**
+   *  @brief constructor; converts parsed edge to edge representation
+   *
+   *  @tparam CSystem is type of system where this edge is being stored
+   *
+   *  @param[in] n_node0 is (zero-based) index of the first (origin) node
+   *  @param[in] n_node1 is (zero-based) index of the second (endpoint) node
+   *  @param[in] r_v_delta is measurement vector
+   *  @param[in] r_t_inv_sigma is the information matrix
+   *  @param[in,out] r_system is reference to system (used to query edge vertices)
+   */
+  template <class CSystem>
+  CBSplineEdge(size_t n_node0, size_t n_node1, size_t n_node2, size_t n_node3, size_t n_node4,
+      const Eigen::Matrix<double, 6, 1> &r_v_delta, const Eigen::Matrix<double, 6, 6> &r_t_inv_sigma, CSystem &r_system)
+    :_TyBase(typename _TyBase::_TyVertexIndexTuple(n_node0, n_node1, n_node2, n_node3, n_node4), r_v_delta, r_t_inv_sigma)
+  {
+    m_vertex_ptr.Get<0>() = &r_system.template r_Get_Vertex<CVertexPose3D>(n_node0, CInitializeNullVertex<CVertexPose3D>());
+    m_vertex_ptr.Get<1>() = &r_system.template r_Get_Vertex<CVertexPose3D>(n_node1, CInitializeNullVertex<CVertexPose3D>());
+    m_vertex_ptr.Get<2>() = &r_system.template r_Get_Vertex<CVertexPose3D>(n_node2, CInitializeNullVertex<CVertexPose3D>());
+    m_vertex_ptr.Get<3>() = &r_system.template r_Get_Vertex<CVertexPose3D>(n_node3, CInitializeNullVertex<CVertexPose3D>());
+    m_vertex_ptr.Get<4>() = &r_system.template r_Get_Vertex<CVertexPose3D>(n_node4, CInitializeNullVertex<CVertexPose3D>());
+    // get vertices (initialize if required)
+  }
+
+  /**
+   *  @brief updates the edge with a new measurement
+   *
+   *  @param[in] r_v_delta is new measurement vector
+   *  @param[in] r_t_inv_sigma is new information matrix
+   */
+  /*inline void Update(const Eigen::Matrix<double, 1, 1> &r_v_delta, const Eigen::Matrix<double, 1, 1> &r_t_inv_sigma) // for some reason this needs to be here, although the base already implements this
+  {
+    _TyBase::Update(r_v_delta, r_t_inv_sigma);
+  }*/
+
+  /**
+   *  @brief calculates jacobians, expectation and error
+   *
+   *  @param[out] r_t_jacobian0 is jacobian, associated with the first vertex
+   *  @param[out] r_t_jacobian1 is jacobian, associated with the second vertex
+   *  @param[out] r_v_expectation is expecation vector
+   *  @param[out] r_v_error is error vector
+   */
+  inline void Calculate_Jacobians_Expectation_Error(_TyBase::_TyJacobianTuple &r_t_jacobian_tuple,
+      Eigen::Matrix<double, 6, 1> &r_v_expectation, Eigen::Matrix<double, 6, 1> &r_v_error) const // change dimensionality of eigen types, if required
+  {
+    // calculates the expectation and the jacobians
+    /*std::cout << m_vertex_ptr.Get<0>()->r_v_State().transpose() << std::endl;
+    std::cout << m_vertex_ptr.Get<1>()->r_v_State().transpose() << std::endl;
+    std::cout << m_vertex_ptr.Get<2>()->r_v_State().transpose() << std::endl;
+    std::cout << m_vertex_ptr.Get<3>()->r_v_State().transpose() << std::endl;*/
+
+    BSplineSE3 spline(m_vertex_ptr.Get<0>()->r_v_State(), m_vertex_ptr.Get<1>()->r_v_State(),
+        m_vertex_ptr.Get<2>()->r_v_State(), m_vertex_ptr.Get<3>()->r_v_State());
+    r_v_expectation = spline.bspline_error6D(m_v_measurement(0), m_vertex_ptr.Get<4>()->r_v_State());
+    // expectation error
+
+    /*std::cout << "V0: " << m_vertex_ptr.Get<0>()->r_v_State().transpose() << std::endl;
+    std::cout << "V1: " << m_vertex_ptr.Get<1>()->r_v_State().transpose() << std::endl;
+    std::cout << "V2: " << m_vertex_ptr.Get<2>()->r_v_State().transpose() << std::endl;
+    std::cout << "V3: " << m_vertex_ptr.Get<3>()->r_v_State().transpose() << std::endl;
+    std::cout << "V4: " << m_vertex_ptr.Get<4>()->r_v_State().transpose() << std::endl;
+    std::cout << "033: " << spline.estimate(0.33).matrix() << std::endl;
+    std::cout << "066: " << spline.estimate(0.66).matrix() << std::endl;*/
+
+    //std::cout << "EXP: " << r_v_expectation << std::endl;
+
+    const double delta = 1e-3;  // smaller delta wont work ?? why? is the error function too ??
+    const double scalar = 1.0 / (delta);
+    Eigen::Matrix<double, 6, 6> Eps = Eigen::Matrix<double, 6, 6>::Identity() * delta; // faster, all memory on stack
+    Eigen::Matrix<double, 6, 1> p_delta;
+
+    for(size_t j = 0; j < 6; ++j) // four 1x6 jacobians
+    {
+      C3DJacobians::Relative_to_Absolute(m_vertex_ptr.Get<0>()->r_v_State(), Eps.col(j), p_delta);
+      BSplineSE3 spline0(p_delta, m_vertex_ptr.Get<1>()->r_v_State(),
+          m_vertex_ptr.Get<2>()->r_v_State(), m_vertex_ptr.Get<3>()->r_v_State());
+      r_t_jacobian_tuple.Get<0>().col(j) = (spline0.bspline_error6D(m_v_measurement(0), m_vertex_ptr.Get<4>()->r_v_State()) - r_v_expectation) * scalar;
+      // J0
+
+      C3DJacobians::Relative_to_Absolute(m_vertex_ptr.Get<1>()->r_v_State(), Eps.col(j), p_delta);
+      BSplineSE3 spline1(m_vertex_ptr.Get<0>()->r_v_State(), p_delta,
+          m_vertex_ptr.Get<2>()->r_v_State(), m_vertex_ptr.Get<3>()->r_v_State());
+      r_t_jacobian_tuple.Get<1>().col(j) = (spline1.bspline_error6D(m_v_measurement(0), m_vertex_ptr.Get<4>()->r_v_State()) - r_v_expectation) * scalar;
+      // J1
+
+      C3DJacobians::Relative_to_Absolute(m_vertex_ptr.Get<2>()->r_v_State(), Eps.col(j), p_delta);
+      BSplineSE3 spline2(m_vertex_ptr.Get<0>()->r_v_State(), m_vertex_ptr.Get<1>()->r_v_State(),
+          p_delta, m_vertex_ptr.Get<3>()->r_v_State());
+      r_t_jacobian_tuple.Get<2>().col(j) = (spline2.bspline_error6D(m_v_measurement(0), m_vertex_ptr.Get<4>()->r_v_State()) - r_v_expectation) * scalar;
+      // J2
+
+      C3DJacobians::Relative_to_Absolute(m_vertex_ptr.Get<3>()->r_v_State(), Eps.col(j), p_delta);
+      BSplineSE3 spline3(m_vertex_ptr.Get<0>()->r_v_State(), m_vertex_ptr.Get<1>()->r_v_State(),
+          m_vertex_ptr.Get<2>()->r_v_State(), p_delta);
+      r_t_jacobian_tuple.Get<3>().col(j) = (spline3.bspline_error6D(m_v_measurement(0), m_vertex_ptr.Get<4>()->r_v_State()) - r_v_expectation) * scalar;
+      // J3
+
+      C3DJacobians::Relative_to_Absolute(m_vertex_ptr.Get<4>()->r_v_State(), Eps.col(j), p_delta);
+      BSplineSE3 spline4(m_vertex_ptr.Get<0>()->r_v_State(), m_vertex_ptr.Get<1>()->r_v_State(),
+          m_vertex_ptr.Get<2>()->r_v_State(), m_vertex_ptr.Get<3>()->r_v_State());
+      r_t_jacobian_tuple.Get<4>().col(j) = (spline4.bspline_error6D(m_v_measurement(0), p_delta) - r_v_expectation) * scalar;
+      // J4
+    }
+    // error is given by spline function
+    /*std::cout << "J0: " << r_t_jacobian_tuple.Get<0>() << std::endl << std::endl;
+    std::cout << "J1: " << r_t_jacobian_tuple.Get<1>() << std::endl << std::endl;
+    std::cout << "J2: " << r_t_jacobian_tuple.Get<2>() << std::endl << std::endl;
+    std::cout << "J3: " << r_t_jacobian_tuple.Get<3>() << std::endl << std::endl;
+    std::cout << "J4: " << r_t_jacobian_tuple.Get<4>() << std::endl << std::endl;*/
+
+    r_v_error = - r_v_expectation;  // measurement should be zero
+    // calculates error (possibly re-calculates, if running A-SLAM)
+  }
+
+  /**
+   *  @brief calculates \f$\chi^2\f$ error
+   *  @return Returns (unweighted) \f$\chi^2\f$ error for this edge.
+   */
+  inline double f_Chi_Squared_Error() const
+  {
+    /*std::cout << "er " <<  m_vertex_ptr.Get<0>()->r_v_State().transpose() << std::endl;
+    std::cout << "er " <<  m_vertex_ptr.Get<1>()->r_v_State().transpose() << std::endl;
+    std::cout << "er " <<  m_vertex_ptr.Get<2>()->r_v_State().transpose() << std::endl;
+    std::cout << "er " <<  m_vertex_ptr.Get<3>()->r_v_State().transpose() << std::endl;*/
+
+    BSplineSE3 spline(m_vertex_ptr.Get<0>()->r_v_State(), m_vertex_ptr.Get<1>()->r_v_State(),
+      m_vertex_ptr.Get<2>()->r_v_State(), m_vertex_ptr.Get<3>()->r_v_State());
+    Eigen::Matrix<double, 6, 1> v_error = - spline.bspline_error6D(m_v_measurement(0), m_vertex_ptr.Get<4>()->r_v_State());
+    // calculates the expectation, error and the jacobians
+
+    return (v_error.transpose() * m_t_sigma_inv).dot(v_error); // ||z_i - h_i(O_i)||^2 lambda_i
+  }
+};
+
+// todo: potom uplne dole
+
+/**
+ *  @brief edge traits for SE(3) solver (specialized for CParser::TEdge3D)
+ */
+template <>
+class CSE3LandmarkPoseEdgeTraits<CParserBase::TEdgeSpline3D> {
+public:
+  typedef CBSplineEdge _TyEdge; /**< @brief the edge type to construct from the parsed type */
+};
+
+
 #endif // !__SE3_TYPES_INCLUDED

@@ -207,6 +207,8 @@ int main(int n_arg_num, const char **p_arg_list)
 			}
 			// use Levenberg-Marquardt for bundle adjustment, GN not good enough
 
+			fprintf(stderr, "Solver selected: %d\n", t_cmd_args.n_solver_choice);
+
 			if(t_cmd_args.b_use_BA || t_cmd_args.b_use_BAS || t_cmd_args.b_use_BAI) { // BA mono / stereo
 				if(t_cmd_args.b_use_BAI && !t_cmd_args.b_use_BAS) {
 					if(n_Run_BA_Intrinsics_Solver(t_cmd_args)) // mono + intrinsics

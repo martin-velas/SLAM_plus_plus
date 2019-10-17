@@ -175,6 +175,8 @@
 // works in windows but not in linux
 #endif // 1
 
+#include "eigen/unsupported/Eigen/MatrixFunctions"
+
 /** \addtogroup se3
  *	@{
  */
@@ -258,6 +260,180 @@ typedef Eigen::Matrix<double, 6, 6> Matrix6d; /**< @brief a 6x6 matrix */
 #endif // !HAVE_EIGEN_6D_DOUBLE_MATRIX
 
 } // ~Eigen
+
+
+/*
+ * @brief BSplines class, consisting of 4 control poses
+ */
+class BSplineSE3 {
+public:
+  /*
+   * @brief constructor from 4 control poses
+   */
+  BSplineSE3(const Eigen::Vector6d &V0, const Eigen::Vector6d &V1,
+      const Eigen::Vector6d &V2, const Eigen::Vector6d &V3)
+  {
+    /*std::cout << "V0 " << V0.transpose() << std::endl;
+    std::cout << "V1 " << V1.transpose() << std::endl;
+    std::cout << "V2 " << V2.transpose() << std::endl;
+    std::cout << "V3 " << V3.transpose() << std::endl;*/
+    control_poses.push_back(vec2pose(V0));
+    control_poses.push_back(vec2pose(V1));
+    control_poses.push_back(vec2pose(V2));
+    control_poses.push_back(vec2pose(V3));
+    //std::cout << "0" << std::endl;
+
+    C << 6,  0,  0,  0,
+       5,  3, -3,  1,
+       1,  3,  3, -2,
+       0,  0,  0,  1;
+    C *= 1.0/6.0;
+    assert(control_poses.size() == DEGREE);
+    Omega.push_back(Eigen::Matrix4f::Zero());
+    for(int i = 1; i < DEGREE; i++) {
+      /*std::cout << control_poses[i-1].matrix() << std::endl << std::endl;
+      std::cout << control_poses[i-1].inverse().matrix() << std::endl << std::endl;
+      std::cout << control_poses[i].matrix() << std::endl << std::endl;
+      std::cout << (control_poses[i-1].inverse() * control_poses[i]).matrix() << std::endl << std::endl;
+      std::cout << (control_poses[i-1].inverse() * control_poses[i]).matrix().log() << std::endl << std::endl;*/
+      Omega.push_back((control_poses[i-1].inverse() * control_poses[i]).matrix().log());
+    }
+    //std::cout << "1" << std::endl;
+  }
+
+  /*
+   * @brief transform 4x4 Rt matrix to 6D pose
+   */
+  inline Eigen::Vector6d pose2vec(const Eigen::Affine3f &pose) {
+    Eigen::Vector6d vec;
+    vec(0) = pose.translation()(0);
+    vec(1) = pose.translation()(1);
+    vec(2) = pose.translation()(2);
+
+    Eigen::AngleAxisf R(pose.rotation());
+    vec(3) = R.axis()(0) * R.angle();
+    vec(4) = R.axis()(1) * R.angle();
+    vec(5) = R.axis()(2) * R.angle();
+
+    return vec;
+  }
+
+  /*
+   * @brief transform 6D pose to 4x4 Rt matrix
+   */
+  inline Eigen::Affine3f vec2pose(const Eigen::Vector6d &vec) {
+    Eigen::Translation3f t(vec(0), vec(1), vec(2));
+
+    Eigen::Vector3d axisd = vec.tail(3);
+    //Eigen::Matrix3d R = Operator_rot(axisd);
+    Eigen::Vector3f axis = axisd.cast<float>();
+    float angle = axis.norm();
+    if(angle < 1e-6) {
+      axis.x() = 1;
+      axis.y() = 0;
+      axis.z() = 0;
+    } else {
+      axis.normalize();
+    }
+    Eigen::AngleAxisf R(angle, axis);
+    //Eigen::Matrix3f Rf = R.cast<float>();
+
+    return t*R;
+  }
+
+  /*
+   * @brief compute weighted cumulative distance between measured points and points on slpine
+   */
+  inline Eigen::Matrix<double, 1, 1> bspline_error()
+  {
+    //std::cout << "2" << std::endl;
+    Eigen::Affine3f V1_estimate = estimate(0.0);
+    //std::cout << V1_estimate.matrix() << std::endl << std::endl;
+    Eigen::Vector6d V1_diff = pose2vec(control_poses[1].inverse() * V1_estimate);
+    //std::cout << V1_diff.transpose() << std::endl << std::endl;
+    Eigen::Affine3f V2_estimate = estimate(1.0);
+    //std::cout << V2_estimate.matrix() << std::endl << std::endl;
+    Eigen::Vector6d V2_diff = pose2vec(control_poses[2].inverse() * V2_estimate);
+    //std::cout << V2_diff.transpose() << std::endl << std::endl;
+    //std::cout << "3" << std::endl;
+
+    const double wt = 1.0;
+    const double wR = 10.0;
+
+    Eigen::Matrix<double, 1, 1> res;
+    res(0) = V1_diff.head(3).norm() * wt + V1_diff.tail(3).norm() * wR +
+         V2_diff.head(3).norm() * wt + V2_diff.tail(3).norm() * wR;
+    //std::cout << "4" << std::endl;
+
+    return res;
+  }
+
+  /*
+   * @brief compute weighted cumulative distance between measured points and points on slpine
+   */
+  inline Eigen::Matrix<double, 6, 1> bspline_error6D(const double t, const Eigen::Vector6d &ref)
+  {
+    Eigen::Affine3f ref_pose = vec2pose(ref);
+
+    Eigen::Affine3f estimation = estimate(t);
+    Eigen::Affine3f diff = ref_pose.inverse() * estimation;
+
+    Eigen::Matrix<double, 6, 1> res = pose2vec(diff);
+
+    return res;
+  }
+
+  /*
+   * @brief compute weighted cumulative distance between measured points and points on slpine
+   */
+  inline Eigen::Matrix<double, 1, 1> bspline_error2(const double t, const Eigen::Vector6d &ref)
+  {
+    Eigen::Affine3f ref_pose = vec2pose(ref);
+
+    Eigen::Affine3f estimation = estimate(t);
+    Eigen::Affine3f diff = ref_pose.inverse() * estimation;
+    double diff_t = diff.translation().norm();
+    double diff_R = fabs(Eigen::AngleAxisf(diff.rotation()).angle());
+
+    const double wt = 1.0;
+    const double wR = 10.0;
+    Eigen::Matrix<double, 1, 1> res;
+    res(0) = diff_t * wt + diff_R * wR;
+    return res;
+  }
+
+
+  /*
+   * @brief estimate point on the spline in time t (t=<0, 1>)
+   */
+  inline Eigen::Affine3f estimate(const float t) const
+  {
+    Eigen::Vector4f B = C * Eigen::Vector4f(1, t, t*t, t*t*t);
+    //std::cout << B.transpose() << std::endl;
+    Eigen::Matrix4f result = control_poses[0].matrix();
+    //std::cout << result << std::endl << std::endl;
+    for(int i = 1; i < DEGREE; i++) {
+      /*std::cout << i << std::endl << std::endl;
+      std::cout << B(i) << std::endl << std::endl;
+      std::cout << Omega[i] << std::endl << std::endl;*/
+      result = result * (B(i) * Omega[i]).exp();
+      //std::cout << result << std::endl << std::endl;
+    }
+    Eigen::Affine3f result_t(result);
+    return result_t;
+  }
+
+private:
+  static const int DEGREE = 4;
+  // degree of spline
+  std::vector<Eigen::Affine3f> control_poses;
+  // control poses
+  Eigen::Matrix4f C;
+  // polynomial coefficients?
+  std::vector<Eigen::Matrix4f> Omega;
+  // assuming this is relative transformations between consecutive poses
+};
+
 
 /**
  *	@brief implementation of Jacobian calculations, required by 3D solvers
@@ -1975,17 +2151,17 @@ public:
 
 		rotation of a vector r by a quaternion w q (w is real, q is imaginary part of the quat) is:
 
-		r' = r + 2w(q × r) + 2q × (q × r)	// × is cross product, multiplications hidden
+		r' = r + 2w(q ï¿½ r) + 2q ï¿½ (q ï¿½ r)	// ï¿½ is cross product, multiplications hidden
 
 		if theta is the rotation angle, w = cos(theta / 2)
 
-		r' = r + 2cos(theta / 2)(q × r) + 2q × (q × r)
+		r' = r + 2cos(theta / 2)(q ï¿½ r) + 2q ï¿½ (q ï¿½ r)
 
 		let a be axis-angle vector, a = q theta / sin(theta / 2), then q = a sin(theta / 2) / theta
 
-		r' = r + 2cos(theta / 2) sin(theta / 2) / theta (a × r) + 2 * (sin(theta / 2))^2 / theta^2 a × (a × r)
+		r' = r + 2cos(theta / 2) sin(theta / 2) / theta (a ï¿½ r) + 2 * (sin(theta / 2))^2 / theta^2 a ï¿½ (a ï¿½ r)
 
-		r' = r + A (a × r) + B a × (a × r)	// where A = 2cos(theta / 2) sin(theta / 2) / theta = sin(theta) / theta, B = 2 (sin(theta / 2))^2 / theta^2 = (1 - cos(theta)) / theta^2 (http://www.wolframalpha.com/input/?i=2*cos(theta+/+2)*+sin(theta+/+2)+/+theta&dataset= and http://www.wolframalpha.com/input/?i=2+*+(sin(theta+/+2))^2+/+theta^2&dataset=)
+		r' = r + A (a ï¿½ r) + B a ï¿½ (a ï¿½ r)	// where A = 2cos(theta / 2) sin(theta / 2) / theta = sin(theta) / theta, B = 2 (sin(theta / 2))^2 / theta^2 = (1 - cos(theta)) / theta^2 (http://www.wolframalpha.com/input/?i=2*cos(theta+/+2)*+sin(theta+/+2)+/+theta&dataset= and http://www.wolframalpha.com/input/?i=2+*+(sin(theta+/+2))^2+/+theta^2&dataset=)
 
 		for interpolation by a multiple t of a quaternion w q, one can do slerp of unit quaternion sign(w) 0 (identity) and w q ("one" rotation)
 
@@ -2011,10 +2187,10 @@ public:
 
 		w' = sin((1 - t) theta / 2) / sin(theta / 2) cos(theta / 2) + sin(t theta / 2) / sin(theta / 2) sign(cos(theta / 2))
 
-		r' = r + 2 * sin((1 - t) theta / 2) / sin(theta / 2) cos(theta / 2) + sin(t theta / 2) / sin(theta / 2) sign(cos(theta / 2)) * (q × r) + 2q × (q × r)
+		r' = r + 2 * sin((1 - t) theta / 2) / sin(theta / 2) cos(theta / 2) + sin(t theta / 2) / sin(theta / 2) sign(cos(theta / 2)) * (q ï¿½ r) + 2q ï¿½ (q ï¿½ r)
 
-		r' = r + (2 * sin((1 - t) theta / 2) / sin(theta / 2) cos(theta / 2) + sin(t theta / 2) / sin(theta / 2) sign(cos(theta / 2)) sin((1 - t) theta / 2) / theta) * (a × r) +
-			 2 * (sin((1 - t) theta / 2) / theta)^2 a × (a × r)
+		r' = r + (2 * sin((1 - t) theta / 2) / sin(theta / 2) cos(theta / 2) + sin(t theta / 2) / sin(theta / 2) sign(cos(theta / 2)) sin((1 - t) theta / 2) / theta) * (a ï¿½ r) +
+			 2 * (sin((1 - t) theta / 2) / theta)^2 a ï¿½ (a ï¿½ r)
 
 		 blah ...
 
@@ -2025,5 +2201,6 @@ public:
 };
 
 /** @} */ // end of group
+
 
 #endif // !__3D_SOLVER_BASE_INCLUDED

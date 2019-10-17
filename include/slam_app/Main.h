@@ -1048,6 +1048,15 @@ struct TDatasetPeeker : public CParserBase::CParserAdaptor {
 	{
 		// no vote, could be used in many situations
 	}
+
+	/**
+	 *  @brief appends the system with an odometry measurement
+	 *  @param[in] r_t_edge is the measurement to be appended
+	 */
+	virtual void AppendSystem(const CParserBase::TEdgeSpline3D &UNUSED(r_t_edge))
+	{
+	  b_has_landmark = true;
+	}
 };
 
 //#include "slam/Marginals.h"
