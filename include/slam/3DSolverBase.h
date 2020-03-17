@@ -273,32 +273,29 @@ public:
   BSplineSE3(const Eigen::Vector6d &V0, const Eigen::Vector6d &V1,
       const Eigen::Vector6d &V2, const Eigen::Vector6d &V3)
   {
-    /*std::cout << "V0 " << V0.transpose() << std::endl;
-    std::cout << "V1 " << V1.transpose() << std::endl;
-    std::cout << "V2 " << V2.transpose() << std::endl;
-    std::cout << "V3 " << V3.transpose() << std::endl;*/
     control_poses.push_back(vec2pose(V0));
     control_poses.push_back(vec2pose(V1));
     control_poses.push_back(vec2pose(V2));
     control_poses.push_back(vec2pose(V3));
-    //std::cout << "0" << std::endl;
 
     C << 6,  0,  0,  0,
        5,  3, -3,  1,
        1,  3,  3, -2,
        0,  0,  0,  1;
     C *= 1.0/6.0;
+
     assert(control_poses.size() == DEGREE);
     Omega.push_back(Eigen::Matrix4f::Zero());
+    magnitude = Eigen::Vector6d::Zero();
+    Eigen::Affine3f previous_delta;
     for(int i = 1; i < DEGREE; i++) {
-      /*std::cout << control_poses[i-1].matrix() << std::endl << std::endl;
-      std::cout << control_poses[i-1].inverse().matrix() << std::endl << std::endl;
-      std::cout << control_poses[i].matrix() << std::endl << std::endl;
-      std::cout << (control_poses[i-1].inverse() * control_poses[i]).matrix() << std::endl << std::endl;
-      std::cout << (control_poses[i-1].inverse() * control_poses[i]).matrix().log() << std::endl << std::endl;*/
-      Omega.push_back((control_poses[i-1].inverse() * control_poses[i]).matrix().log());
+      const Eigen::Affine3f delta = control_poses[i-1].inverse() * control_poses[i];
+      Omega.push_back(delta.matrix().log());
+      if(i > 1) {
+        magnitude += pose2vec(previous_delta.inverse() * delta);
+      }
+      previous_delta = delta;
     }
-    //std::cout << "1" << std::endl;
   }
 
   /*
@@ -344,33 +341,6 @@ public:
   /*
    * @brief compute weighted cumulative distance between measured points and points on slpine
    */
-  inline Eigen::Matrix<double, 1, 1> bspline_error()
-  {
-    //std::cout << "2" << std::endl;
-    Eigen::Affine3f V1_estimate = estimate(0.0);
-    //std::cout << V1_estimate.matrix() << std::endl << std::endl;
-    Eigen::Vector6d V1_diff = pose2vec(control_poses[1].inverse() * V1_estimate);
-    //std::cout << V1_diff.transpose() << std::endl << std::endl;
-    Eigen::Affine3f V2_estimate = estimate(1.0);
-    //std::cout << V2_estimate.matrix() << std::endl << std::endl;
-    Eigen::Vector6d V2_diff = pose2vec(control_poses[2].inverse() * V2_estimate);
-    //std::cout << V2_diff.transpose() << std::endl << std::endl;
-    //std::cout << "3" << std::endl;
-
-    const double wt = 1.0;
-    const double wR = 10.0;
-
-    Eigen::Matrix<double, 1, 1> res;
-    res(0) = V1_diff.head(3).norm() * wt + V1_diff.tail(3).norm() * wR +
-         V2_diff.head(3).norm() * wt + V2_diff.tail(3).norm() * wR;
-    //std::cout << "4" << std::endl;
-
-    return res;
-  }
-
-  /*
-   * @brief compute weighted cumulative distance between measured points and points on slpine
-   */
   inline Eigen::Matrix<double, 6, 1> bspline_error6D(const double t, const Eigen::Vector6d &ref)
   {
     Eigen::Affine3f ref_pose = vec2pose(ref);
@@ -380,28 +350,8 @@ public:
 
     Eigen::Matrix<double, 6, 1> res = pose2vec(diff);
 
-    return res;
+    return res + magnitude;
   }
-
-  /*
-   * @brief compute weighted cumulative distance between measured points and points on slpine
-   */
-  inline Eigen::Matrix<double, 1, 1> bspline_error2(const double t, const Eigen::Vector6d &ref)
-  {
-    Eigen::Affine3f ref_pose = vec2pose(ref);
-
-    Eigen::Affine3f estimation = estimate(t);
-    Eigen::Affine3f diff = ref_pose.inverse() * estimation;
-    double diff_t = diff.translation().norm();
-    double diff_R = fabs(Eigen::AngleAxisf(diff.rotation()).angle());
-
-    const double wt = 1.0;
-    const double wR = 10.0;
-    Eigen::Matrix<double, 1, 1> res;
-    res(0) = diff_t * wt + diff_R * wR;
-    return res;
-  }
-
 
   /*
    * @brief estimate point on the spline in time t (t=<0, 1>)
@@ -432,6 +382,7 @@ private:
   // polynomial coefficients?
   std::vector<Eigen::Matrix4f> Omega;
   // assuming this is relative transformations between consecutive poses
+  Eigen::Vector6d magnitude;
 };
 
 
