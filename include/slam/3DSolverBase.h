@@ -350,7 +350,8 @@ public:
 
     Eigen::Matrix<double, 6, 1> res = pose2vec(diff);
 
-    return res + magnitude;
+    // return res + magnitude;
+    return res;
   }
 
   /*
