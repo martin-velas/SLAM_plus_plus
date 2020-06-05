@@ -12,6 +12,8 @@
 #include "slam/BaseTypes.h"
 #include "slam/3DSolverBase.h"
 #include "slam/Parser.h" // parsed types passed to constructors
+#include <stdio.h>
+#include <iostream>
 
 /** \addtogroup se3
  *	@{
@@ -685,6 +687,257 @@ public:
 
 /** @} */ // end of group
 
+/**
+ *	@brief GPS edge
+ */
+class CEdge3DXYZ : public CBaseEdgeImpl<CEdge3DXYZ, MakeTypelist(CVertexPose3D), 3> {
+public:
+	typedef CBaseEdgeImpl<CEdge3DXYZ, MakeTypelist(CVertexPose3D), 3> _TyBase; /**< @brief base class */
+
+public:
+	__GRAPH_TYPES_ALIGN_OPERATOR_NEW // imposed by the use of eigen, just copy this
+
+	/**
+	 *	@brief default constructor; has no effect
+	 */
+	inline CEdge3DXYZ()
+	{}
+
+	/**
+	 *	@brief constructor; converts parsed edge to edge representation
+	 *
+	 *	@tparam CSystem is type of system where this edge is being stored
+	 *
+	 *	@param[in] r_t_edge is parsed edge
+	 *	@param[in,out] r_system is reference to system (used to query edge vertices)
+	 */
+	template <class CSystem>
+	CEdge3DXYZ(size_t n_vertex0, const Eigen::Vector3d &r_v_delta,
+		const Eigen::Matrix<double, 3, 3> &r_v_sigma, CSystem &r_system)
+		:_TyBase(n_vertex0, r_v_delta, r_v_sigma)
+	{
+		m_p_vertex0 = &r_system.template r_Get_Vertex<CVertexPose3D>(n_vertex0, CInitializeNullVertex<>());
+		// initialize vertex 1 manually
+	}
+
+	/**
+	 *	@brief constructor; converts parsed edge to edge representation
+	 *
+	 *	@tparam CSystem is type of system where this edge is being stored
+	 *
+	 *	@param[in] r_t_edge is parsed edge
+	 *	@param[in,out] r_system is reference to system (used to query edge vertices)
+	 */
+	template <class CSystem>
+	CEdge3DXYZ(const CParserBase::TEdgeXYZ &r_t_edge, CSystem &r_system)
+		:_TyBase(r_t_edge.m_n_node_0, r_t_edge.m_v_delta, r_t_edge.m_t_inv_sigma)
+	{
+		m_p_vertex0 = &r_system.template r_Get_Vertex<CVertexPose3D>(r_t_edge.m_n_node_0, CInitializeNullVertex<>());
+	}
+
+	/**
+	 *	@brief updates the edge with a new measurement
+	 *
+	 *	@param[in] r_v_delta is new measurement vector
+	 *	@param[in] r_t_inv_sigma is new information matrix
+	 */
+	inline void Update(const Eigen::Vector3d &r_v_delta, const Eigen::Matrix<double, 3, 3> &r_t_inv_sigma)
+	{
+		_TyBase::Update(r_v_delta, r_t_inv_sigma);
+	}
+
+	/**
+	 *	@brief calculates jacobians, expectation and error
+	 *
+	 *	@param[out] r_t_jacobian0 is jacobian, associated with the first vertex
+	 *	@param[out] r_v_expectation is expecation vector
+	 *	@param[out] r_v_error is error vector
+	 */
+	inline void Calculate_Jacobian_Expectation_Error(Eigen::Matrix<double, 3, 6> &r_t_jacobian0,
+			Eigen::Vector3d &r_v_expectation, Eigen::Vector3d &r_v_error) const
+	{
+		r_v_expectation = m_p_vertex0->r_v_State().head<3>();
+
+		const double delta = 1e-9;
+		const double scalar = 1.0 / (delta);
+
+		Eigen::Matrix<double, 6, 6> Eps;
+		Eps = Eigen::Matrix<double, 6, 6>::Identity() * delta; // faster, all memory on stack
+
+		Eigen::Matrix<double, 3, 6> &H1 = r_t_jacobian0;
+		// can actually work inplace
+
+		Eigen::Matrix<double, 6, 1> p_delta;
+
+		//for XYZ and RPY
+		for(int j = 0; j < 6; ++ j) {
+			C3DJacobians::Relative_to_Absolute(m_p_vertex0->r_v_State(), Eps.col(j), p_delta);
+
+			H1.col(j) = (p_delta.head<3>() - r_v_expectation) * scalar;
+		}
+		r_v_error = m_v_measurement - r_v_expectation;
+
+		//std::cout << "exp: " << m_v_measurement.transpose() << " <> " << r_v_expectation.transpose() <<
+		//		" : " << (r_v_error.transpose() * m_t_sigma_inv).dot(r_v_error) << std::endl;
+	}
+
+	/**
+	 *	@brief calculates \f$\chi^2\f$ error
+	 *	@return Returns (unweighted) \f$\chi^2\f$ error for this edge.
+	 */
+	inline double f_Chi_Squared_Error() const
+	{
+		Eigen::Vector3d v_error;
+
+		v_error = m_v_measurement - m_p_vertex0->r_v_State().head<3>();
+		//std::cout << "ch: " << m_v_measurement.transpose() << " <> " << m_p_vertex0->r_v_State().head<3>().transpose() << std::endl;
+
+		return (v_error.transpose() * m_t_sigma_inv).dot(v_error); // ||z_i - h_i(O_i)||^2 lambda_i
+	}
+};
+
+/** @} */ // end of group
+
+/**
+ *	@brief GPS + offset edge
+ */
+class CEdge3DXYZOFF : public CBaseEdgeImpl<CEdge3DXYZOFF, MakeTypelist(CVertexPose3D), 3> {
+protected:
+    Eigen::Matrix<double, 3, 1, Eigen::DontAlign> m_v_offset;
+public:
+	typedef CBaseEdgeImpl<CEdge3DXYZOFF, MakeTypelist(CVertexPose3D), 3> _TyBase; /**< @brief base class */
+
+public:
+	__GRAPH_TYPES_ALIGN_OPERATOR_NEW // imposed by the use of eigen, just copy this
+
+	/**
+	 *	@brief default constructor; has no effect
+	 */
+	inline CEdge3DXYZOFF()
+	{}
+
+	/**
+	 *	@brief constructor; converts parsed edge to edge representation
+	 *
+	 *	@tparam CSystem is type of system where this edge is being stored
+	 *
+	 *	@param[in] r_t_edge is parsed edge
+	 *	@param[in,out] r_system is reference to system (used to query edge vertices)
+	 */
+	template <class CSystem>
+	CEdge3DXYZOFF(size_t n_vertex0, const Eigen::Vector3d &r_v_delta, const Eigen::Vector3d &r_v_offset,
+		const Eigen::Matrix<double, 3, 3> &r_v_sigma, CSystem &r_system)
+		:_TyBase(n_vertex0, r_v_delta, r_v_sigma),
+		 m_v_offset(r_v_offset)
+	{
+		m_p_vertex0 = &r_system.template r_Get_Vertex<CVertexPose3D>(n_vertex0, CInitializeNullVertex<>());
+		// initialize vertex 1 manually
+	}
+
+	/**
+	 *	@brief constructor; converts parsed edge to edge representation
+	 *
+	 *	@tparam CSystem is type of system where this edge is being stored
+	 *
+	 *	@param[in] r_t_edge is parsed edge
+	 *	@param[in,out] r_system is reference to system (used to query edge vertices)
+	 */
+	template <class CSystem>
+	CEdge3DXYZOFF(const CParserBase::TEdgeXYZOFF &r_t_edge, CSystem &r_system)
+		:_TyBase(r_t_edge.m_n_node_0, r_t_edge.m_v_delta, r_t_edge.m_t_inv_sigma),
+		 m_v_offset(r_t_edge.m_v_offset)
+	{
+		m_p_vertex0 = &r_system.template r_Get_Vertex<CVertexPose3D>(r_t_edge.m_n_node_0, CInitializeNullVertex<>());
+	}
+
+	/**
+	 *	@brief updates the edge with a new measurement
+	 *
+	 *	@param[in] r_v_delta is new measurement vector
+	 *	@param[in] r_t_inv_sigma is new information matrix
+	 */
+	inline void Update(const Eigen::Vector3d &r_v_delta, const Eigen::Matrix<double, 3, 3> &r_t_inv_sigma)
+	{
+		_TyBase::Update(r_v_delta, r_t_inv_sigma);
+	}
+
+	/**
+	 *	@brief calculates jacobians, expectation and error
+	 *
+	 *	@param[out] r_t_jacobian0 is jacobian, associated with the first vertex
+	 *	@param[out] r_v_expectation is expecation vector
+	 *	@param[out] r_v_error is error vector
+	 */
+	inline void Calculate_Jacobian_Expectation_Error(Eigen::Matrix<double, 3, 6> &r_t_jacobian0,
+			Eigen::Vector3d &r_v_expectation, Eigen::Vector3d &r_v_error) const
+	{
+		Eigen::Matrix<double, 6, 1> offsetL = Eigen::Matrix<double, 6, 1>::Zero();
+		offsetL.head(3) = m_v_offset;
+		Eigen::Matrix<double, 6, 1> offsetW;
+		C3DJacobians::Relative_to_Absolute(m_p_vertex0->r_v_State(), offsetL, offsetW);
+		r_v_expectation = offsetW.head(3);
+		// get expectation with offset
+
+		const double delta = 1e-9;
+		const double scalar = 1.0 / (delta);
+
+		Eigen::Matrix<double, 6, 6> Eps;
+		Eps = Eigen::Matrix<double, 6, 6>::Identity() * delta; // faster, all memory on stack
+
+		Eigen::Matrix<double, 3, 6> &H1 = r_t_jacobian0;
+		// can actually work inplace
+
+		Eigen::Matrix<double, 6, 1> p_delta;
+
+		//for XYZ and RPY
+		for(int j = 0; j < 6; ++ j) {
+			C3DJacobians::Relative_to_Absolute(m_p_vertex0->r_v_State(), Eps.col(j), p_delta);
+			C3DJacobians::Relative_to_Absolute(p_delta, offsetL, offsetW);
+
+			H1.col(j) = (offsetW.head<3>() - r_v_expectation) * scalar;
+		}
+		r_v_error = m_v_measurement - r_v_expectation;
+
+		//std::cout << "exp: " << m_v_measurement.transpose() << " <> " << r_v_expectation.transpose() <<
+		//		" : " << (r_v_error.transpose() * m_t_sigma_inv).dot(r_v_error) << std::endl;
+	}
+
+	/**
+	 *	@brief calculates \f$\chi^2\f$ error
+	 *	@return Returns (unweighted) \f$\chi^2\f$ error for this edge.
+	 */
+	inline double f_Chi_Squared_Error() const
+	{
+		Eigen::Matrix<double, 6, 1> offsetL = Eigen::Matrix<double, 6, 1>::Zero();
+		offsetL.head(3) = m_v_offset;
+		Eigen::Matrix<double, 6, 1> offsetW;
+		C3DJacobians::Relative_to_Absolute(m_p_vertex0->r_v_State(), offsetL, offsetW);
+
+		Eigen::Vector3d v_error;
+		v_error = m_v_measurement - offsetW.head<3>();
+		//std::cout << "ch: " << m_v_measurement.transpose() << " <> " << m_p_vertex0->r_v_State().head<3>().transpose() << std::endl;
+
+		return (v_error.transpose() * m_t_sigma_inv).dot(v_error); // ||z_i - h_i(O_i)||^2 lambda_i
+	}
+};
+
+/**
+ *	@brief edge traits for SE(3) solver (specialized for CParser::TEdge3D)
+ */
+template <>
+class CSE3LandmarkPoseEdgeTraits<CParserBase::TEdgeXYZ> {
+public:
+	typedef CEdge3DXYZ _TyEdge; /**< @brief the edge type to construct from the parsed type */
+};
+
+/**
+ *	@brief edge traits for SE(3) solver (specialized for CParser::TEdge3D)
+ */
+template <>
+class CSE3LandmarkPoseEdgeTraits<CParserBase::TEdgeXYZOFF> {
+public:
+	typedef CEdge3DXYZOFF _TyEdge; /**< @brief the edge type to construct from the parsed type */
+};
 
 /**
  *  @brief BSpline 5xpose edge

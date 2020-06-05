@@ -908,6 +908,24 @@ struct TDatasetPeeker : public CParserBase::CParserAdaptor {
 	}
 
 	/**
+	 *	@brief appends the system with an odometry measurement
+	 *	@param[in] r_t_edge is the measurement to be appended
+	 */
+	virtual void AppendSystem(const CParserBase::TEdgeXYZ &UNUSED(r_t_edge))
+	{
+		b_has_edge3d = true;
+	}
+
+	/**
+	 *	@brief appends the system with an odometry measurement
+	 *	@param[in] r_t_edge is the measurement to be appended
+	 */
+	virtual void AppendSystem(const CParserBase::TEdgeXYZOFF &UNUSED(r_t_edge))
+	{
+		b_has_edge3d = true;
+	}
+
+	/**
 	 *	@brief appends the system with an landmark 3d xyz measurement
 	 *	@param[in] r_t_edge is the measurement to be appended
 	 */

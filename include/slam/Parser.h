@@ -388,6 +388,126 @@ public:
 	};
 
 	/**
+	 *	@brief XYZRPY measurement base class
+	 */
+	struct TEdgeXYZ : public CParseEntity {
+		size_t m_n_node_0; /**< @brief (zero-based) index of the first (origin) node */
+		Eigen::Matrix<double, 3, 1> m_v_delta; /**< @brief dealte measurement (also called "z") */
+		Eigen::Matrix<double, 3, 3> m_t_inv_sigma; /**< @brief inverse sigma matrix, elements are not square roots */
+
+		/**
+		 *	@brief default constructor
+		 *
+		 *	@param[in] n_node_0 is (zero-based) index of the first (origin) node
+		 *	@param[in] f_delta_x is delta x position
+		 *	@param[in] f_delta_y is delta y position
+		 *	@param[in] f_delta_z is delta z position
+		 *	@param[in] p_upper_matrix_3x3 is row-major upper triangular and diagonal 3x3 matrix
+		 *		containing the inverse sigma matrix, elements are not square roots
+		 *
+		 *	The matrix is stored row by row from top to bottom,
+		 *	with left to right column order. Example:
+		 *	@code
+		 *	|0 1 2|
+		 *	|  3 4|
+		 *	|    5|
+		 *	@endcode
+		 */
+		inline TEdgeXYZ(size_t n_node_0,
+			double f_delta_x, double f_delta_y, double f_delta_z,
+			const double *p_upper_matrix_3x3)
+			:m_n_node_0(n_node_0)
+		{
+			m_v_delta << f_delta_x, f_delta_y, f_delta_z;
+
+			const double *p_u = p_upper_matrix_3x3;
+			m_t_inv_sigma <<
+				p_u[0],  p_u[1],  p_u[2],
+				p_u[1],	 p_u[3],  p_u[4],
+				p_u[2],	 p_u[4],  p_u[5];
+			// fill the matrix
+		}
+
+		/**
+		 *	@brief override constructor
+		 *
+		 *	@param[in] n_node_0 is (zero-based) index of the first (origin) node
+		 *	@param[in] n_node_1 is (zero-based) index of the second (endpoint) node
+		 *	@param[in] edge is vector containing position and AXIS-ANGLE representation of rotation
+		 *	@param[in] info is 6x6 information matrix
+		 *		containing the inverse sigma matrix, elements are not square roots
+		 */
+		inline TEdgeXYZ(size_t n_node_0, const Eigen::Matrix<double, 3, 1> &edge,
+				const Eigen::Matrix<double, 3, 3> &info)
+			:m_n_node_0(n_node_0), m_v_delta(edge), m_t_inv_sigma(info)
+		{}
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+	};
+
+	/**
+	 *	@brief XYZRPY measurement base class
+	 */
+	struct TEdgeXYZOFF : public CParseEntity {
+		size_t m_n_node_0; /**< @brief (zero-based) index of the first (origin) node */
+		Eigen::Matrix<double, 3, 1> m_v_delta; /**< @brief dealte measurement (also called "z") */
+		Eigen::Matrix<double, 3, 1> m_v_offset;
+		Eigen::Matrix<double, 3, 3> m_t_inv_sigma; /**< @brief inverse sigma matrix, elements are not square roots */
+
+		/**
+		 *	@brief default constructor
+		 *
+		 *	@param[in] n_node_0 is (zero-based) index of the first (origin) node
+		 *	@param[in] f_delta_x is delta x position
+		 *	@param[in] f_delta_y is delta y position
+		 *	@param[in] f_delta_z is delta z position
+		 *	@param[in] p_upper_matrix_3x3 is row-major upper triangular and diagonal 3x3 matrix
+		 *		containing the inverse sigma matrix, elements are not square roots
+		 *
+		 *	The matrix is stored row by row from top to bottom,
+		 *	with left to right column order. Example:
+		 *	@code
+		 *	|0 1 2|
+		 *	|  3 4|
+		 *	|    5|
+		 *	@endcode
+		 */
+		inline TEdgeXYZOFF(size_t n_node_0,
+			double f_delta_x, double f_delta_y, double f_delta_z,
+			double f_offset_x, double f_offset_y, double f_offset_z,
+			const double *p_upper_matrix_3x3)
+			:m_n_node_0(n_node_0)
+		{
+			m_v_delta << f_delta_x, f_delta_y, f_delta_z;
+			m_v_offset << f_offset_x, f_offset_y, f_offset_z;
+
+			const double *p_u = p_upper_matrix_3x3;
+			m_t_inv_sigma <<
+				p_u[0],  p_u[1],  p_u[2],
+				p_u[1],	 p_u[3],  p_u[4],
+				p_u[2],	 p_u[4],  p_u[5];
+			// fill the matrix
+		}
+
+		/**
+		 *	@brief override constructor
+		 *
+		 *	@param[in] n_node_0 is (zero-based) index of the first (origin) node
+		 *	@param[in] n_node_1 is (zero-based) index of the second (endpoint) node
+		 *	@param[in] edge is vector containing position and AXIS-ANGLE representation of rotation
+		 *	@param[in] info is 6x6 information matrix
+		 *		containing the inverse sigma matrix, elements are not square roots
+		 */
+		inline TEdgeXYZOFF(size_t n_node_0, const Eigen::Matrix<double, 3, 1> &edge,
+				const Eigen::Matrix<double, 3, 1> &offset,
+				const Eigen::Matrix<double, 3, 3> &info)
+			:m_n_node_0(n_node_0), m_v_delta(edge), m_v_offset(offset), m_t_inv_sigma(info)
+		{}
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+	};
+
+	/**
 	 *	@brief unary factor class
 	 */
 	struct TUnaryFactor3D : public CParseEntity {
@@ -996,6 +1116,18 @@ public:
 		 *	@param[in] r_t_edge is the measurement to be appended
 		 */
 		virtual void AppendSystem(const TEdge3D &r_t_edge) = 0;
+
+		/**
+		 *	@brief appends the system with an odometry measurement
+		 *	@param[in] r_t_edge is the measurement to be appended
+		 */
+		virtual void AppendSystem(const TEdgeXYZ &r_t_edge) = 0;
+
+		/**
+		 *	@brief appends the system with an odometry measurement
+		 *	@param[in] r_t_edge is the measurement to be appended
+		 */
+		virtual void AppendSystem(const TEdgeXYZOFF &r_t_edge) = 0;
 
 		/**
 		 *	@brief appends the system with an 3d landmark measurement
