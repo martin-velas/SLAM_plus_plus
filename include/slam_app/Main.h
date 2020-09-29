@@ -926,6 +926,26 @@ struct TDatasetPeeker : public CParserBase::CParserAdaptor {
 	}
 
 	/**
+	 *	@brief appends the system with an odometry measurement
+	 *	@param[in] r_t_edge is the measurement to be appended
+	 */
+	virtual void AppendSystem(const CParserBase::TEdge3DSelf &UNUSED(r_t_edge))
+	{
+		b_has_landmark = true;
+		b_has_edge3d = true;
+	}
+
+	/**
+	 *	@brief appends the system with an odometry measurement
+	 *	@param[in] r_t_edge is the measurement to be appended
+	 */
+	virtual void AppendSystem(const CParserBase::TEdge3DTernary &UNUSED(r_t_edge))
+	{
+		b_has_landmark = true;
+		b_has_edge3d = true;
+	}
+
+	/**
 	 *	@brief appends the system with vertex position
 	 *	@param[in] r_t_vertex is the vertex to be appended
 	 *	@note The vertices can be ignored in most of the solvers.

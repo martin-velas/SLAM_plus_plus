@@ -624,6 +624,158 @@ public:
 };
 
 /**
+ *	@brief 3D pose edge parse primitive handler
+ */
+class CEdge3DSelfParsePrimitiveAxisAngle {
+public:
+	/**
+	 *	@brief enumerates all tokens that identify this parsed primitive
+	 *
+	 *	@param[in,out] r_token_name_map is map of token names
+	 *	@param[in] n_assigned_id is id assigned by the parser to this primitive
+	 */
+	static void EnumerateTokens(std::map<std::string, int> &r_token_name_map,
+		int n_assigned_id) // throw(std::bad_alloc)
+	{
+		r_token_name_map["EDGE3SELF:AXISANGLE"] = n_assigned_id;
+		r_token_name_map["EDGE_SELF_SE3:AXISANGLE"] = n_assigned_id;
+		// add as uppercase!
+	}
+
+	/**
+	 *	@brief parses this primitive and dispatches it to the parse loop
+	 *
+	 *	@param[in] n_line_no is zero-based line number (for error reporting)
+	 *	@param[in] r_s_line is string, containing the current line (without the token)
+	 *	@param[in] r_s_token is string, containing the token name (in uppercase)
+	 *	@param[in,out] r_parse_loop is target for passing the parsed primitives to
+	 *
+	 *	@return Returns true on success, false on failure.
+	 */
+	template <class _TyParseLoop>
+	static bool Parse_and_Dispatch(size_t n_line_no, const std::string &r_s_line,
+		const std::string &UNUSED(r_s_token), _TyParseLoop &r_parse_loop)
+	{
+		int p_pose_idx[1];
+		double p_measurement[6];
+		double p_matrix[21];
+		if(sscanf(r_s_line.c_str(), "%d %lf %lf %lf %lf %lf %lf " // pose indices and 6D measurement
+		   "%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf" // covariance follows
+		   " %lf %lf %lf %lf %lf %lf %lf", p_pose_idx, p_measurement,
+		   p_measurement + 1, p_measurement + 2, p_measurement + 3, p_measurement + 4,
+		   p_measurement + 5, p_matrix, p_matrix + 1, p_matrix + 2, p_matrix + 3,
+		   p_matrix + 4, p_matrix + 5, p_matrix + 6, p_matrix + 7, p_matrix + 8,
+		   p_matrix + 9, p_matrix + 10, p_matrix + 11, p_matrix + 12, p_matrix + 13,
+		   p_matrix + 14, p_matrix + 15, p_matrix + 16, p_matrix + 17, p_matrix + 18,
+		   p_matrix + 19, p_matrix + 20) != 1 + 6 + 21) {
+		   	_ASSERTE(n_line_no < SIZE_MAX);
+			fprintf(stderr, "error: line " PRIsize ": line is truncated\n", n_line_no + 1);
+			return false;
+		}
+		// read the individual numbers
+
+		//if(p_pose_idx[0] < p_pose_idx[1]) { // this was used as a disambiguation trait for g2o / isam format datasets. since none of them use EDGE_SE3:AXISANGLE, it is not needed here.
+			if(fabs(p_matrix[0]) < 1e-5 || fabs(p_matrix[6]) < 1e-5 || fabs(p_matrix[11]) < 1e-5 ||
+			   fabs(p_matrix[15]) < 1e-5 || fabs(p_matrix[18]) < 1e-5 || fabs(p_matrix[20]) < 1e-5) {
+				fprintf(stderr, "error: the inverse sigma matrix is in unknown order."
+					" contact your dataset master\n");
+			}
+			// make sure inverse sigma is diagonal and ordered as expected
+
+			CParserBase::TEdge3DSelf edge(p_pose_idx[0],
+				p_measurement[0], p_measurement[1], p_measurement[2],
+				p_measurement[3], p_measurement[4], p_measurement[5], p_matrix);
+			// process the measurement
+
+			r_parse_loop.AppendSystem(edge);
+			// append the measurement to the system, or something
+		/*} else {
+			fprintf(stderr, "error: edges are in switched order"
+				" contact your dataset master\n");
+			// ignores this kind of error
+		}*/
+
+		return true;
+	}
+};
+
+/**
+ *	@brief 3D pose edge parse primitive handler
+ */
+class CEdge3DTernaryParsePrimitiveAxisAngle {
+public:
+	/**
+	 *	@brief enumerates all tokens that identify this parsed primitive
+	 *
+	 *	@param[in,out] r_token_name_map is map of token names
+	 *	@param[in] n_assigned_id is id assigned by the parser to this primitive
+	 */
+	static void EnumerateTokens(std::map<std::string, int> &r_token_name_map,
+		int n_assigned_id) // throw(std::bad_alloc)
+	{
+		r_token_name_map["EDGE3TERNARY:AXISANGLE"] = n_assigned_id;
+		r_token_name_map["EDGE_SE3_TERNARY:AXISANGLE"] = n_assigned_id;
+		// add as uppercase!
+	}
+
+	/**
+	 *	@brief parses this primitive and dispatches it to the parse loop
+	 *
+	 *	@param[in] n_line_no is zero-based line number (for error reporting)
+	 *	@param[in] r_s_line is string, containing the current line (without the token)
+	 *	@param[in] r_s_token is string, containing the token name (in uppercase)
+	 *	@param[in,out] r_parse_loop is target for passing the parsed primitives to
+	 *
+	 *	@return Returns true on success, false on failure.
+	 */
+	template <class _TyParseLoop>
+	static bool Parse_and_Dispatch(size_t n_line_no, const std::string &r_s_line,
+		const std::string &UNUSED(r_s_token), _TyParseLoop &r_parse_loop)
+	{
+		int p_pose_idx[3];
+		double p_measurement[6];
+		double p_matrix[21];
+		if(sscanf(r_s_line.c_str(), "%d %d %d %lf %lf %lf %lf %lf %lf " // pose indices and 6D measurement
+		   "%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf" // covariance follows
+		   " %lf %lf %lf %lf %lf %lf %lf", p_pose_idx, p_pose_idx + 1, p_pose_idx + 2, p_measurement,
+		   p_measurement + 1, p_measurement + 2, p_measurement + 3, p_measurement + 4,
+		   p_measurement + 5, p_matrix, p_matrix + 1, p_matrix + 2, p_matrix + 3,
+		   p_matrix + 4, p_matrix + 5, p_matrix + 6, p_matrix + 7, p_matrix + 8,
+		   p_matrix + 9, p_matrix + 10, p_matrix + 11, p_matrix + 12, p_matrix + 13,
+		   p_matrix + 14, p_matrix + 15, p_matrix + 16, p_matrix + 17, p_matrix + 18,
+		   p_matrix + 19, p_matrix + 20) != 3 + 6 + 21) {
+		   	_ASSERTE(n_line_no < SIZE_MAX);
+			fprintf(stderr, "error: line " PRIsize ": line is truncated\n", n_line_no + 1);
+			return false;
+		}
+		// read the individual numbers
+
+		//if(p_pose_idx[0] < p_pose_idx[1]) { // this was used as a disambiguation trait for g2o / isam format datasets. since none of them use EDGE_SE3:AXISANGLE, it is not needed here.
+			if(fabs(p_matrix[0]) < 1e-5 || fabs(p_matrix[6]) < 1e-5 || fabs(p_matrix[11]) < 1e-5 ||
+			   fabs(p_matrix[15]) < 1e-5 || fabs(p_matrix[18]) < 1e-5 || fabs(p_matrix[20]) < 1e-5) {
+				fprintf(stderr, "error: the inverse sigma matrix is in unknown order."
+					" contact your dataset master\n");
+			}
+			// make sure inverse sigma is diagonal and ordered as expected
+
+			CParserBase::TEdge3DTernary edge(p_pose_idx[0], p_pose_idx[1], p_pose_idx[2],
+				p_measurement[0], p_measurement[1], p_measurement[2],
+				p_measurement[3], p_measurement[4], p_measurement[5], p_matrix);
+			// process the measurement
+
+			r_parse_loop.AppendSystem(edge);
+			// append the measurement to the system, or something
+		/*} else {
+			fprintf(stderr, "error: edges are in switched order"
+				" contact your dataset master\n");
+			// ignores this kind of error
+		}*/
+
+		return true;
+	}
+};
+
+/**
  *	@brief 2D landmark edge parse primitive handler
  */
 class CLandmark3D_XYZ_ParsePrimitive {
@@ -1726,7 +1878,8 @@ typedef CConcatTypelist<MakeTypelist_Safe((CEdge2DParsePrimitive,
 	CEdgeP2SC3DParsePrimitive)), MakeTypelist_Safe((CROCV_Landmark_UF_ParsePrimitive,
 	CROCV_Landmark_ParsePrimitive, CROCV_Pose_ParsePrimitive, CROCV_PoseGroundTruth_ParsePrimitive,
 	CROCV_DeltaTimeEdge_ParsePrimitive, CROCV_RangeEdge_ParsePrimitive,
-	CVertexIntrinsicsParsePrimitive, CEdgeP2CI3DParsePrimitive))>::_TyResult CStandardParsedPrimitives; /**< @brief a list of standard parsed primitives @note If you are going to modify this, you will have to modify CParserBase::CParserAdaptor and CDatasetPeeker which implements it. */
+	CVertexIntrinsicsParsePrimitive, CEdgeP2CI3DParsePrimitive, CEdge3DSelfParsePrimitiveAxisAngle,
+	CEdge3DTernaryParsePrimitiveAxisAngle))>::_TyResult CStandardParsedPrimitives; /**< @brief a list of standard parsed primitives @note If you are going to modify this, you will have to modify CParserBase::CParserAdaptor and CDatasetPeeker which implements it. */
 
 typedef CParserTemplate<CParserBase::CParserAdaptor, CStandardParsedPrimitives> CStandardParser; /**< @brief standard parser */
 
