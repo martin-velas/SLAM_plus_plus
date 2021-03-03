@@ -817,9 +817,9 @@ public:
 			//_ASSERTE(m_t_HtSiH_vertex0 == m_t_HtSiH_vertex0.transpose()); // is this symmetric?
 
 			Eigen::Map<typename CVertexTraits<0>::_TyVectorAlign, CUberBlockMatrix::map_Alignment> m_t_right_hand_vertex0(m_p_RHS_vert[0]);
-			if(b_is_robust_edge) // compile-time constant
+			/*if(b_is_robust_edge) // compile-time constant
 				m_t_right_hand_vertex0.noalias() = t_H0_sigma_inv * v_error * f_robust_weight;
-			else
+			else*/
 				m_t_right_hand_vertex0.noalias() = t_H0_sigma_inv * v_error;
 		}
 		if(hyperedge_detail::no_ConstVertices || m_p_HtSiH_vert[1]) {

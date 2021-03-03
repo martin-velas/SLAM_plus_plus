@@ -158,7 +158,21 @@ public:
 		}
 		// the sizes must match
 
+		/*for(int a = 0; a < est_vertices.size(); ++ a)
+		{
+			std::cout << est_vertices[a].transpose() << std::endl;
+			std::cout << r_gt_vertices[a].transpose() << std::endl;
+		}*/
+
 		Align_PoseSets(est_vertices, r_gt_vertices, b_up_to_scale);
+		/*std::cout << "ass" << std::endl;
+
+		for(int a = 0; a < est_vertices.size(); ++ a)
+		{
+			std::cout << est_vertices[a].transpose() << std::endl;
+			std::cout << r_gt_vertices[a].transpose() << std::endl;
+		}*/
+
 		/*std::pair<_TyVector, double> t_transform = v_Align_PoseSets(r_est_vertices,
 			r_gt_vertices, b_up_to_scale); // transform * est approaches gt
 		// compute a rigid transformation that puts ground truth vertices close to the solution vertices

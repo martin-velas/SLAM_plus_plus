@@ -455,8 +455,8 @@ public:
 
 		if(!this->m_b_use_schur)
 			fprintf(stderr, "warning: instancing CNonlinearSolver_Lambda_DL without Schur: will be slower\n");
-		if(n_dummy_param)
-			fprintf(stderr, "warning: using constant Levenberg-Marquardt damping of %d\n", n_dummy_param);
+		//if(n_dummy_param)
+		//	fprintf(stderr, "warning: using constant Levenberg-Marquardt damping of %d\n", n_dummy_param);
 	}
 
 	/**
@@ -967,7 +967,7 @@ public:
 				}
 				if(n_best_group_id != m_n_landmark_group_id) {
 					//throw std::runtime_error("not implemented");
-					fprintf(stderr, "warning: using untested SC reordering branch\n"); // just so that we know that this takes place // todo - test this (will probably need a special graph to do that)
+					//fprintf(stderr, "warning: using untested SC reordering branch\n"); // just so that we know that this takes place // todo - test this (will probably need a special graph to do that)
 
 					b_reordering_needed = true;
 					m_n_landmark_group_id = n_best_group_id;
@@ -1306,7 +1306,7 @@ public:
 								Eigen::VectorXd &b = m_v_dx; // Gauss-Newton step // work inplace
 								b -= a; // only need (b - a) below, never b by itself
 								double f_step_distance_sqr = (b/* - a*/).squaredNorm();
-								double c = a.dot(b/* - a*/); // ã^T * (b - a)
+								double c = a.dot(b/* - a*/); // ï¿½^T * (b - a)
 								double f_denom = sqrt((c * c - f_step_distance_sqr * f_sgd_scale * f_sgd_scale) + // do this first, f_sgd_scale is typically pretty small, try to avoid some of the roundoff
 									f_step_distance_sqr * f_delta * f_delta);
 								double f_direction_lerp1;
@@ -1428,8 +1428,8 @@ public:
 
 						bool b_bad_step;
 						if((b_bad_step = (f_error > f_last_error))) { // bad step
-							fprintf(stderr, "warning: chi2 rising (delta = %g, decreasing to %g)\n",
-								f_delta, f_delta / f_v);
+							//fprintf(stderr, "warning: chi2 rising (delta = %g, decreasing to %g)\n",
+							//	f_delta, f_delta / f_v);
 							// verbose
 
 							nonlinear_detail::CSolverOps_Base::Load_State(this->m_r_system, v_saved_state);
@@ -2474,8 +2474,8 @@ protected:
 
 			size_t n_nzb_after = r_omega.n_Block_Num();
 
-			printf("debug: dropped " PRIsize " / " PRIsize " omega blocks\n",
-				n_nzb_before - n_nzb_after, n_nzb_before);
+			//printf("debug: dropped " PRIsize " / " PRIsize " omega blocks\n",
+			//	n_nzb_before - n_nzb_after, n_nzb_before);
 		} else {
 			static bool b_warned = false;
 			if(!b_warned) {

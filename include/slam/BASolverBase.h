@@ -208,7 +208,73 @@ public:
 		DimensionCheck<Vector5d>(r_t_vertex2);
 		DimensionCheck<Vector5d>(r_t_dest);
 
-		r_t_dest = r_t_vertex1 + r_t_vertex2; // accelerated using SSE
+		//r_t_dest = r_t_vertex1 + r_t_vertex2; // accelerated using SSE
+		// delta distortion coefficient must be normalized
+		r_t_dest(4) = r_t_vertex1(4) / (.5 * (r_t_vertex1(0) * r_t_vertex1(1)));
+		// transform to
+
+		r_t_dest(4) = r_t_dest(4) + r_t_vertex2(4) / (.5 * (r_t_vertex1(0) * r_t_vertex1(1)));
+		r_t_dest.head(4) = r_t_vertex1.head(4) + r_t_vertex2.head(4);	// fx fy cx cy
+		// update
+
+		r_t_dest(4) = r_t_dest(4) * (.5 * (r_t_dest(0) * r_t_dest(1)));
+		// transform back
+	}
+
+	/**
+	 *	@brief composition for intrinsic parameters vertices
+	 *
+	 *	@tparam Derived0 is Eigen derived matrix type for the first matrix argument
+	 *	@tparam Derived1 is Eigen derived matrix type for the second matrix argument
+	 *	@tparam Derived2 is Eigen derived matrix type for the third matrix argument
+	 *
+	 *	@param[in] r_t_vertex1 is the vertex to be modified
+	 *	@param[in] r_t_vertex2 is the delta vector
+	 *	@param[out] r_t_dest is the result of the composition
+	 */
+	template <class Derived0, class Derived1, class Derived2>
+	static void Relative_to_Absolute_IntrinsicsReduced(const Eigen::MatrixBase<Derived0> &r_t_vertex1,
+		const Eigen::MatrixBase<Derived1> &r_t_vertex2, Eigen::MatrixBase<Derived2> &r_t_dest)
+	{
+		DimensionCheck<Eigen::Vector2d>(r_t_vertex1);
+		DimensionCheck<Eigen::Vector2d>(r_t_vertex2);
+		DimensionCheck<Eigen::Vector2d>(r_t_dest);
+
+		// delta distortion coefficient must be normalized
+		r_t_dest(1) = r_t_vertex1(1) / (.5 * (r_t_vertex1(0) * r_t_vertex1(0)));
+		// transform to
+
+		r_t_dest(1) = r_t_dest(1) + r_t_vertex2(1) / (.5 * (r_t_vertex1(0) * r_t_vertex1(0)));
+		r_t_dest(0) = r_t_vertex1(0) + r_t_vertex2(0);	// fx
+		// update
+
+		r_t_dest(1) = r_t_dest(1) * (.5 * (r_t_dest(0) * r_t_dest(0)));
+		// transform back
+	}
+
+	template <class Derived0>
+	static inline Eigen::Vector3d v_InvDepth_to_XYZ(const Eigen::MatrixBase<Derived0> &r_v_position)
+	{
+		DimensionCheck<Eigen::Vector3d>(r_v_position);
+
+		Eigen::Vector3d v_pos_xyz;
+		double f_depth = v_pos_xyz(2) = 1 / r_v_position(2);
+		v_pos_xyz.template head<2>() = r_v_position.template head<2>() * f_depth;
+
+		return v_pos_xyz;
+	}
+
+	template <class Derived0>
+	static inline Eigen::Vector3d v_XYZ_to_InvDepth(const Eigen::MatrixBase<Derived0> &r_v_position)
+	{
+		DimensionCheck<Eigen::Vector3d>(r_v_position);
+
+		double f_inv_depth = 1 / r_v_position(2);
+		Eigen::Vector3d v_inv_depth;
+		v_inv_depth.template head<2>() = r_v_position.template head<2>() * f_inv_depth;
+		v_inv_depth(2) = f_inv_depth;
+
+		return v_inv_depth;
 	}
 
 	/**
@@ -234,7 +300,7 @@ public:
 		double fy = r_t_intrinsics(1);
 		double cx = r_t_intrinsics(2);
 		double cy = r_t_intrinsics(3);
-		double k = r_t_intrinsics(4) / (.5 * (fx + fy));
+		double k = r_t_intrinsics(4) / (.5 * (fx * fy));
 
 		Eigen::Vector2d c(cx, cy);
 		double r2 = (pt - c).squaredNorm();
@@ -273,14 +339,14 @@ public:
 		//double ap = 1.0029;
 		double cx = r_t_intrinsics(2);
 		double cy = r_t_intrinsics(3);
-		double k = r_t_intrinsics(4) / (.5 * (fx + fy))/*sqrt(fx * fy)*/; // rescale intrinsics// since post-ICRA2015 release the distortion is scaled by focal length in the internal representation
+		double k = r_t_intrinsics(4) / (.5 * (fx * fy))/*sqrt(fx * fy)*/; // rescale intrinsics// since post-ICRA2015 release the distortion is scaled by focal length in the internal representation
 
 		Eigen::Matrix3d A;
 		/*A(0, 0) = fx; 	A(0, 1) = 0; 	A(0, 2) = cx;
 		A(1, 0) = 0; 	A(1, 1) = fy; 	A(1, 2) = cy;
 		A(2, 0) = 0; 	A(2, 1) = 0; 	A(2, 2) = 1;*/
-		A << fx,  0, cx,
-			  0, fy, cy,
+		A << fx,  0,  0,
+			  0, fy,  0,
 			  0,  0,  1;
 		Eigen::Vector2d c(cx, cy); // the ?optical? center? is there a better letter describing it?
 
@@ -306,10 +372,11 @@ public:
 		uv /= uv(2);
 
 		//apply radial distortion
-		double r = (uv.head<2>() - c).norm();//sqrt((uv(0)-A(0, 2))*(uv(0)-A(0, 2)) + (uv(1)-A(1, 2))*(uv(1)-A(1, 2)));
+		double r = uv.head<2>().norm();//sqrt((uv(0)-A(0, 2))*(uv(0)-A(0, 2)) + (uv(1)-A(1, 2))*(uv(1)-A(1, 2)));
 		/*uv(0) =  A(0, 2) + (1 + r*k) * (uv(0) - A(0, 2));
 		uv(1) =  A(1, 2) + (1 + r*k) * (uv(1) - A(1, 2));*/
-		uv.template head<2>() = c + (1 + r*r * k) * (uv.template head<2>() - c);
+		uv.template head<2>() = (1 + r*r * k) * (uv.template head<2>());
+		uv.template head<2>() = uv.template head<2>() + c;
 
 		//lets try 04J09 paper distortion
 		/*int sign = (uv(0) > 0) ? 1 : ((uv(0) < 0) ? -1 : 0);
@@ -475,7 +542,7 @@ public:
 		//double ap = 1.0029;
 		double cx = r_t_intrinsics(2);
 		double cy = r_t_intrinsics(3);
-		double k = r_t_intrinsics(4) / (.5 * (fx + fy))/*sqrt(fx * fy)*/; // rescale intrinsics// since post-ICRA2015 release the distortion is scaled by focal length in the internal representation
+		double k = r_t_intrinsics(4) / (.5 * (fx * fy))/*sqrt(fx * fy)*/; // rescale intrinsics// since post-ICRA2015 release the distortion is scaled by focal length in the internal representation
 		double b = r_t_intrinsics(5);
 
 		Eigen::Matrix3d A;
@@ -917,6 +984,950 @@ public:
 			//std::cout << "meas: " << d1.transpose() << " (" << r_t_dest.transpose() << ")" << std::endl;
 
 			H2.col(j) = (r_t_dest - d1) * scalar;
+		}
+	}
+
+	/**
+	 *	@brief projects a point from 3D to 2D camera image
+	 *
+	 *	@tparam Derived0 is Eigen derived matrix type for the first matrix argument
+	 *	@tparam Derived1 is Eigen derived matrix type for the second matrix argument
+	 *	@tparam Derived2 is Eigen derived matrix type for the third matrix argument
+	 *	@tparam Derived3 is Eigen derived matrix type for the fourth matrix argument
+	 *	@tparam Derived4 is Eigen derived matrix type for the fifth matrix argument
+	 *
+	 *	@param[in] r_t_xyz is the first vertex - point
+	 *	@param[in] r_t_cam_observer is the vertex of observing camera
+	 *	@param[in] r_t_intrinsics is instrinsic parameters of the camera
+	 *	@param[in] r_t_cam_owner is the vertex of owner cam
+	 *	@param[out] r_t_dest is filled with absolute coordinates of result
+	 */
+	template <class Derived0, class Derived1, class Derived2, class Derived3, class Derived4>
+	static void Project_P2C_Other(const Eigen::MatrixBase<Derived0> &r_t_xyz,
+		const Eigen::MatrixBase<Derived1> &r_t_cam_observer,
+		const Eigen::MatrixBase<Derived2> &r_t_intrinsics,
+		const Eigen::MatrixBase<Derived3> &r_t_cam_owner,
+		Eigen::MatrixBase<Derived4> &r_t_dest)
+	{
+		DimensionCheck<Vector6d>(r_t_cam_observer);
+		DimensionCheck<Vector6d>(r_t_cam_owner);
+		DimensionCheck<Vector5d>(r_t_intrinsics);
+		DimensionCheck<Eigen::Vector3d>(r_t_xyz);
+		DimensionCheck<Eigen::Vector2d>(r_t_dest);
+
+		//construct camera intrinsics matrix
+		double fx = r_t_intrinsics(0);
+		double fy = r_t_intrinsics(1);
+		double cx = r_t_intrinsics(2);
+		double cy = r_t_intrinsics(3);
+		double k = r_t_intrinsics(4) / (.5 * (fx * fy))/*sqrt(fx * fy)*/; // rescale intrinsics// since post-ICRA2015 release the distortion is scaled by focal length in the internal representation
+
+		Eigen::Matrix3d A;
+		A << fx,  0, cx,
+			  0, fy, cy,
+			  0,  0,  1;
+		Eigen::Vector2d c(cx, cy); // the ?optical? center? is there a better letter describing it?
+
+		// transform the point to global coordinates
+		//construct [R | t]
+		Eigen::Matrix<double, 4, 4> Rt_owner = Eigen::Matrix<double, 4, 4>::Identity();
+		Rt_owner.template block<3, 3>(0, 0) = C3DJacobians::t_AxisAngle_to_RotMatrix(r_t_cam_owner.template tail<3>());
+		Rt_owner.template block<3, 1>(0, 3) = r_t_cam_owner.template head<3>();
+
+		//construct point vector
+		Eigen::Vector4d X = Eigen::Vector4d::Ones();
+		X.template head<3>() = r_t_xyz;
+
+		Eigen::Vector4d X_global = Rt_owner.inverse() * X;
+
+		//construct [R | t]
+		Eigen::Matrix<double, 3, 4> Rt;
+		Rt.template block<3, 3>(0, 0) = C3DJacobians::t_AxisAngle_to_RotMatrix(r_t_cam_observer.template tail<3>());
+		Rt.col(3) = r_t_cam_observer.template head<3>();
+
+		//project world to camera
+		Eigen::Vector3d x = Rt * X_global;
+
+		//project camera to image
+		Eigen::Vector3d uv = A * x;
+		//normalize
+		uv /= uv(2);
+
+		//apply radial distortion
+		double r = (uv.head<2>() - c).norm();//sqrt((uv(0)-A(0, 2))*(uv(0)-A(0, 2)) + (uv(1)-A(1, 2))*(uv(1)-A(1, 2)));
+		uv.template head<2>() = c + (1 + r*r * k) * (uv.template head<2>() - c);
+
+		r_t_dest(0) = uv(0);
+	#ifdef DATA_UPSIDE_DOWN
+		r_t_dest(1) = -uv(1);
+	#else
+		r_t_dest(1) = uv(1);
+	#endif
+	}
+
+	/**
+	 *	@brief projects a 3D point to 2D camera image and calculates the jacobians, including the one for the intrinsics
+	 *
+	 *	@tparam Derived0 is Eigen derived matrix type for the first matrix argument
+	 *	@tparam Derived1 is Eigen derived matrix type for the second matrix argument
+	 *	@tparam Derived2 is Eigen derived matrix type for the third matrix argument
+	 *	@tparam Derived3 is Eigen derived matrix type for the fourth matrix argument
+	 *	@tparam Derived4 is Eigen derived matrix type for the fifth matrix argument
+	 *
+	 *	@param[in] r_t_vertex0 is the first vertex, in local coordinates of camera - XYZ
+	 *	@param[in] r_t_intrinsics is instrinsic parameters of the camera
+	 *	@param[out] r_t_dest is filled with relative coordinates of the second vertex
+	 *	@param[out] r_t_xyz_measurement is filled with the second jacobian
+	 *	@param[out] r_t_intrinsics_measurement is filled with the third jacobian
+	 *
+	 *	@note Neither of the input parameters may be reused as output.
+	 */
+	template <class Derived0, class Derived1, class Derived2,
+		class Derived3, class Derived4>
+	static void Project_P2CI_Self(const Eigen::MatrixBase<Derived0> &r_t_vertex0,
+		const Eigen::MatrixBase<Derived1> &r_t_intrinsics,
+		Eigen::MatrixBase<Derived2> &r_t_dest,
+		Eigen::MatrixBase<Derived3> &r_t_xyz_measurement,
+		Eigen::MatrixBase<Derived4> &r_t_intrinsics_measurement)
+	{
+		DimensionCheck<Eigen::Vector3d>(r_t_vertex0);
+		DimensionCheck<Vector5d>(r_t_intrinsics);
+		DimensionCheck<Eigen::Vector2d>(r_t_dest);
+		DimensionCheck<Eigen::Matrix<double, 2, 3> >(r_t_xyz_measurement);
+		DimensionCheck<Eigen::Matrix<double, 2, 5> >(r_t_intrinsics_measurement);
+
+		_ASSERTE((const void*)&r_t_vertex0 != (const void*)&r_t_dest);
+		_ASSERTE((const void*)&r_t_intrinsics != (const void*)&r_t_dest);
+		// cant compare addresses directly, the inputs may be maps or expressions and their type may not be convertible
+		// make sure that neither vector is the same as the destination, otherwise it is overwritten
+		// by the first call to Absolute_to_Relative() and then the jacobians are not computed correcly
+
+		/* TODO: make more efficient */
+		//lets try it according to g2o
+		const double delta = 1e-9;
+		const double scalar = 1.0 / (delta);
+
+		Matrix6d Eps;
+		Eps = Matrix6d::Identity() * delta; // faster, all memory on stack
+
+		//compute camera jacobian
+		Eigen::MatrixBase<Derived3> &J_xyz = r_t_xyz_measurement;
+		Eigen::MatrixBase<Derived4> &J_intrinsics = r_t_intrinsics_measurement;
+
+		Eigen::Vector6d cam_zero = Eigen::Vector6d::Zero();	// cam in origin with no rotation
+		Project_P2C(cam_zero, r_t_intrinsics, r_t_vertex0, r_t_dest);
+
+		Eigen::Vector2d d1;
+		Vector6d p_delta_cam;
+		Eigen::Vector3d p_delta_xyz;
+		Vector5d p_delta_intrinsics;
+
+		//for xyz
+		for(int j = 0; j < 3; ++ j) {
+			Relative_to_Absolute_XYZ(r_t_vertex0, Eps.col(j).template head<3>(), p_delta_xyz);
+			Project_P2C(cam_zero, r_t_intrinsics, p_delta_xyz, d1);
+			J_xyz.col(j) = (d1 - r_t_dest) * scalar;
+		}
+		//for intrinsics
+		//Eps(4, 4) = 1e-12; // can't!
+		for(int j = 0; j < 5; ++ j) {
+			Relative_to_Absolute_Intrinsics(r_t_intrinsics, Eps.col(j).template head<5>(), p_delta_intrinsics);
+			Project_P2C(cam_zero, p_delta_intrinsics, r_t_vertex0, d1);
+			J_intrinsics.col(j) = (d1 - r_t_dest) * scalar;
+		}
+
+		//send jacobians out
+		/*r_t_cam_measurement = J_cam;
+		r_t_xyz_measurement = J_xyz;
+		r_t_intrinsics_measurement = J_intrinsics;*/
+		// avoid unnecessary copy: they are all references
+	}
+
+	/**
+	 *	@brief projects a 3D point to 2D camera image and calculates the jacobians, including the one for the intrinsics
+	 *
+	 *	@tparam Derived0 is Eigen derived matrix type for the first matrix argument
+	 *	@tparam Derived1 is Eigen derived matrix type for the second matrix argument
+	 *	@tparam Derived2 is Eigen derived matrix type for the third matrix argument
+	 *	@tparam Derived3 is Eigen derived matrix type for the fourth matrix argument
+	 *	@tparam Derived4 is Eigen derived matrix type for the fifth matrix argument
+	 *
+	 *	@param[in] r_t_vertex0 is the first vertex, in local coordinates of camera - XYZ
+	 *	@param[in] r_t_vertex1 is the first vertex, observer camera
+	 *	@param[in] r_t_intrinsics is instrinsic parameters of the camera
+	 *	@param[in] r_t_vertex2 is the first vertex, owner camera of local point
+	 *	@param[out] r_t_dest is filled with relative coordinates of the second vertex
+	 *	@param[out] r_t_xyz_measurement is filled with the second jacobian
+	 *	@param[out] r_t_cam0_measurement is filled with the second jacobian
+	 *	@param[out] r_t_intrinsics_measurement is filled with the third jacobian
+	 *	@param[out] r_t_cam1_measurement is filled with the second jacobian
+	 *
+	 *	@note Neither of the input parameters may be reused as output.
+	 */
+	template <class Derived0, class Derived1, class Derived2,
+		class Derived3, class Derived4, class Derived5, class Derived6, class Derived7, class Derived8>
+	static void Project_P2CI_Other(const Eigen::MatrixBase<Derived0> &r_t_vertex0,
+		const Eigen::MatrixBase<Derived1> &r_t_vertex1,
+		const Eigen::MatrixBase<Derived2> &r_t_intrinsics,
+		const Eigen::MatrixBase<Derived3> &r_t_vertex2,
+		Eigen::MatrixBase<Derived4> &r_t_dest,
+		Eigen::MatrixBase<Derived5> &r_t_xyz_measurement,
+		Eigen::MatrixBase<Derived6> &r_t_cam0_measurement,
+		Eigen::MatrixBase<Derived7> &r_t_intrinsics_measurement,
+		Eigen::MatrixBase<Derived8> &r_t_cam1_measurement)
+	{
+		DimensionCheck<Eigen::Vector3d>(r_t_vertex0);
+		DimensionCheck<Vector6d>(r_t_vertex1);
+		DimensionCheck<Vector5d>(r_t_intrinsics);
+		DimensionCheck<Vector6d>(r_t_vertex2);
+		DimensionCheck<Eigen::Vector2d>(r_t_dest);
+		DimensionCheck<Eigen::Matrix<double, 2, 3> >(r_t_xyz_measurement);
+		DimensionCheck<Eigen::Matrix<double, 2, 6> >(r_t_cam0_measurement);
+		DimensionCheck<Eigen::Matrix<double, 2, 5> >(r_t_intrinsics_measurement);
+		DimensionCheck<Eigen::Matrix<double, 2, 6> >(r_t_cam1_measurement);
+
+		_ASSERTE((const void*)&r_t_vertex0 != (const void*)&r_t_dest);
+		_ASSERTE((const void*)&r_t_intrinsics != (const void*)&r_t_dest);
+		// cant compare addresses directly, the inputs may be maps or expressions and their type may not be convertible
+		// make sure that neither vector is the same as the destination, otherwise it is overwritten
+		// by the first call to Absolute_to_Relative() and then the jacobians are not computed correcly
+
+		/* TODO: make more efficient */
+		//lets try it according to g2o
+		const double delta = 1e-9;
+		const double scalar = 1.0 / (delta);
+
+		Matrix6d Eps;
+		Eps = Matrix6d::Identity() * delta; // faster, all memory on stack
+
+		//compute camera jacobian
+		Eigen::MatrixBase<Derived5> &J_xyz = r_t_xyz_measurement;
+		Eigen::MatrixBase<Derived7> &J_intrinsics = r_t_intrinsics_measurement;
+		Eigen::MatrixBase<Derived6> &J_cam0 = r_t_cam0_measurement;
+		Eigen::MatrixBase<Derived8> &J_cam1 = r_t_cam1_measurement;
+
+		Project_P2C_Other(r_t_vertex0, r_t_vertex1, r_t_intrinsics, r_t_vertex2, r_t_dest);
+
+		Eigen::Vector2d d1;
+		Vector6d p_delta_cam;
+		Eigen::Vector3d p_delta_xyz;
+		Vector5d p_delta_intrinsics;
+
+		//for xyz
+		Eigen::Vector4d X_tmp = Eigen::Vector4d::Ones();
+		Eigen::Vector3d X_global_tmp;
+		for(int j = 0; j < 3; ++ j) {
+			Relative_to_Absolute_XYZ(r_t_vertex0, Eps.col(j).template head<3>(), p_delta_xyz);
+			Project_P2C_Other(p_delta_xyz, r_t_vertex1, r_t_intrinsics, r_t_vertex2, d1);
+			J_xyz.col(j) = (d1 - r_t_dest) * scalar;
+		}
+		//for intrinsics
+		for(int j = 0; j < 5; ++ j) {
+			Relative_to_Absolute_Intrinsics(r_t_intrinsics, Eps.col(j).template head<5>(), p_delta_intrinsics);
+			Project_P2C_Other(r_t_vertex0, r_t_vertex1, p_delta_intrinsics, r_t_vertex2, d1);
+			J_intrinsics.col(j) = (d1 - r_t_dest) * scalar;
+		}
+		// for observer camera
+		for(int j = 0; j < 6; ++ j) {
+			C3DJacobians::Relative_to_Absolute(r_t_vertex1, Eps.col(j), p_delta_cam);
+			Project_P2C_Other(r_t_vertex0, p_delta_cam, r_t_intrinsics, r_t_vertex2, d1);
+			J_cam0.col(j) = (d1 - r_t_dest) * scalar;
+		}
+		// for owner camera
+		for(int j = 0; j < 6; ++ j) {
+			C3DJacobians::Relative_to_Absolute(r_t_vertex2, Eps.col(j), p_delta_cam);
+			Project_P2C_Other(r_t_vertex0, r_t_vertex1, r_t_intrinsics, p_delta_cam, d1);
+			J_cam1.col(j) = (d1 - r_t_dest) * scalar;
+		}
+
+		//send jacobians out
+		/*r_t_cam_measurement = J_cam;
+		r_t_xyz_measurement = J_xyz;
+		r_t_intrinsics_measurement = J_intrinsics;*/
+		// avoid unnecessary copy: they are all references
+	}
+
+	/**
+	 *	@brief projects a 3D point to 2D camera image and calculates the jacobians, including the one for the intrinsics
+	 *
+	 *	@tparam Derived0 is Eigen derived matrix type for the first matrix argument
+	 *	@tparam Derived1 is Eigen derived matrix type for the second matrix argument
+	 *	@tparam Derived2 is Eigen derived matrix type for the third matrix argument
+	 *	@tparam Derived3 is Eigen derived matrix type for the fourth matrix argument
+	 *	@tparam Derived4 is Eigen derived matrix type for the fifth matrix argument
+	 *	@tparam Derived5 is Eigen derived matrix type for the sixth matrix argument
+	 *	@tparam Derived6 is Eigen derived matrix type for the seventh matrix argument
+	 *
+	 *	@param[in] r_t_vertex1 is the first vertex, in absolute coordinates - CAM
+	 *	@param[in] r_t_intrinsics is instrinsic parameters of the camera
+	 *	@param[in] r_t_vertex2 is the second vertex, also in absolute coordinates - XYZ, inverse depth
+	 *	@param[out] r_t_dest is filled with relative coordinates of the second vertex
+	 *	@param[out] r_t_cam_measurement is filled with the first jacobian
+	 *	@param[out] r_t_xyz_measurement is filled with the second jacobian
+	 *	@param[out] r_t_intrinsics_measurement is filled with the third jacobian
+	 *
+	 *	@note Neither of the input parameters may be reused as output.
+	 */
+	template <class Derived0, class Derived1, class Derived2,
+		class Derived3, class Derived4, class Derived5, class Derived6>
+	static void Project_P2CI_InvDepth(const Eigen::MatrixBase<Derived0> &r_t_vertex1,
+		const Eigen::MatrixBase<Derived1> &r_t_intrinsics,
+		const Eigen::MatrixBase<Derived2> &r_t_vertex2, Eigen::MatrixBase<Derived3> &r_t_dest,
+		Eigen::MatrixBase<Derived4> &r_t_cam_measurement, Eigen::MatrixBase<Derived5> &r_t_xyz_measurement,
+		Eigen::MatrixBase<Derived6> &r_t_intrinsics_measurement)
+	{
+		DimensionCheck<Vector6d>(r_t_vertex1);
+		DimensionCheck<Vector5d>(r_t_intrinsics);
+		DimensionCheck<Eigen::Vector3d>(r_t_vertex2);
+		DimensionCheck<Eigen::Vector2d>(r_t_dest);
+		DimensionCheck<Eigen::Matrix<double, 2, 6> >(r_t_cam_measurement);
+		DimensionCheck<Eigen::Matrix<double, 2, 3> >(r_t_xyz_measurement);
+		DimensionCheck<Eigen::Matrix<double, 2, 5> >(r_t_intrinsics_measurement);
+
+		_ASSERTE((const void*)&r_t_vertex1 != (const void*)&r_t_dest);
+		_ASSERTE((const void*)&r_t_intrinsics != (const void*)&r_t_dest);
+		_ASSERTE((const void*)&r_t_vertex2 != (const void*)&r_t_dest); // cant compare addresses directly, the inputs may be maps or expressions and their type may not be convertible
+		// make sure that neither vector is the same as the destination, otherwise it is overwritten
+		// by the first call to Absolute_to_Relative() and then the jacobians are not computed correcly
+
+		/* TODO: make more efficient */
+		//lets try it according to g2o
+		const double delta = 1e-9;
+		const double scalar = 1.0 / (delta);
+		/*const double delta_pixel = 1e-6;
+		const double scalar_pixel = 1.0 / (delta_pixel);
+		const double delta_distortion = 1e-12;
+		const double scalar_distortion = 1.0 / (delta_pixel);*/
+
+		Matrix6d Eps;// = delta * Eigen::MatrixXd::Identity(10, 10); // MatrixXd needs to allocate storage on heap ... many milliseconds lost
+		Eps = Matrix6d::Identity() * delta; // faster, all memory on stack
+
+		//compute camera jacobian
+		Eigen::MatrixBase<Derived4> &J_cam = r_t_cam_measurement;
+		Eigen::MatrixBase<Derived5> &J_xyz = r_t_xyz_measurement;
+		Eigen::MatrixBase<Derived6> &J_intrinsics = r_t_intrinsics_measurement;
+
+		Project_P2C(r_t_vertex1, r_t_intrinsics, v_InvDepth_to_XYZ(r_t_vertex2), r_t_dest);
+
+		Eigen::Vector2d d1;
+		Vector6d p_delta_cam;
+		Eigen::Vector3d p_delta_xyz;
+		Vector5d p_delta_intrinsics;
+
+		//for camera
+		for(int j = 0; j < 6; ++ j) {
+			C3DJacobians::Relative_to_Absolute(r_t_vertex1, Eps.col(j), p_delta_cam);
+			Project_P2C(p_delta_cam, r_t_intrinsics, v_InvDepth_to_XYZ(r_t_vertex2), d1);
+			J_cam.col(j) = (d1 - r_t_dest) * scalar;
+		}
+		//for xyz
+		for(int j = 0; j < 3; ++ j) {
+			Relative_to_Absolute_XYZ(r_t_vertex2, Eps.col(j).template head<3>(), p_delta_xyz);
+			Project_P2C(r_t_vertex1, r_t_intrinsics, v_InvDepth_to_XYZ(p_delta_xyz), d1);
+			J_xyz.col(j) = (d1 - r_t_dest) * scalar;
+		}
+		//for intrinsics
+		//Eps(4, 4) = 1e-12; // can't!
+		for(int j = 0; j < 5; ++ j) {
+			Relative_to_Absolute_Intrinsics(r_t_intrinsics, Eps.col(j).template head<5>(), p_delta_intrinsics);
+			Project_P2C(r_t_vertex1, p_delta_intrinsics, v_InvDepth_to_XYZ(r_t_vertex2), d1);
+			J_intrinsics.col(j) = (d1 - r_t_dest) * scalar;
+		}
+
+		//send jacobians out
+		/*r_t_cam_measurement = J_cam;
+		r_t_xyz_measurement = J_xyz;
+		r_t_intrinsics_measurement = J_intrinsics;*/
+		// avoid unnecessary copy: they are all references
+	}
+
+	/**
+	 *	@brief projects a 3D point to 2D camera image and calculates the jacobians, including the one for the intrinsics
+	 *
+	 *	@tparam Derived0 is Eigen derived matrix type for the first matrix argument
+	 *	@tparam Derived1 is Eigen derived matrix type for the second matrix argument
+	 *	@tparam Derived2 is Eigen derived matrix type for the third matrix argument
+	 *	@tparam Derived3 is Eigen derived matrix type for the fourth matrix argument
+	 *	@tparam Derived4 is Eigen derived matrix type for the fifth matrix argument
+	 *
+	 *	@param[in] r_t_vertex0 is the first vertex, in local coordinates of camera - XYZ
+	 *	@param[in] r_t_intrinsics is instrinsic parameters of the camera
+	 *	@param[out] r_t_dest is filled with relative coordinates of the second vertex
+	 *	@param[out] r_t_xyz_measurement is filled with the second jacobian
+	 *	@param[out] r_t_intrinsics_measurement is filled with the third jacobian
+	 *
+	 *	@note Neither of the input parameters may be reused as output.
+	 */
+	template <class Derived0, class Derived1, class Derived2,
+		class Derived3, class Derived4>
+	static void Project_P2CI_Self_InvDepth(const Eigen::MatrixBase<Derived0> &r_t_vertex0,
+		const Eigen::MatrixBase<Derived1> &r_t_intrinsics,
+		Eigen::MatrixBase<Derived2> &r_t_dest,
+		Eigen::MatrixBase<Derived3> &r_t_xyz_measurement,
+		Eigen::MatrixBase<Derived4> &r_t_intrinsics_measurement)
+	{
+		DimensionCheck<Eigen::Vector3d>(r_t_vertex0);
+		DimensionCheck<Vector5d>(r_t_intrinsics);
+		DimensionCheck<Eigen::Vector2d>(r_t_dest);
+		DimensionCheck<Eigen::Matrix<double, 2, 3> >(r_t_xyz_measurement);
+		DimensionCheck<Eigen::Matrix<double, 2, 5> >(r_t_intrinsics_measurement);
+
+		_ASSERTE((const void*)&r_t_vertex0 != (const void*)&r_t_dest);
+		_ASSERTE((const void*)&r_t_intrinsics != (const void*)&r_t_dest);
+		// cant compare addresses directly, the inputs may be maps or expressions and their type may not be convertible
+		// make sure that neither vector is the same as the destination, otherwise it is overwritten
+		// by the first call to Absolute_to_Relative() and then the jacobians are not computed correcly
+
+		/* TODO: make more efficient */
+		//lets try it according to g2o
+		const double delta = 1e-9;
+		const double scalar = 1.0 / (delta);
+
+		Matrix6d Eps;
+		Eps = Matrix6d::Identity() * delta; // faster, all memory on stack
+
+		//compute camera jacobian
+		Eigen::MatrixBase<Derived3> &J_xyz = r_t_xyz_measurement;
+		Eigen::MatrixBase<Derived4> &J_intrinsics = r_t_intrinsics_measurement;
+
+		Eigen::Vector6d cam_zero = Eigen::Vector6d::Zero();	// cam in origin with no rotation
+		Project_P2C(cam_zero, r_t_intrinsics, v_InvDepth_to_XYZ(r_t_vertex0), r_t_dest);
+
+		Eigen::Vector2d d1;
+		Vector6d p_delta_cam;
+		Eigen::Vector3d p_delta_xyz;
+		Vector5d p_delta_intrinsics;
+
+		//for xyz
+		for(int j = 0; j < 3; ++ j) {
+			Relative_to_Absolute_XYZ(r_t_vertex0, Eps.col(j).template head<3>(), p_delta_xyz);
+			Project_P2C(cam_zero, r_t_intrinsics, v_InvDepth_to_XYZ(p_delta_xyz), d1);
+			J_xyz.col(j) = (d1 - r_t_dest) * scalar;
+		}
+		//for intrinsics
+		//Eps(4, 4) = 1e-12; // can't!
+		for(int j = 0; j < 5; ++ j) {
+			Relative_to_Absolute_Intrinsics(r_t_intrinsics, Eps.col(j).template head<5>(), p_delta_intrinsics);
+			Project_P2C(cam_zero, p_delta_intrinsics, v_InvDepth_to_XYZ(r_t_vertex0), d1);
+			J_intrinsics.col(j) = (d1 - r_t_dest) * scalar;
+		}
+
+		//send jacobians out
+		/*r_t_cam_measurement = J_cam;
+		r_t_xyz_measurement = J_xyz;
+		r_t_intrinsics_measurement = J_intrinsics;*/
+		// avoid unnecessary copy: they are all references
+	}
+
+	/**
+	 *	@brief projects a 3D point to 2D camera image and calculates the jacobians, including the one for the intrinsics
+	 *
+	 *	@tparam Derived0 is Eigen derived matrix type for the first matrix argument
+	 *	@tparam Derived1 is Eigen derived matrix type for the second matrix argument
+	 *	@tparam Derived2 is Eigen derived matrix type for the third matrix argument
+	 *	@tparam Derived3 is Eigen derived matrix type for the fourth matrix argument
+	 *	@tparam Derived4 is Eigen derived matrix type for the fifth matrix argument
+	 *
+	 *	@param[in] r_t_vertex0 is the first vertex, in local coordinates of camera - XYZ
+	 *	@param[in] r_t_vertex1 is the first vertex, observer camera
+	 *	@param[in] r_t_intrinsics is instrinsic parameters of the camera
+	 *	@param[in] r_t_vertex2 is the first vertex, owner camera of local point
+	 *	@param[out] r_t_dest is filled with relative coordinates of the second vertex
+	 *	@param[out] r_t_xyz_measurement is filled with the second jacobian
+	 *	@param[out] r_t_cam0_measurement is filled with the second jacobian
+	 *	@param[out] r_t_intrinsics_measurement is filled with the third jacobian
+	 *	@param[out] r_t_cam1_measurement is filled with the second jacobian
+	 *
+	 *	@note Neither of the input parameters may be reused as output.
+	 */
+	template <class Derived0, class Derived1, class Derived2,
+		class Derived3, class Derived4, class Derived5, class Derived6, class Derived7, class Derived8>
+	static void Project_P2CI_Other_InvDepth(const Eigen::MatrixBase<Derived0> &r_t_vertex0,
+		const Eigen::MatrixBase<Derived1> &r_t_vertex1,
+		const Eigen::MatrixBase<Derived2> &r_t_intrinsics,
+		const Eigen::MatrixBase<Derived3> &r_t_vertex2,
+		Eigen::MatrixBase<Derived4> &r_t_dest,
+		Eigen::MatrixBase<Derived5> &r_t_xyz_measurement,
+		Eigen::MatrixBase<Derived6> &r_t_cam0_measurement,
+		Eigen::MatrixBase<Derived7> &r_t_intrinsics_measurement,
+		Eigen::MatrixBase<Derived8> &r_t_cam1_measurement)
+	{
+		DimensionCheck<Eigen::Vector3d>(r_t_vertex0);
+		DimensionCheck<Vector6d>(r_t_vertex1);
+		DimensionCheck<Vector5d>(r_t_intrinsics);
+		DimensionCheck<Vector6d>(r_t_vertex2);
+		DimensionCheck<Eigen::Vector2d>(r_t_dest);
+		DimensionCheck<Eigen::Matrix<double, 2, 3> >(r_t_xyz_measurement);
+		DimensionCheck<Eigen::Matrix<double, 2, 6> >(r_t_cam0_measurement);
+		DimensionCheck<Eigen::Matrix<double, 2, 5> >(r_t_intrinsics_measurement);
+		DimensionCheck<Eigen::Matrix<double, 2, 6> >(r_t_cam1_measurement);
+
+		_ASSERTE((const void*)&r_t_vertex0 != (const void*)&r_t_dest);
+		_ASSERTE((const void*)&r_t_intrinsics != (const void*)&r_t_dest);
+		// cant compare addresses directly, the inputs may be maps or expressions and their type may not be convertible
+		// make sure that neither vector is the same as the destination, otherwise it is overwritten
+		// by the first call to Absolute_to_Relative() and then the jacobians are not computed correcly
+
+		/* TODO: make more efficient */
+		//lets try it according to g2o
+		const double delta = 1e-9;
+		const double scalar = 1.0 / (delta);
+
+		Matrix6d Eps;
+		Eps = Matrix6d::Identity() * delta; // faster, all memory on stack
+
+		//compute camera jacobian
+		Eigen::MatrixBase<Derived5> &J_xyz = r_t_xyz_measurement;
+		Eigen::MatrixBase<Derived7> &J_intrinsics = r_t_intrinsics_measurement;
+		Eigen::MatrixBase<Derived6> &J_cam0 = r_t_cam0_measurement;
+		Eigen::MatrixBase<Derived8> &J_cam1 = r_t_cam1_measurement;
+
+		Project_P2C_Other(v_InvDepth_to_XYZ(r_t_vertex0), r_t_vertex1, r_t_intrinsics, r_t_vertex2, r_t_dest);
+
+		Eigen::Vector2d d1;
+		Vector6d p_delta_cam;
+		Eigen::Vector3d p_delta_xyz;
+		Vector5d p_delta_intrinsics;
+
+		//for xyz
+		Eigen::Vector4d X_tmp = Eigen::Vector4d::Ones();
+		Eigen::Vector3d X_global_tmp;
+		for(int j = 0; j < 3; ++ j) {
+			Relative_to_Absolute_XYZ(r_t_vertex0, Eps.col(j).template head<3>(), p_delta_xyz);
+			Project_P2C_Other(v_InvDepth_to_XYZ(p_delta_xyz), r_t_vertex1, r_t_intrinsics, r_t_vertex2, d1);
+			J_xyz.col(j) = (d1 - r_t_dest) * scalar;
+		}
+		//for intrinsics
+		for(int j = 0; j < 5; ++ j) {
+			Relative_to_Absolute_Intrinsics(r_t_intrinsics, Eps.col(j).template head<5>(), p_delta_intrinsics);
+			Project_P2C_Other(v_InvDepth_to_XYZ(r_t_vertex0), r_t_vertex1, p_delta_intrinsics, r_t_vertex2, d1);
+			J_intrinsics.col(j) = (d1 - r_t_dest) * scalar;
+		}
+		// for observer camera
+		for(int j = 0; j < 6; ++ j) {
+			C3DJacobians::Relative_to_Absolute(r_t_vertex1, Eps.col(j), p_delta_cam);
+			Project_P2C_Other(v_InvDepth_to_XYZ(r_t_vertex0), p_delta_cam, r_t_intrinsics, r_t_vertex2, d1);
+			J_cam0.col(j) = (d1 - r_t_dest) * scalar;
+		}
+		// for owner camera
+		for(int j = 0; j < 6; ++ j) {
+			C3DJacobians::Relative_to_Absolute(r_t_vertex2, Eps.col(j), p_delta_cam);
+			Project_P2C_Other(v_InvDepth_to_XYZ(r_t_vertex0), r_t_vertex1, r_t_intrinsics, p_delta_cam, d1);
+			J_cam1.col(j) = (d1 - r_t_dest) * scalar;
+		}
+
+		//send jacobians out
+		/*r_t_cam_measurement = J_cam;
+		r_t_xyz_measurement = J_xyz;
+		r_t_intrinsics_measurement = J_intrinsics;*/
+		// avoid unnecessary copy: they are all references
+	}
+
+	/**
+	 *	@brief projects a point from 3D to 2D camera image
+	 *
+	 *	@tparam Derived0 is Eigen derived matrix type for the first matrix argument
+	 *	@tparam Derived1 is Eigen derived matrix type for the second matrix argument
+	 *	@tparam Derived2 is Eigen derived matrix type for the third matrix argument
+	 *	@tparam Derived3 is Eigen derived matrix type for the fourth matrix argument
+	 *
+	 *	@param[in] r_t_vertex1 is the first vertex - camera
+	 *	@param[in] r_t_intrinsics is instrinsic parameters of the camera
+	 *	@param[in] r_t_vertex2 is the second vertex - point
+	 *	@param[out] r_t_dest is filled with absolute coordinates of result
+	 */
+	template <class Derived0, class Derived1, class Derived2, class Derived3>
+	static void Project_P2C2(const Eigen::MatrixBase<Derived0> &r_t_vertex1,
+		const Eigen::MatrixBase<Derived1> &r_t_vertex2,
+		const Eigen::MatrixBase<Derived2> &r_t_intrinsics,
+		Eigen::MatrixBase<Derived3> &r_t_dest,
+		bool &in_front_of_cam)
+	{
+		DimensionCheck<Vector6d>(r_t_vertex1);
+		DimensionCheck<Eigen::Vector2d>(r_t_intrinsics);
+		DimensionCheck<Eigen::Vector3d>(r_t_vertex2);
+		DimensionCheck<Eigen::Vector2d>(r_t_dest);
+
+		//construct camera intrinsics matrix
+		double f = r_t_intrinsics(0);
+		double k = r_t_intrinsics(1) / (.5 * (f * f))/*sqrt(fx * fy)*/; // rescale intrinsics// since post-ICRA2015 release the distortion is scaled by focal length in the internal representation
+
+		Eigen::Matrix3d A;
+		/*A(0, 0) = fx; 	A(0, 1) = 0; 	A(0, 2) = cx;
+		A(1, 0) = 0; 	A(1, 1) = fy; 	A(1, 2) = cy;
+		A(2, 0) = 0; 	A(2, 1) = 0; 	A(2, 2) = 1;*/
+		A << f,  0, 0,
+			  0, f, 0,
+			  0,  0,  1;
+
+		//construct [R | t]
+		Eigen::Matrix<double, 3, 4> Rt;
+		Rt.template block<3, 3>(0, 0) = C3DJacobians::t_AxisAngle_to_RotMatrix(r_t_vertex1.template tail<3>());
+		Rt.col(3) = r_t_vertex1.template head<3>();
+
+		//construct point vector
+		Eigen::Vector4d X;
+		X.template head<3>() = r_t_vertex2;
+		X(3) = 1;
+
+		//project world to camera
+		Eigen::Vector3d x = Rt * X;
+		if(x(2) < 0)
+			in_front_of_cam = false;
+		else
+			in_front_of_cam = true;
+
+		//project camera to image
+		Eigen::Vector3d uv = A * x;
+		//normalize
+		uv /= uv(2);
+
+		double r2 = (uv.template head<2>()).squaredNorm();
+		uv.template head<2>() = (1 + r2 * k) * (uv.template head<2>());
+		// apply radial distortion // todo - make the distortion function a (template?) parameter
+
+		r_t_dest(0) = uv(0);
+#ifdef DATA_UPSIDE_DOWN
+		r_t_dest(1) = -uv(1);
+#else
+		r_t_dest(1) = uv(1);
+#endif
+	}
+
+	/**
+	 *	@brief projects a point from 3D to 2D camera image
+	 *
+	 *	@tparam Derived0 is Eigen derived matrix type for the first matrix argument
+	 *	@tparam Derived1 is Eigen derived matrix type for the second matrix argument
+	 *	@tparam Derived2 is Eigen derived matrix type for the third matrix argument
+	 *	@tparam Derived3 is Eigen derived matrix type for the fourth matrix argument
+	 *	@tparam Derived4 is Eigen derived matrix type for the fifth matrix argument
+	 *
+	 *	@param[in] r_t_xyz is the first vertex - point
+	 *	@param[in] r_t_cam_observer is the vertex of observing camera
+	 *	@param[in] r_t_intrinsics is instrinsic parameters of the camera
+	 *	@param[in] r_t_cam_owner is the vertex of owner cam
+	 *	@param[out] r_t_dest is filled with absolute coordinates of result
+	 */
+	template <class Derived0, class Derived1, class Derived2, class Derived3, class Derived4>
+	static void Project_P2C2_Other(const Eigen::MatrixBase<Derived0> &r_t_xyz,
+		const Eigen::MatrixBase<Derived1> &r_t_cam_observer,
+		const Eigen::MatrixBase<Derived2> &r_t_intrinsics,
+		const Eigen::MatrixBase<Derived3> &r_t_cam_owner,
+		Eigen::MatrixBase<Derived4> &r_t_dest,
+		bool &in_front_of_cam)
+	{
+		DimensionCheck<Vector6d>(r_t_cam_observer);
+		DimensionCheck<Vector6d>(r_t_cam_owner);
+		DimensionCheck<Eigen::Vector2d>(r_t_intrinsics);
+		DimensionCheck<Eigen::Vector3d>(r_t_xyz);
+		DimensionCheck<Eigen::Vector2d>(r_t_dest);
+
+		//construct camera intrinsics matrix
+		double f = r_t_intrinsics(0);
+		double k = r_t_intrinsics(1) / (.5 * (f * f))/*sqrt(fx * fy)*/; // rescale intrinsics// since post-ICRA2015 release the distortion is scaled by focal length in the internal representation
+
+		Eigen::Matrix3d A;
+		A << f,  0, 0,
+			  0, f, 0,
+			  0,  0,  1;
+
+		// transform the point to global coordinates
+		//construct [R | t]
+		Eigen::Matrix<double, 4, 4> Rt_owner = Eigen::Matrix<double, 4, 4>::Identity();
+		Rt_owner.template block<3, 3>(0, 0) = C3DJacobians::t_AxisAngle_to_RotMatrix(r_t_cam_owner.template tail<3>());
+		Rt_owner.template block<3, 1>(0, 3) = r_t_cam_owner.template head<3>();
+
+		//construct point vector
+		Eigen::Vector4d X = Eigen::Vector4d::Ones();
+		X.template head<3>() = r_t_xyz;
+
+		Eigen::Vector4d X_global = Rt_owner.inverse() * X;
+
+		//construct [R | t]
+		Eigen::Matrix<double, 3, 4> Rt;
+		Rt.template block<3, 3>(0, 0) = C3DJacobians::t_AxisAngle_to_RotMatrix(r_t_cam_observer.template tail<3>());
+		Rt.col(3) = r_t_cam_observer.template head<3>();
+
+		//project world to camera
+		Eigen::Vector3d x = Rt * X_global;
+		if(x(2) < 0)
+			in_front_of_cam = false;
+		else
+			in_front_of_cam = true;
+
+		//project camera to image
+		Eigen::Vector3d uv = A * x;
+		//normalize
+		uv /= uv(2);
+
+		double r2 = (uv.template head<2>()).squaredNorm();
+		uv.template head<2>() = (1 + r2 * k) * (uv.template head<2>());
+		// apply radial distortion // todo - make the distortion function a (template?) parameter
+		//std::cout << r_t_intrinsics.transpose() << " | " << uv.transpose() << std::endl;
+
+		r_t_dest(0) = uv(0);
+#ifdef DATA_UPSIDE_DOWN
+		r_t_dest(1) = -uv(1);
+#else
+		r_t_dest(1) = uv(1);
+#endif
+	}
+
+	/**
+	 *	@brief projects a 3D point to 2D camera image and calculates the jacobians, including the one for the intrinsics
+	 *
+	 *	@tparam Derived0 is Eigen derived matrix type for the first matrix argument
+	 *	@tparam Derived1 is Eigen derived matrix type for the second matrix argument
+	 *	@tparam Derived2 is Eigen derived matrix type for the third matrix argument
+	 *	@tparam Derived3 is Eigen derived matrix type for the fourth matrix argument
+	 *	@tparam Derived4 is Eigen derived matrix type for the fifth matrix argument
+	 *	@tparam Derived5 is Eigen derived matrix type for the sixth matrix argument
+	 *	@tparam Derived6 is Eigen derived matrix type for the seventh matrix argument
+	 *
+	 *	@param[in] r_t_vertex1 is the first vertex, in absolute coordinates - CAM
+	 *	@param[in] r_t_intrinsics is instrinsic parameters of the camera
+	 *	@param[in] r_t_vertex2 is the second vertex, also in absolute coordinates - XYZ, inverse depth
+	 *	@param[out] r_t_dest is filled with relative coordinates of the second vertex
+	 *	@param[out] r_t_cam_measurement is filled with the first jacobian
+	 *	@param[out] r_t_xyz_measurement is filled with the second jacobian
+	 *	@param[out] r_t_intrinsics_measurement is filled with the third jacobian
+	 *
+	 *	@note Neither of the input parameters may be reused as output.
+	 */
+	template <class Derived0, class Derived1, class Derived2,
+		class Derived3, class Derived4, class Derived5, class Derived6>
+	static void Project_P2CI2_InvDepth(const Eigen::MatrixBase<Derived0> &r_t_vertex1,
+		const Eigen::MatrixBase<Derived1> &r_t_vertex2,
+		const Eigen::MatrixBase<Derived2> &r_t_intrinsics, Eigen::MatrixBase<Derived3> &r_t_dest,
+		Eigen::MatrixBase<Derived4> &r_t_cam_measurement, Eigen::MatrixBase<Derived5> &r_t_xyz_measurement,
+		Eigen::MatrixBase<Derived6> &r_t_intrinsics_measurement)
+	{
+		DimensionCheck<Vector6d>(r_t_vertex1);
+		DimensionCheck<Eigen::Vector2d>(r_t_intrinsics);
+		DimensionCheck<Eigen::Vector3d>(r_t_vertex2);
+		DimensionCheck<Eigen::Vector2d>(r_t_dest);
+		DimensionCheck<Eigen::Matrix<double, 2, 6> >(r_t_cam_measurement);
+		DimensionCheck<Eigen::Matrix<double, 2, 3> >(r_t_xyz_measurement);
+		DimensionCheck<Eigen::Matrix<double, 2, 2> >(r_t_intrinsics_measurement);
+
+		_ASSERTE((const void*)&r_t_vertex1 != (const void*)&r_t_dest);
+		_ASSERTE((const void*)&r_t_intrinsics != (const void*)&r_t_dest);
+		_ASSERTE((const void*)&r_t_vertex2 != (const void*)&r_t_dest); // cant compare addresses directly, the inputs may be maps or expressions and their type may not be convertible
+		// make sure that neither vector is the same as the destination, otherwise it is overwritten
+		// by the first call to Absolute_to_Relative() and then the jacobians are not computed correcly
+
+		/* TODO: make more efficient */
+		//lets try it according to g2o
+		const double delta = 1e-9;
+		const double scalar = 1.0 / (delta);
+		/*const double delta_pixel = 1e-6;
+		const double scalar_pixel = 1.0 / (delta_pixel);
+		const double delta_distortion = 1e-12;
+		const double scalar_distortion = 1.0 / (delta_pixel);*/
+
+		Matrix6d Eps;// = delta * Eigen::MatrixXd::Identity(10, 10); // MatrixXd needs to allocate storage on heap ... many milliseconds lost
+		Eps = Matrix6d::Identity() * delta; // faster, all memory on stack
+
+		//compute camera jacobian
+		Eigen::MatrixBase<Derived4> &J_cam = r_t_cam_measurement;
+		Eigen::MatrixBase<Derived5> &J_xyz = r_t_xyz_measurement;
+		Eigen::MatrixBase<Derived6> &J_intrinsics = r_t_intrinsics_measurement;
+
+		bool tmp = true;
+		Project_P2C2(r_t_vertex1, v_InvDepth_to_XYZ(r_t_vertex2), r_t_intrinsics, r_t_dest, tmp);
+
+		Eigen::Vector2d d1;
+		Vector6d p_delta_cam;
+		Eigen::Vector3d p_delta_xyz;
+		Eigen::Vector2d p_delta_intrinsics;
+
+		//for camera
+		for(int j = 0; j < 6; ++ j) {
+			C3DJacobians::Relative_to_Absolute(r_t_vertex1, Eps.col(j), p_delta_cam);
+			Project_P2C2(p_delta_cam, v_InvDepth_to_XYZ(r_t_vertex2), r_t_intrinsics, d1, tmp);
+			J_cam.col(j) = (d1 - r_t_dest) * scalar;
+		}
+		//for xyz
+		for(int j = 0; j < 3; ++ j) {
+			Relative_to_Absolute_XYZ(r_t_vertex2, Eps.col(j).template head<3>(), p_delta_xyz);
+			Project_P2C2(r_t_vertex1, v_InvDepth_to_XYZ(p_delta_xyz), r_t_intrinsics, d1, tmp);
+			J_xyz.col(j) = (d1 - r_t_dest) * scalar;
+		}
+		//for intrinsics
+		for(int j = 0; j < 2; ++ j) {
+			Relative_to_Absolute_IntrinsicsReduced(r_t_intrinsics, Eps.col(j).template head<2>(), p_delta_intrinsics);
+			Project_P2C2(r_t_vertex1, v_InvDepth_to_XYZ(r_t_vertex2), p_delta_intrinsics, d1, tmp);
+			J_intrinsics.col(j) = (d1 - r_t_dest) * scalar;
+		}
+	}
+
+	/**
+	 *	@brief projects a 3D point to 2D camera image and calculates the jacobians, including the one for the intrinsics
+	 *
+	 *	@tparam Derived0 is Eigen derived matrix type for the first matrix argument
+	 *	@tparam Derived1 is Eigen derived matrix type for the second matrix argument
+	 *	@tparam Derived2 is Eigen derived matrix type for the third matrix argument
+	 *	@tparam Derived3 is Eigen derived matrix type for the fourth matrix argument
+	 *	@tparam Derived4 is Eigen derived matrix type for the fifth matrix argument
+	 *
+	 *	@param[in] r_t_vertex0 is the first vertex, in local coordinates of camera - XYZ
+	 *	@param[in] r_t_intrinsics is instrinsic parameters of the camera
+	 *	@param[out] r_t_dest is filled with relative coordinates of the second vertex
+	 *	@param[out] r_t_xyz_measurement is filled with the second jacobian
+	 *	@param[out] r_t_intrinsics_measurement is filled with the third jacobian
+	 *
+	 *	@note Neither of the input parameters may be reused as output.
+	 */
+	template <class Derived0, class Derived1, class Derived2,
+		class Derived3, class Derived4>
+	static void Project_P2CI2_Self_InvDepth(const Eigen::MatrixBase<Derived0> &r_t_vertex0,
+		const Eigen::MatrixBase<Derived1> &r_t_intrinsics,
+		Eigen::MatrixBase<Derived2> &r_t_dest,
+		Eigen::MatrixBase<Derived3> &r_t_xyz_measurement,
+		Eigen::MatrixBase<Derived4> &r_t_intrinsics_measurement)
+	{
+		DimensionCheck<Eigen::Vector3d>(r_t_vertex0);
+		DimensionCheck<Eigen::Vector2d>(r_t_intrinsics);
+		DimensionCheck<Eigen::Vector2d>(r_t_dest);
+		DimensionCheck<Eigen::Matrix<double, 2, 3> >(r_t_xyz_measurement);
+		DimensionCheck<Eigen::Matrix<double, 2, 2> >(r_t_intrinsics_measurement);
+
+		_ASSERTE((const void*)&r_t_vertex0 != (const void*)&r_t_dest);
+		_ASSERTE((const void*)&r_t_intrinsics != (const void*)&r_t_dest);
+		// cant compare addresses directly, the inputs may be maps or expressions and their type may not be convertible
+		// make sure that neither vector is the same as the destination, otherwise it is overwritten
+		// by the first call to Absolute_to_Relative() and then the jacobians are not computed correcly
+
+		/* TODO: make more efficient */
+		const double delta = 1e-9;
+		const double scalar = 1.0 / (delta);
+
+		Matrix6d Eps;
+		Eps = Matrix6d::Identity() * delta; // faster, all memory on stack
+
+		//compute camera jacobian
+		Eigen::MatrixBase<Derived3> &J_xyz = r_t_xyz_measurement;
+		Eigen::MatrixBase<Derived4> &J_intrinsics = r_t_intrinsics_measurement;
+
+		bool tmp = true;
+		Eigen::Vector6d cam_zero = Eigen::Vector6d::Zero();	// cam in origin with no rotation
+		Project_P2C2(cam_zero, v_InvDepth_to_XYZ(r_t_vertex0), r_t_intrinsics, r_t_dest, tmp);
+
+		Eigen::Vector2d d1;
+		Vector6d p_delta_cam;
+		Eigen::Vector3d p_delta_xyz;
+		Eigen::Vector2d p_delta_intrinsics;
+
+		//for xyz
+		for(int j = 0; j < 3; ++ j) {
+			Relative_to_Absolute_XYZ(r_t_vertex0, Eps.col(j).template head<3>(), p_delta_xyz);
+			Project_P2C2(cam_zero, v_InvDepth_to_XYZ(p_delta_xyz), r_t_intrinsics, d1, tmp);
+			J_xyz.col(j) = (d1 - r_t_dest) * scalar;
+		}
+		//for intrinsics
+		for(int j = 0; j < 2; ++ j) {
+			Relative_to_Absolute_IntrinsicsReduced(r_t_intrinsics, Eps.col(j).template head<2>(), p_delta_intrinsics);
+			Project_P2C2(cam_zero, v_InvDepth_to_XYZ(r_t_vertex0), p_delta_intrinsics, d1, tmp);
+			J_intrinsics.col(j) = (d1 - r_t_dest) * scalar;
+		}
+	}
+
+	/**
+	 *	@brief projects a 3D point to 2D camera image and calculates the jacobians, including the one for the intrinsics
+	 *
+	 *	@tparam Derived0 is Eigen derived matrix type for the first matrix argument
+	 *	@tparam Derived1 is Eigen derived matrix type for the second matrix argument
+	 *	@tparam Derived2 is Eigen derived matrix type for the third matrix argument
+	 *	@tparam Derived3 is Eigen derived matrix type for the fourth matrix argument
+	 *	@tparam Derived4 is Eigen derived matrix type for the fifth matrix argument
+	 *
+	 *	@param[in] r_t_vertex0 is the first vertex, in local coordinates of camera - XYZ
+	 *	@param[in] r_t_vertex1 is the first vertex, observer camera
+	 *	@param[in] r_t_intrinsics is instrinsic parameters of the camera
+	 *	@param[in] r_t_vertex2 is the first vertex, owner camera of local point
+	 *	@param[out] r_t_dest is filled with relative coordinates of the second vertex
+	 *	@param[out] r_t_xyz_measurement is filled with the second jacobian
+	 *	@param[out] r_t_cam0_measurement is filled with the second jacobian
+	 *	@param[out] r_t_intrinsics_measurement is filled with the third jacobian
+	 *	@param[out] r_t_cam1_measurement is filled with the second jacobian
+	 *
+	 *	@note Neither of the input parameters may be reused as output.
+	 */
+	template <class Derived0, class Derived1, class Derived2,
+		class Derived3, class Derived4, class Derived5, class Derived6, class Derived7, class Derived8>
+	static void Project_P2CI2_Other_InvDepth(const Eigen::MatrixBase<Derived0> &r_t_vertex0,
+		const Eigen::MatrixBase<Derived1> &r_t_vertex1,
+		const Eigen::MatrixBase<Derived2> &r_t_intrinsics,
+		const Eigen::MatrixBase<Derived3> &r_t_vertex2,
+		Eigen::MatrixBase<Derived4> &r_t_dest,
+		Eigen::MatrixBase<Derived5> &r_t_xyz_measurement,
+		Eigen::MatrixBase<Derived6> &r_t_cam0_measurement,
+		Eigen::MatrixBase<Derived7> &r_t_intrinsics_measurement,
+		Eigen::MatrixBase<Derived8> &r_t_cam1_measurement)
+	{
+		DimensionCheck<Eigen::Vector3d>(r_t_vertex0);
+		DimensionCheck<Vector6d>(r_t_vertex1);
+		DimensionCheck<Eigen::Vector2d>(r_t_intrinsics);
+		DimensionCheck<Vector6d>(r_t_vertex2);
+		DimensionCheck<Eigen::Vector2d>(r_t_dest);
+		DimensionCheck<Eigen::Matrix<double, 2, 3> >(r_t_xyz_measurement);
+		DimensionCheck<Eigen::Matrix<double, 2, 6> >(r_t_cam0_measurement);
+		DimensionCheck<Eigen::Matrix<double, 2, 2> >(r_t_intrinsics_measurement);
+		DimensionCheck<Eigen::Matrix<double, 2, 6> >(r_t_cam1_measurement);
+
+		_ASSERTE((const void*)&r_t_vertex0 != (const void*)&r_t_dest);
+		_ASSERTE((const void*)&r_t_intrinsics != (const void*)&r_t_dest);
+		// cant compare addresses directly, the inputs may be maps or expressions and their type may not be convertible
+		// make sure that neither vector is the same as the destination, otherwise it is overwritten
+		// by the first call to Absolute_to_Relative() and then the jacobians are not computed correcly
+
+		/* TODO: make more efficient */
+		const double delta = 1e-9;
+		const double scalar = 1.0 / (delta);
+
+		Matrix6d Eps;
+		Eps = Matrix6d::Identity() * delta; // faster, all memory on stack
+
+		//compute camera jacobian
+		Eigen::MatrixBase<Derived5> &J_xyz = r_t_xyz_measurement;
+		Eigen::MatrixBase<Derived7> &J_intrinsics = r_t_intrinsics_measurement;
+		Eigen::MatrixBase<Derived6> &J_cam0 = r_t_cam0_measurement;
+		Eigen::MatrixBase<Derived8> &J_cam1 = r_t_cam1_measurement;
+
+		bool tmp = true;
+		Project_P2C2_Other(v_InvDepth_to_XYZ(r_t_vertex0), r_t_vertex1, r_t_intrinsics, r_t_vertex2, r_t_dest, tmp);
+
+		Eigen::Vector2d d1;
+		Vector6d p_delta_cam;
+		Eigen::Vector3d p_delta_xyz;
+		Eigen::Vector2d p_delta_intrinsics;
+
+		//for xyz
+		Eigen::Vector4d X_tmp = Eigen::Vector4d::Ones();
+		Eigen::Vector3d X_global_tmp;
+		for(int j = 0; j < 3; ++ j) {
+			Relative_to_Absolute_XYZ(r_t_vertex0, Eps.col(j).template head<3>(), p_delta_xyz);
+			Project_P2C2_Other(v_InvDepth_to_XYZ(p_delta_xyz), r_t_vertex1, r_t_intrinsics, r_t_vertex2, d1, tmp);
+			J_xyz.col(j) = (d1 - r_t_dest) * scalar;
+		}
+		//for intrinsics
+		for(int j = 0; j < 2; ++ j) {
+			Relative_to_Absolute_IntrinsicsReduced(r_t_intrinsics, Eps.col(j).template head<2>(), p_delta_intrinsics);
+			Project_P2C2_Other(v_InvDepth_to_XYZ(r_t_vertex0), r_t_vertex1, p_delta_intrinsics, r_t_vertex2, d1, tmp);
+			J_intrinsics.col(j) = (d1 - r_t_dest) * scalar;
+		}
+		// for observer camera
+		for(int j = 0; j < 6; ++ j) {
+			C3DJacobians::Relative_to_Absolute(r_t_vertex1, Eps.col(j), p_delta_cam);
+			Project_P2C2_Other(v_InvDepth_to_XYZ(r_t_vertex0), p_delta_cam, r_t_intrinsics, r_t_vertex2, d1, tmp);
+			J_cam0.col(j) = (d1 - r_t_dest) * scalar;
+		}
+		// for owner camera
+		for(int j = 0; j < 6; ++ j) {
+			C3DJacobians::Relative_to_Absolute(r_t_vertex2, Eps.col(j), p_delta_cam);
+			Project_P2C2_Other(v_InvDepth_to_XYZ(r_t_vertex0), r_t_vertex1, r_t_intrinsics, p_delta_cam, d1, tmp);
+			J_cam1.col(j) = (d1 - r_t_dest) * scalar;
 		}
 	}
 };

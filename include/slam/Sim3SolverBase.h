@@ -408,13 +408,152 @@ public:
 			TSim3 t_shift1 = vert1;
 			t_shift1 *= t_eps;
 			t_shift1.Inverse_Compose(vert2);
-			r_t_jacobian1.col(i) = (t_shift1.v_Log() - r_v_difference) * f_scale;
+			r_t_jacobian1.col(i) = -(t_shift1.v_Log() - r_v_difference) * f_scale;
 
 			TSim3 t_shift2 = vert2;
 			t_shift2 *= t_eps;
 			TSim3 t_diff = vert1; t_diff.Inverse_Compose(t_shift2);
-			r_t_jacobian2.col(i) = (t_diff.v_Log() - r_v_difference) * f_scale;
+			r_t_jacobian2.col(i) = -(t_diff.v_Log() - r_v_difference) * f_scale;
 
+			v_eps(i) = 0; // rezero
+		}
+		// numerical jacobian
+	}
+
+	/**
+	 *	@brief composes a pair of relative Sim(3) poses to yield an aboslute transformation
+	 *
+	 *	@tparam Derived0 is Eigen derived matrix type for the first matrix argument
+	 *	@tparam Derived1 is Eigen derived matrix type for the second matrix argument
+	 *	@tparam Derived2 is Eigen derived matrix type for the third matrix argument
+	 *
+	 *	@param[in] r_v_vertex1 is the first transformation (in absolute coordinates)
+	 *	@param[out] r_v_difference is filled with relative coordinates of the second vertex
+	 *	@param[out] r_t_jacobian1 is filled with the first jacobian (delta difference / delta vertex 1)
+	 */
+	template <class Derived0, class Derived1, class Derived2>
+	static void RollJacobians(const Eigen::MatrixBase<Derived0> &r_v_vertex1,
+		Eigen::MatrixBase<Derived1> &r_v_difference, Eigen::MatrixBase<Derived2> &r_t_jacobian1)
+	{
+		DimensionCheck<Eigen::Vector7d>(r_v_vertex1);
+		DimensionCheck<Eigen::Vector1d>(r_v_difference);
+		DimensionCheck<Eigen::Matrix<double, 1, 7> >(r_t_jacobian1);
+
+		TSim3 vert1;
+		vert1.Exp(r_v_vertex1);
+		// exp map
+
+		Eigen::Vector7d pose = vert1.v_tRs();
+		Eigen::Matrix3d rot = C3DJacobians::Operator_rot(pose.tail(4).head(3));
+		Eigen::Vector3d up(0, 1, 0);
+		Eigen::Vector3d up2 = rot/*.inverse()*/ * up;
+
+		Eigen::Vector3d ea = rot.eulerAngles(1, 0, 2);
+		r_v_difference(0) = ea(2);
+		//std::cout << "roll " << ea.transpose() << " | ";
+
+		if(ea(2) > M_PI / 2)
+			r_v_difference(0) = - M_PI + ea(2);
+		if(ea(2) < -M_PI / 2)
+			r_v_difference(0) = M_PI + ea(2);
+
+		// put to cyclic range
+		r_v_difference(0) = /*(up2 - up).norm();*/r_v_difference(0) * r_v_difference(0);//0.5 - 0.5 * cos(r_v_difference(0));
+		//r_v_difference(0) = 1-up2(1);//acos(up2(1));
+		//std::cout << "roll " << r_v_difference(0) << " | " << up2.transpose() << std::endl;
+
+		Eigen::Vector7d v_eps = Eigen::Vector7d::Zero();
+		const double f_eps = 1e-9, f_scale = 1 / f_eps;
+		for(int i = 0; i < 7; ++ i) {
+			v_eps(i) = f_eps;
+			TSim3 t_eps = t_Exp(v_eps);
+
+			TSim3 t_shift1 = vert1;
+			t_shift1 *= t_eps;
+			Eigen::Vector7d dpose = t_shift1.v_tRs();
+			rot = C3DJacobians::Operator_rot(dpose.tail(4).head(3));
+
+			up2 = rot/*.inverse()*/ * up;
+
+			ea = rot.eulerAngles(1, 0, 2);
+
+			Eigen::Vector1d ang_shift;
+			ang_shift(0) = ea(2);
+			if(ea(2) > M_PI / 2)
+				ang_shift(0) = - M_PI + ea(2);
+			if(ea(2) < -M_PI / 2)
+				ang_shift(0) = M_PI + ea(2);
+
+			ang_shift(0) = /*(up2 - up).norm();*/ang_shift(0) * ang_shift(0);//0.5 - 0.5 * cos(ang_shift(0));
+			//ang_shift(0) = 1-up2(1);//acos(up2(1));
+
+			r_t_jacobian1.col(i) = -(r_v_difference - ang_shift) * f_scale;
+			v_eps(i) = 0; // rezero
+		}
+		//std::cout << r_t_jacobian1 << std::endl;
+		// numerical jacobian
+	}
+
+	/**
+	 *	@brief composes a pair of relative Sim(3) poses to yield an aboslute transformation
+	 *
+	 *	@tparam Derived0 is Eigen derived matrix type for the first matrix argument
+	 *	@tparam Derived1 is Eigen derived matrix type for the second matrix argument
+	 *	@tparam Derived2 is Eigen derived matrix type for the third matrix argument
+	 *
+	 *	@param[in] r_v_vertex1 is the first transformation (in absolute coordinates)
+	 *	@param[out] r_v_difference is filled with relative coordinates of the second vertex
+	 *	@param[out] r_t_jacobian1 is filled with the first jacobian (delta difference / delta vertex 1)
+	 */
+	template <class Derived0, class Derived1, class Derived2>
+	static void PitchJacobians(const Eigen::MatrixBase<Derived0> &r_v_vertex1,
+		Eigen::MatrixBase<Derived1> &r_v_difference, Eigen::MatrixBase<Derived2> &r_t_jacobian1)
+	{
+		DimensionCheck<Eigen::Vector7d>(r_v_vertex1);
+		DimensionCheck<Eigen::Vector1d>(r_v_difference);
+		DimensionCheck<Eigen::Matrix<double, 1, 7> >(r_t_jacobian1);
+
+		TSim3 vert1;
+		vert1.Exp(r_v_vertex1);
+		// exp map
+
+		Eigen::Vector7d pose = vert1.v_tRs();
+		Eigen::Matrix3d rot = C3DJacobians::Operator_rot(pose.tail(4).head(3));
+
+		Eigen::Vector3d ea = rot.eulerAngles(1, 0, 2);
+		r_v_difference(0) = ea(1);
+
+		if(ea(1) > M_PI / 2)
+			r_v_difference(0) = - M_PI + ea(1);
+		if(ea(1) < -M_PI / 2)
+			r_v_difference(0) = M_PI + ea(1);
+
+		// put to cyclic range
+		r_v_difference(0) = /*0.5 - 0.5 * cos(r_v_difference(0))*/r_v_difference(0) * r_v_difference(0);
+
+		const double f_eps = 1e-9, f_scale = 1 / f_eps;
+		Eigen::Vector7d v_eps = Eigen::Vector7d::Zero();
+		for(int i = 0; i < 7; ++ i) {
+			v_eps(i) = f_eps;
+			TSim3 t_eps = t_Exp(v_eps);
+
+			TSim3 t_shift1 = vert1;
+			t_shift1 *= t_eps;
+			pose = t_shift1.v_tRs();
+			rot = C3DJacobians::Operator_rot(pose.tail(4).head(3));
+
+			ea = rot.eulerAngles(1, 0, 2);
+
+			Eigen::Vector1d ang_shift;
+			ang_shift(0) = ea(1);
+			if(ea(1) > M_PI / 2)
+				ang_shift(0) = - M_PI + ea(1);
+			if(ea(1) < -M_PI / 2)
+				ang_shift(0) = M_PI + ea(1);
+
+			ang_shift(0) = /*0.5 - 0.5 * cos(ang_shift(0))*/ang_shift(0) * ang_shift(0);
+
+			r_t_jacobian1.col(i) = -(r_v_difference - ang_shift) * f_scale;
 			v_eps(i) = 0; // rezero
 		}
 		// numerical jacobian
@@ -3625,6 +3764,179 @@ public:
 		}
 		// calculate numerical jacobians
 	}
+
+	/**
+	 *	@brief projects an XYZ point in camera-local coordinates from 3D to 2D camera image
+	 *
+	 *	@tparam Derived0 is Eigen derived matrix type for the first matrix argument
+	 *	@tparam Derived1 is Eigen derived matrix type for the second matrix argument
+	 *	@tparam Derived2 is Eigen derived matrix type for the third matrix argument
+	 *	@tparam Derived3 is Eigen derived matrix type for the fourth matrix argument
+	 *	@tparam Derived4 is Eigen derived matrix type for the fifth matrix argument
+	 *
+	 *	@param[in] r_v_vertex_xyz is the first vertex, in camera local coordinates, XYZ
+	 *	@param[in] r_v_vertex_observing_cam is the camera observing the vertex, in absolute coordinates, Sim(3)
+	 *	@param[in] r_v_intrinsics is instrinsic parameters of the observing camera
+	 *	@param[in] r_v_vertex_owner_cam is the camera that owns the vertex, also in absolute coordinates, Sim(3)
+	 *	@param[out] r_v_reprojection is filled with the reprojected 2D coordinates of the point
+	 *	@param[in] b_use_squared_k_normalization is flag to use normalization <tt>k_new = k / (.5 * fx * fy)</tt>
+	 *		instead of <tt>k_new = k / (.5 * (fx + fy))</tt>
+	 *
+	 *	@return Returns true if the landmark is in front of the camera, otherwise returns false.
+	 *
+	 *	@note This has a different order of arguments, compared to CBAJacobians::Project_P2C(),
+	 *		in order to avoid having to swap the order of arguments.
+	 */
+	template <class Derived0, class Derived1, class Derived2, class Derived3, class Derived4>
+	static bool Project_P2CI2_LocalXYZ_Other(const Eigen::MatrixBase<Derived0> &r_v_vertex_xyz,
+		const Eigen::MatrixBase<Derived1> &r_v_vertex_observing_cam,
+		const Eigen::MatrixBase<Derived3> &r_v_intrinsics,
+		const Eigen::MatrixBase<Derived2> &r_v_vertex_owner_cam,
+		Eigen::MatrixBase<Derived4> &r_v_reprojection)
+	{
+		DimensionCheck<Eigen::Vector7d>(r_v_vertex_observing_cam);
+		DimensionCheck<Eigen::Vector2d>(r_v_intrinsics);
+		DimensionCheck<Eigen::Vector7d>(r_v_vertex_owner_cam);
+		DimensionCheck<Eigen::Vector3d>(r_v_vertex_xyz);
+		DimensionCheck<Eigen::Vector2d>(r_v_reprojection);
+
+		const double f_fx = r_v_intrinsics(0);
+		const double f_k = r_v_intrinsics(1) / (.5 * (f_fx /*note multiplication*/ * f_fx)); // SOSO: works better for mono
+
+		const TSim3 t_camera(r_v_vertex_observing_cam, TSim3::from_sim3_vector);
+		const TSim3 t_owner_camera(r_v_vertex_owner_cam, TSim3::from_sim3_vector);
+		TSim3 t_diff_transform = t_camera; t_diff_transform.Inverse_Compose(t_owner_camera); // calculate direct transform as inverse composition (camera^{-1} * owner_camera)
+		// get a Sim(3) pose
+
+		const Eigen::Vector3d &X = r_v_vertex_xyz; // just rename
+		// get xyz
+
+		Eigen::Vector3d x = t_diff_transform * X; // get it from the local space of the owner camera and put it to the local space of the observing camera
+		_ASSERTE((x - t_camera.v_InvTransform(t_owner_camera * X)).norm() < 1e-10); // make sure we got the difference transform right
+		// transform from one camera to the other camera
+
+		Eigen::Matrix3d K;
+		K << f_fx,  0, 0,
+			  0, f_fx, 0,
+			  0,  0,  1;
+		// construct camera intrinsics matrix
+
+		Eigen::Vector3d uv = K * x;
+		bool b_in_front_of_camera = uv(2) > 0;
+		uv.head<2>() /= uv(2); uv(2) = 1;
+		// project camera to image, dehomogenize
+
+		double r2 = (uv.template head<2>() - K.template topRightCorner<2, 1>()).squaredNorm();
+		uv.template head<2>() = K.template topRightCorner<2, 1>() +
+			(1 + r2 * f_k) * (uv.template head<2>() - K.template topRightCorner<2, 1>());
+		// apply radial distortion // todo - make the distortion function a (template?) parameter
+
+#ifdef DATA_UPSIDE_DOWN
+		r_v_reprojection(0) = uv(0);
+		r_v_reprojection(1) = -uv(1); // because of how image coordinates have orrigin in top left corner usually
+#else // DATA_UPSIDE_DOWN
+		r_v_reprojection = uv.template head<2>();
+#endif // DATA_UPSIDE_DOWN
+
+		return b_in_front_of_camera;
+	}
+
+	/**
+	 *	@brief projects an InvDepth point in camera-local coordinates from 3D to 2D camera + intrinsics image and calculates the jacobians
+	 *
+	 *	@tparam Derived0 is Eigen derived matrix type for the first matrix argument
+	 *	@tparam Derived1 is Eigen derived matrix type for the second matrix argument
+	 *	@tparam Derived2 is Eigen derived matrix type for the third matrix argument
+	 *	@tparam Derived3 is Eigen derived matrix type for the fourth matrix argument
+	 *	@tparam Derived4 is Eigen derived matrix type for the fifth matrix argument
+	 *	@tparam Derived5 is Eigen derived matrix type for the sixth matrix argument
+	 *	@tparam Derived6 is Eigen derived matrix type for the seventh matrix argument
+	 *	@tparam Derived7 is Eigen derived matrix type for the eighth matrix argument
+	 *	@tparam Derived8 is Eigen derived matrix type for the eighth matrix argument
+	 *
+	 *	@param[in] r_v_vertex_xyz is the first vertex, in camera local coordinates, XYZ
+	 *	@param[in] r_v_vertex_observing_cam is the camera observing the vertex, in absolute coordinates, Sim(3)
+	 *	@param[in] r_v_intrinsics is instrinsic parameters of the observing camera
+	 *	@param[in] r_v_vertex_owner_cam is the camera that owns the vertex,  alsoin absolute coordinates, Sim(3)
+	 *	@param[out] r_v_reprojection is filled with the reprojected 2D coordinates of the point
+	 *	@param[out] r_t_J0 is filled with the first jacobian (delta reprojection / delta xyz point)
+	 *	@param[out] r_t_J1 is filled with the second jacobian (delta reprojection / delta Sim(3) observing camera)
+	 *	@param[out] r_t_J2 is filled with the second jacobian (delta reprojection / delta Sim(3) owner camera)
+	 *
+	 *	@return Returns true if the landmark is in front of the camera, otherwise returns false.
+	 *
+	 *	@note Neither of the input parameters may be reused as output.
+	 *	@note This has a different order of arguments, compared to CBAJacobians::Project_P2C(),
+	 *		in order to avoid having to swap the order of arguments.
+	 */
+	template <class Derived0, class Derived1, class Derived2, class Derived3,
+		class Derived4, class Derived5, class Derived6, class Derived7, class Derived8>
+	static bool Project_P2CI2_LocalInvDepth_Other(const Eigen::MatrixBase<Derived0> &r_v_vertex_inv_depth,
+		const Eigen::MatrixBase<Derived1> &r_v_vertex_observing_cam,
+		const Eigen::MatrixBase<Derived2> &r_v_intrinsics,
+		const Eigen::MatrixBase<Derived3> &r_v_vertex_owner_cam,
+		Eigen::MatrixBase<Derived4> &r_v_reprojection,
+		Eigen::MatrixBase<Derived5> &r_t_J0,
+		Eigen::MatrixBase<Derived6> &r_t_J1,
+		Eigen::MatrixBase<Derived7> &r_t_J2,
+		Eigen::MatrixBase<Derived8> &r_t_J3)
+	{
+		DimensionCheck<Eigen::Vector7d>(r_v_vertex_observing_cam);
+		DimensionCheck<Eigen::Vector2d>(r_v_intrinsics);
+		DimensionCheck<Eigen::Vector7d>(r_v_vertex_owner_cam);
+		DimensionCheck<Eigen::Vector3d>(r_v_vertex_inv_depth);
+		DimensionCheck<Eigen::Vector2d>(r_v_reprojection);
+		DimensionCheck<Eigen::Matrix<double, 2, 3> >(r_t_J0);
+		DimensionCheck<Eigen::Matrix<double, 2, 7> >(r_t_J1);
+		DimensionCheck<Eigen::Matrix<double, 2, 2> >(r_t_J2);
+		DimensionCheck<Eigen::Matrix<double, 2, 7> >(r_t_J3);
+
+		_ASSERTE((const void*)&r_v_vertex_observing_cam != (const void*)&r_v_reprojection);
+		_ASSERTE((const void*)&r_v_intrinsics != (const void*)&r_v_reprojection);
+		_ASSERTE((const void*)&r_v_vertex_owner_cam != (const void*)&r_v_reprojection);
+		_ASSERTE((const void*)&r_v_vertex_inv_depth != (const void*)&r_v_reprojection); // cant compare addresses directly, the inputs may be maps or expressions and their type may not be convertible
+		// make sure that neither vector is the same as the destination, otherwise it is overwritten
+		// by the first call to Project_P2C_InvDepth() and then the jacobians are not computed correcly
+
+		const double f_delta = 1e-9;
+		const double f_scaler = 1.0 / f_delta;
+		const Eigen::Matrix7d t_epsilon = Eigen::Matrix7d::Identity() * f_delta;
+
+		bool b_in_front_of_camera = Project_P2CI2_LocalXYZ_Other(v_InvDepth_to_XYZ(r_v_vertex_inv_depth), r_v_vertex_observing_cam, r_v_intrinsics, r_v_vertex_owner_cam, r_v_reprojection);
+
+		for(int j = 0; j < 3; ++ j) {
+			Eigen::Vector3d v_delta;
+			Relative_to_Absolute_InvDepth_Epsilon(r_v_vertex_inv_depth, t_epsilon.col(j).template head<3>(), v_delta); // epsilon is in xyz
+			Eigen::Vector2d v_reprojected_with_delta;
+			Project_P2CI2_LocalXYZ_Other(v_InvDepth_to_XYZ(v_delta), r_v_vertex_observing_cam, r_v_intrinsics, r_v_vertex_owner_cam, v_reprojected_with_delta);
+			r_t_J0.col(j) = (v_reprojected_with_delta - r_v_reprojection) * f_scaler;
+		}
+		for(int j = 0; j < 7; ++ j) {
+			Eigen::Vector7d v_delta;
+			Relative_to_Absolute(r_v_vertex_observing_cam, t_epsilon.col(j), v_delta); // post-multiplicative update! have to swap the first two arguments for pre-multiplicative, and equally in CVertexCamSim3::Operator_Plus() and CVertexCamSim3::Operator_Minus().
+			Eigen::Vector2d v_reprojected_with_delta;
+			Project_P2CI2_LocalXYZ_Other(v_InvDepth_to_XYZ(r_v_vertex_inv_depth), v_delta, r_v_intrinsics, r_v_vertex_owner_cam, v_reprojected_with_delta);
+			r_t_J1.col(j) = (v_reprojected_with_delta - r_v_reprojection) * f_scaler;
+		}
+		for(int j = 0; j < 2; ++ j) {
+			Eigen::Vector2d v_delta;
+			CBAJacobians::Relative_to_Absolute_IntrinsicsReduced(r_v_intrinsics, t_epsilon.col(j).template head<2>(), v_delta);
+			Eigen::Vector2d v_reprojected_with_delta;
+			Project_P2CI2_LocalXYZ_Other(v_InvDepth_to_XYZ(r_v_vertex_inv_depth), r_v_vertex_observing_cam, v_delta, r_v_vertex_owner_cam, v_reprojected_with_delta);
+			r_t_J2.col(j) = (v_reprojected_with_delta - r_v_reprojection) * f_scaler;
+		}
+		for(int j = 0; j < 7; ++ j) {
+			Eigen::Vector7d v_delta;
+			Relative_to_Absolute(r_v_vertex_owner_cam, t_epsilon.col(j), v_delta); // post-multiplicative update! have to swap the first two arguments for pre-multiplicative, and equally in CVertexCamSim3::Operator_Plus() and CVertexCamSim3::Operator_Minus().
+			Eigen::Vector2d v_reprojected_with_delta;
+			Project_P2CI2_LocalXYZ_Other(v_InvDepth_to_XYZ(r_v_vertex_inv_depth), r_v_vertex_observing_cam, r_v_intrinsics, v_delta, v_reprojected_with_delta);
+			r_t_J3.col(j) = (v_reprojected_with_delta - r_v_reprojection) * f_scaler;
+		}
+		// calculate numerical jacobians
+
+		return b_in_front_of_camera;
+	}
+
 
 private:
 	// the rest is internal implementation

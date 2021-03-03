@@ -14,6 +14,9 @@
 #ifndef __3D_SOLVER_BASE_INCLUDED
 #define __3D_SOLVER_BASE_INCLUDED
 
+#include <iostream>
+#include <unsupported/Eigen/MatrixFunctions>
+
 /**
  *	@file include/slam/3DSolverBase.h
  *	@brief a simple base class for 3D solver, made according to 2D solver
@@ -175,6 +178,7 @@
 // works in windows but not in linux
 #endif // 1
 
+//#include <unsupported/Eigen/MatrixFunctions>
 /** \addtogroup se3
  *	@{
  */
@@ -268,6 +272,32 @@ public:
 	typedef Eigen::Matrix6d Matrix6d; /**< @brief 6x6 matrix type */
 
 public:
+	/*
+	 * @brief transform 4x4 Rt matrix to 6D pose
+	 */
+	static Eigen::Vector6d PoseToVec(const Eigen::Matrix<double, 4, 4, Eigen::DontAlign> &pose) {
+		Eigen::Vector6d vec = Eigen::Vector6d::Zero();
+		vec.head(3) = pose.block(0, 3, 3, 1);
+
+		Eigen::Matrix3d R = pose.block(0, 0, 3, 3);
+		Eigen::Vector3d axis = C3DJacobians::v_RotMatrix_to_AxisAngle(R);
+
+		vec.tail(3) = axis;
+
+		return vec;
+	}
+
+	/*
+	 * @brief transform 6D pose to 4x4 Rt matrix
+	 */
+	static Eigen::Matrix<double, 4, 4, Eigen::DontAlign> VecToPose(const Eigen::Vector6d &vec) {
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> pose = Eigen::Matrix<double, 4, 4, Eigen::DontAlign>::Identity();
+		pose.block(0, 3, 3, 1) = vec.head(3);
+		pose.block(0, 0, 3, 3) = C3DJacobians::t_AxisAngle_to_RotMatrix(vec.tail(3));
+
+		return pose;
+	}
+
 	/**
 	 *	@brief converts from axis angle rep to rotation matrix
 	 *	@param[in] v_vec is axis-angle rotation (angle is encoded as the magnitude of the axis)
@@ -1637,6 +1667,58 @@ public:
 		}
 	}
 
+	static inline double AngleVector3d(Eigen::Vector3d v0, Eigen::Vector3d v1)
+	{
+		Eigen::Matrix<double, 1, 1> dot = v0.transpose() * v1;
+		double lenSq1 = v0.squaredNorm();
+		double lenSq2 = v1.squaredNorm();
+		double angle = acos(dot(0) / sqrt(lenSq1 * lenSq2));
+
+		return angle;
+	}
+
+	/**
+	 *	@brief computes jacobian and error of IMU
+	 */
+	template <class Derived0, class Derived1, class Derived2, class Derived3>
+	static inline void IMU_Jacobian(const Eigen::MatrixBase<Derived0> &r_t_vertex1,
+		const Eigen::MatrixBase<Derived1> &r_t_measurement, Eigen::MatrixBase<Derived2> &r_t_dest,
+		Eigen::MatrixBase<Derived3> &r_t_jacobian)
+	{
+		DimensionCheck<Vector6d>(r_t_vertex1);
+		DimensionCheck<Eigen::Vector3d>(r_t_measurement);
+		DimensionCheck<Eigen::Matrix<double, 1, 1> >(r_t_dest);
+		DimensionCheck<Eigen::Matrix<double, 1, 6> >(r_t_jacobian);
+
+
+		//lets try it according to g2o
+		const double delta = 1e-9;
+		const double scalar = 1.0 / (delta);
+
+		Matrix6d Eps;
+		Eps = Matrix6d::Identity() * delta; // faster, all memory on stack
+
+		Eigen::MatrixBase<Derived3> &H = r_t_jacobian;
+		// can actually work inplace
+
+		Eigen::Vector3d unitY = Eigen::Vector3d(0, 1, 0);
+		Eigen::Vector3d local_meas = t_AxisAngle_to_RotMatrix(r_t_vertex1.tail(3)).inverse() * r_t_measurement;
+		// transform to local coordinates
+
+		r_t_dest(0) = AngleVector3d(unitY, local_meas);
+
+		for(int j = 0; j < 6; ++ j) {
+			Vector6d p_delta;
+			Eigen::Matrix<double, 1, 1> d1;
+			Relative_to_Absolute(r_t_vertex1, Eps.col(j), p_delta);
+
+			local_meas = t_AxisAngle_to_RotMatrix(p_delta.tail(3)).inverse() * r_t_measurement;
+			d1(0) = AngleVector3d(unitY, local_meas);
+
+			H.col(j) = (r_t_dest - d1) * scalar;
+		}
+	}
+
 	/**
 	 *	@brief SE(3) coordinate frame
 	 */
@@ -1975,17 +2057,17 @@ public:
 
 		rotation of a vector r by a quaternion w q (w is real, q is imaginary part of the quat) is:
 
-		r' = r + 2w(q × r) + 2q × (q × r)	// × is cross product, multiplications hidden
+		r' = r + 2w(q ï¿½ r) + 2q ï¿½ (q ï¿½ r)	// ï¿½ is cross product, multiplications hidden
 
 		if theta is the rotation angle, w = cos(theta / 2)
 
-		r' = r + 2cos(theta / 2)(q × r) + 2q × (q × r)
+		r' = r + 2cos(theta / 2)(q ï¿½ r) + 2q ï¿½ (q ï¿½ r)
 
 		let a be axis-angle vector, a = q theta / sin(theta / 2), then q = a sin(theta / 2) / theta
 
-		r' = r + 2cos(theta / 2) sin(theta / 2) / theta (a × r) + 2 * (sin(theta / 2))^2 / theta^2 a × (a × r)
+		r' = r + 2cos(theta / 2) sin(theta / 2) / theta (a ï¿½ r) + 2 * (sin(theta / 2))^2 / theta^2 a ï¿½ (a ï¿½ r)
 
-		r' = r + A (a × r) + B a × (a × r)	// where A = 2cos(theta / 2) sin(theta / 2) / theta = sin(theta) / theta, B = 2 (sin(theta / 2))^2 / theta^2 = (1 - cos(theta)) / theta^2 (http://www.wolframalpha.com/input/?i=2*cos(theta+/+2)*+sin(theta+/+2)+/+theta&dataset= and http://www.wolframalpha.com/input/?i=2+*+(sin(theta+/+2))^2+/+theta^2&dataset=)
+		r' = r + A (a ï¿½ r) + B a ï¿½ (a ï¿½ r)	// where A = 2cos(theta / 2) sin(theta / 2) / theta = sin(theta) / theta, B = 2 (sin(theta / 2))^2 / theta^2 = (1 - cos(theta)) / theta^2 (http://www.wolframalpha.com/input/?i=2*cos(theta+/+2)*+sin(theta+/+2)+/+theta&dataset= and http://www.wolframalpha.com/input/?i=2+*+(sin(theta+/+2))^2+/+theta^2&dataset=)
 
 		for interpolation by a multiple t of a quaternion w q, one can do slerp of unit quaternion sign(w) 0 (identity) and w q ("one" rotation)
 
@@ -2011,10 +2093,10 @@ public:
 
 		w' = sin((1 - t) theta / 2) / sin(theta / 2) cos(theta / 2) + sin(t theta / 2) / sin(theta / 2) sign(cos(theta / 2))
 
-		r' = r + 2 * sin((1 - t) theta / 2) / sin(theta / 2) cos(theta / 2) + sin(t theta / 2) / sin(theta / 2) sign(cos(theta / 2)) * (q × r) + 2q × (q × r)
+		r' = r + 2 * sin((1 - t) theta / 2) / sin(theta / 2) cos(theta / 2) + sin(t theta / 2) / sin(theta / 2) sign(cos(theta / 2)) * (q ï¿½ r) + 2q ï¿½ (q ï¿½ r)
 
-		r' = r + (2 * sin((1 - t) theta / 2) / sin(theta / 2) cos(theta / 2) + sin(t theta / 2) / sin(theta / 2) sign(cos(theta / 2)) sin((1 - t) theta / 2) / theta) * (a × r) +
-			 2 * (sin((1 - t) theta / 2) / theta)^2 a × (a × r)
+		r' = r + (2 * sin((1 - t) theta / 2) / sin(theta / 2) cos(theta / 2) + sin(t theta / 2) / sin(theta / 2) sign(cos(theta / 2)) sin((1 - t) theta / 2) / theta) * (a ï¿½ r) +
+			 2 * (sin((1 - t) theta / 2) / theta)^2 a ï¿½ (a ï¿½ r)
 
 		 blah ...
 
@@ -2022,6 +2104,158 @@ public:
 
 		return t_result;
 	}
+};
+
+/*
+ * @brief BSplines class, consisting of 4 control poses
+ */
+class BSplineSE3 {
+public:
+	/*
+	 * @brief constructor from 4 control poses
+	 */
+	BSplineSE3(const Eigen::Vector6d &V0, const Eigen::Vector6d &V1,
+			const Eigen::Vector6d &V2, const Eigen::Vector6d &V3)
+	{
+		control_poses.push_back(vec2pose(V0));
+		control_poses.push_back(vec2pose(V1));
+		control_poses.push_back(vec2pose(V2));
+		control_poses.push_back(vec2pose(V3));
+
+		C << 6,  0,  0,  0,
+			 5,  3, -3,  1,
+			 1,  3,  3, -2,
+			 0,  0,  0,  1;
+		C *= 1.0/6.0;
+		assert(control_poses.size() == DEGREE);
+		Omega.push_back(Eigen::Matrix<double, 4, 4, Eigen::DontAlign>::Zero());
+		// todo: uncomment and add unsupported Eigen to work, exp too
+		for(int i = 1; i < DEGREE; i++) {
+			//Omega.push_back(Eigen::Matrix<double, 4, 4, Eigen::DontAlign>::Zero());
+			const Eigen::Matrix<double, 4, 4, Eigen::DontAlign> log = (control_poses[i-1].inverse() * control_poses[i]).log();
+			Omega.push_back(log);
+		}
+	}
+
+	/*
+	 * @brief transform 4x4 Rt matrix to 6D pose
+	 */
+	inline Eigen::Vector6d pose2vec(const Eigen::Matrix<double, 4, 4, Eigen::DontAlign> &pose) {
+		Eigen::Vector6d vec = Eigen::Vector6d::Zero();
+		vec.head(3) = pose.block(0, 3, 3, 1);
+
+		Eigen::Matrix3d R = pose.block(0, 0, 3, 3);
+		Eigen::Vector3d axis = C3DJacobians::v_RotMatrix_to_AxisAngle(R);
+
+		vec.tail(3) = axis;
+
+		return vec;
+	}
+
+	/*
+	 * @brief transform 6D pose to 4x4 Rt matrix
+	 */
+	inline Eigen::Matrix<double, 4, 4, Eigen::DontAlign> vec2pose(const Eigen::Vector6d &vec) {
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> pose = Eigen::Matrix<double, 4, 4, Eigen::DontAlign>::Identity();
+		pose.block(0, 3, 3, 1) = vec.head(3);
+		pose.block(0, 0, 3, 3) = C3DJacobians::t_AxisAngle_to_RotMatrix(vec.tail(3));
+
+		return pose;
+	}
+
+	/*
+	 * @brief compute weighted cumulative distance between measured points and points on slpine
+	 */
+	inline Eigen::Matrix<double, 1, 1> bspline_error()
+	{
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> V1_estimate = estimate(0.0);
+		Eigen::Vector6d V1_diff = pose2vec(control_poses[1].inverse() * V1_estimate);
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> V2_estimate = estimate(1.0);
+		Eigen::Vector6d V2_diff = pose2vec(control_poses[2].inverse() * V2_estimate);
+
+		const double wt = 1.0;
+		const double wR = 10.0;
+
+		Eigen::Matrix<double, 1, 1> res;
+		res(0) = V1_diff.head(3).norm() * wt + V1_diff.tail(3).norm() * wR +
+				 V2_diff.head(3).norm() * wt + V2_diff.tail(3).norm() * wR;
+
+		return res;
+	}
+
+	/*
+	 * @brief compute weighted cumulative distance between measured points and points on slpine
+	 */
+	inline Eigen::Matrix<double, 6, 1> bspline_error6D(const double t, const Eigen::Vector6d &ref)
+	{
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> ref_pose = vec2pose(ref);
+
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> estimation = estimate(t);
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> diff = ref_pose.inverse() * estimation;
+
+		Eigen::Matrix<double, 6, 1> res = pose2vec(diff);
+
+		return res;
+	}
+
+	/*
+	 * @brief compute weighted cumulative distance between measured points and points on slpine
+	 */
+	inline Eigen::Matrix<double, 6, 1> bspline_expectation6D(const double t)
+	{
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> estimation = estimate(t);
+
+		Eigen::Matrix<double, 6, 1> res = pose2vec(estimation);
+
+		return res;
+	}
+
+	/*
+	 * @brief compute weighted cumulative distance between measured points and points on slpine
+	 */
+	inline Eigen::Matrix<double, 1, 1> bspline_error2(const double t, const Eigen::Vector6d &ref)
+	{
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> ref_pose = vec2pose(ref);
+
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> estimation = estimate(t);
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> diff = ref_pose.inverse() * estimation;
+		double diff_t = diff.block(0, 3, 3, 1).norm();
+		double diff_R = 0;//fabs(Eigen::AngleAxisd(diff.block(0, 0, 3, 3)).angle());
+
+		const double wt = 1.0;
+		const double wR = 10.0;
+		Eigen::Matrix<double, 1, 1> res;
+		res(0) = diff_t * wt + diff_R * wR;
+		return res;
+	}
+
+
+	/*
+	 * @brief estimate point on the spline in time t (t=<0, 1>)
+	 * ! no! 0 starts at 2nd control point, 1 ends at 3rd control point
+	 * so use <-1, 2> to cover whole spline
+	 */
+	inline Eigen::Matrix<double, 4, 4, Eigen::DontAlign> estimate(const float t) const
+	{
+		Eigen::Vector4d B = C * Eigen::Vector4d(1, t, t*t, t*t*t);
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> result = control_poses[0];
+		for(int i = 1; i < DEGREE; i++) {
+			// todo: uncomment and add unsupported Eigen to work, log too
+			result = result * (B(i) * Omega[i]).exp();
+		}
+		
+		return result;
+	}
+
+private:
+	static const int DEGREE = 4;
+	// degree of spline
+	std::vector<Eigen::Matrix<double, 4, 4, Eigen::DontAlign> > control_poses;
+	// control poses
+	Eigen::Matrix<double, 4, 4, Eigen::DontAlign> C;
+	// polynomial coefficients?
+	std::vector<Eigen::Matrix<double, 4, 4, Eigen::DontAlign> > Omega;
+	// assuming this is relative transformations between consecutive poses
 };
 
 /** @} */ // end of group

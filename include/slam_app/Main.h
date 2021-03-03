@@ -58,7 +58,7 @@
  *	somewhat slower. You can do that by using:
  *
  *	@code{.sh}
- *	$ cmake -D CMAKE_C_COMPILER=/opt/local/bin/gcc-mp-6.3 -D CMAKE_CXX_COMPILER=/opt/local/bin/g++-mp-6.3 ..
+ *	$ cmake -D CMAKE_C_COMPILER=/opt/local/bin/gcc-mp-4.7 -D CMAKE_CXX_COMPILER=/opt/local/bin/g++-mp-4.7 ..
  *	@endcode
  *
  *	Where you might want to change the version to the latest one that you have installed. But it will
@@ -79,7 +79,7 @@
  *	versions, there were varius issues with Windows. Since CMake 3.x, you can easily
  *	generate Visual Studio workspace using cmake-gui, that will work just as well.
  *	It only does not have project grouping, which is a very minor cosmetic issue.
- *	We tested this with Visual Studio 2008, 2010, 2012, 2013, 2015 and 2017.
+ *	We tested this with Visual Studio 2008, 2012, 2013, 2015 and 2017.
  *
  *	There is an internal compiler error in Visual Studio 2012 if Eigen complex BLAS
  *	is enabled (added an extra CMake option to enable it, as it is usually not needed).
@@ -908,24 +908,6 @@ struct TDatasetPeeker : public CParserBase::CParserAdaptor {
 	}
 
 	/**
-	 *	@brief appends the system with an landmark 3d xyz measurement
-	 *	@param[in] r_t_edge is the measurement to be appended
-	 */
-	virtual void AppendSystem(const CParserBase::TLandmark3D_XYZ &UNUSED(r_t_edge))
-	{
-		b_has_landmark = true;
-	}
-
-	/**
-	 *	@brief appends the system with a projection measurement
-	 *	@param[in] r_t_edge is the measurement to be appended
-	 */
-	virtual void AppendSystem(const CParserBase::TEdgeSpheronXYZ &UNUSED(r_t_edge))
-	{
-		b_has_spheron = true;
-	}
-
-	/**
 	 *	@brief appends the system with an odometry measurement
 	 *	@param[in] r_t_edge is the measurement to be appended
 	 */
@@ -943,6 +925,34 @@ struct TDatasetPeeker : public CParserBase::CParserAdaptor {
 	{
 		b_has_landmark = true;
 		b_has_edge3d = true;
+	}
+
+	/**
+	 *	@brief appends the system with an odometry measurement
+	 *	@param[in] r_t_edge is the measurement to be appended
+	 */
+	virtual void AppendSystem(const CParserBase::TEdgeSpline3D &UNUSED(r_t_edge))
+	{
+		b_has_landmark = true;
+		b_has_edge3d = true;
+	}
+
+	/**
+	 *	@brief appends the system with an landmark 3d xyz measurement
+	 *	@param[in] r_t_edge is the measurement to be appended
+	 */
+	virtual void AppendSystem(const CParserBase::TLandmark3D_XYZ &UNUSED(r_t_edge))
+	{
+		b_has_landmark = true;
+	}
+
+	/**
+	 *	@brief appends the system with a projection measurement
+	 *	@param[in] r_t_edge is the measurement to be appended
+	 */
+	virtual void AppendSystem(const CParserBase::TEdgeSpheronXYZ &UNUSED(r_t_edge))
+	{
+		b_has_spheron = true;
 	}
 
 	/**
