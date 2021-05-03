@@ -37,7 +37,7 @@ int n_Run_SE3_Solver(const TCommandLineArgs &t_args) // throw(std::runtime_error
 	_ASSERTE(!t_args.b_pose_only);
 
 	typedef MakeTypelist_Safe((CVertexPose3D, CVertexLandmark3D)) TVertexTypelist_SE3;
-	typedef MakeTypelist_Safe((CEdgePose3D, CEdgePose3DSelf, CEdgePoseTernary3D, CEdgePoseLandmark3D, CBSplineEdge/*, CEdgePose3D_Ternary*/)) TEdgeTypelist_SE3; // testing hyperedges
+	typedef MakeTypelist_Safe((CEdgePose3D, CEdgePose3DSelf, CEdgePoseTernary3D, CEdgeNormal3D, CEdgePoseLandmark3D, CBSplineEdge/*, CEdgePose3D_Ternary*/)) TEdgeTypelist_SE3; // testing hyperedges
 	// define types of vertices, edges
 
 	typedef CFlatSystem<CBaseVertex, TVertexTypelist_SE3,

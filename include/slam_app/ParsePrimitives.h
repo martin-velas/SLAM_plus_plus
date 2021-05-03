@@ -834,6 +834,61 @@ public:
 };
 
 /**
+ *	@brief 3D pose edge parse primitive handler
+ */
+class CEdge3DNormalParsePrimitive {
+public:
+	/**
+	 *	@brief enumerates all tokens that identify this parsed primitive
+	 *
+	 *	@param[in,out] r_token_name_map is map of token names
+	 *	@param[in] n_assigned_id is id assigned by the parser to this primitive
+	 */
+	static void EnumerateTokens(std::map<std::string, int> &r_token_name_map,
+		int n_assigned_id) // throw(std::bad_alloc)
+	{
+		r_token_name_map["EDGE3NORM"] = n_assigned_id;
+		r_token_name_map["EDGE_NORMAL"] = n_assigned_id;
+		// add as uppercase!
+	}
+
+	/**
+	 *	@brief parses this primitive and dispatches it to the parse loop
+	 *
+	 *	@param[in] n_line_no is zero-based line number (for error reporting)
+	 *	@param[in] r_s_line is string, containing the current line (without the token)
+	 *	@param[in] r_s_token is string, containing the token name (in uppercase)
+	 *	@param[in,out] r_parse_loop is target for passing the parsed primitives to
+	 *
+	 *	@return Returns true on success, false on failure.
+	 */
+	template <class _TyParseLoop>
+	static bool Parse_and_Dispatch(size_t n_line_no, const std::string &r_s_line,
+		const std::string &UNUSED(r_s_token), _TyParseLoop &r_parse_loop)
+	{
+		int p_pose_idx[1];
+		double p_measurement[3];
+		double p_matrix[1];
+		if(sscanf(r_s_line.c_str(), "%d %lf %lf %lf " // pose indices and 6D measurement
+		   "%lf", p_pose_idx, p_measurement, p_measurement + 1, p_measurement + 2,
+		   p_matrix) != 1 + 3 + 1) {
+		   	_ASSERTE(n_line_no < SIZE_MAX);
+			fprintf(stderr, "error: line " PRIsize ": line is truncated\n", n_line_no + 1);
+			return false;
+		}
+		// read the individual numbers
+
+		CParserBase::TEdge3DNormal edge(p_pose_idx[0],
+			p_measurement[0], p_measurement[1], p_measurement[2], p_matrix);
+		// process the measurement
+
+		r_parse_loop.AppendSystem(edge);
+
+		return true;
+	}
+};
+
+/**
  *	@brief 2D landmark edge parse primitive handler
  */
 class CLandmark3D_XYZ_ParsePrimitive {
@@ -1937,7 +1992,8 @@ typedef CConcatTypelist<MakeTypelist_Safe((CEdge2DParsePrimitive,
 	CROCV_Landmark_ParsePrimitive, CROCV_Pose_ParsePrimitive, CROCV_PoseGroundTruth_ParsePrimitive,
 	CROCV_DeltaTimeEdge_ParsePrimitive, CROCV_RangeEdge_ParsePrimitive,
 	CVertexIntrinsicsParsePrimitive, CEdgeP2CI3DParsePrimitive, CEdgeSpline3DParsePrimitive,
-	CEdge3DSelfParsePrimitiveAxisAngle, CEdge3DTernaryParsePrimitiveAxisAngle))>::_TyResult CStandardParsedPrimitives; /**< @brief a list of standard parsed primitives @note If you are going to modify this, you will have to modify CParserBase::CParserAdaptor and CDatasetPeeker which implements it. */
+	CEdge3DSelfParsePrimitiveAxisAngle, CEdge3DTernaryParsePrimitiveAxisAngle,
+	CEdge3DNormalParsePrimitive))>::_TyResult CStandardParsedPrimitives; /**< @brief a list of standard parsed primitives @note If you are going to modify this, you will have to modify CParserBase::CParserAdaptor and CDatasetPeeker which implements it. */
 
 typedef CParserTemplate<CParserBase::CParserAdaptor, CStandardParsedPrimitives> CStandardParser; /**< @brief standard parser */
 

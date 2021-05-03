@@ -531,6 +531,56 @@ public:
 	};
 
 	/**
+	 *	@brief axis angle self edge
+	 */
+	struct TEdge3DNormal : public CParseEntity {
+		size_t m_n_node_0; /**< @brief (zero-based) index of the first (origin) node */
+		Eigen::Matrix<double, 3, 1> m_v_delta; /**< @brief dealte measurement (also called "z") */
+		Eigen::Matrix<double, 1, 1> m_t_inv_sigma; /**< @brief inverse sigma matrix, elements are not square roots */
+
+		/**
+		 *	@brief default constructor
+		 *
+		 *	@param[in] n_node_0 is (zero-based) index of the first (origin) node
+		 *	@param[in] f_delta_x is normal x
+		 *	@param[in] f_delta_y is normal y
+		 *	@param[in] f_delta_z is normal z
+		 *	@param[in] p_upper_matrix_1x1 is row-major upper triangular and diagonal 1x1 matrix
+		 *		containing the inverse sigma matrix, elements are not square roots
+		 *
+		 */
+		inline TEdge3DNormal(size_t n_node_0,
+			double f_delta_x, double f_delta_y, double f_delta_z,
+			const double *p_upper_matrix_1x1)
+			:m_n_node_0(n_node_0)
+		{
+			m_v_delta << f_delta_x, f_delta_y, f_delta_z;
+			// no constructor for 6-valued vector
+
+			const double *p_u = p_upper_matrix_1x1;
+			m_t_inv_sigma <<
+				p_u[0];
+			// fill the matrix
+		}
+
+		/**
+		 *	@brief override constructor
+		 *
+		 *	@param[in] n_node_0 is (zero-based) index of the first (origin) node
+		 *	@param[in] n_node_1 is (zero-based) index of the second (endpoint) node
+		 *	@param[in] edge is vector containing position and AXIS-ANGLE representation of rotation
+		 *	@param[in] info is 6x6 information matrix
+		 *		containing the inverse sigma matrix, elements are not square roots
+		 */
+		inline TEdge3DNormal(size_t n_node_0, const Eigen::Matrix<double, 3, 1> &edge,
+				const Eigen::Matrix<double, 1, 1> &info)
+			:m_n_node_0(n_node_0), m_v_delta(edge), m_t_inv_sigma(info)
+		{}
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+	};
+
+	/**
 	 *	@brief XYZRPY measurement base class
 	 */
 	struct TEdgeSpline3D : public CParseEntity {
@@ -1146,6 +1196,12 @@ public:
 		 *	@param[in] r_t_edge is the measurement to be appended
 		 */
 		virtual void AppendSystem(const TEdge3DSelf &r_t_edge) = 0;
+
+		/**
+		 *	@brief appends the system with an odometry measurement
+		 *	@param[in] r_t_edge is the measurement to be appended
+		 */
+		virtual void AppendSystem(const TEdge3DNormal &r_t_edge) = 0;
 
 		/**
 		 *	@brief appends the system with an odometry measurement
