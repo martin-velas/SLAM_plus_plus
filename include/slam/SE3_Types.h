@@ -3120,6 +3120,172 @@ public:
 /**
  *	@brief SE(3) edge
  */
+class CPlaneOffsetEdge : public CBaseEdgeImpl<CPlaneOffsetEdge, MakeTypelist(CVertexPlane3D, CVertexPose3D), 2/* dist, angle */, 6, CBaseEdge::Robust>,
+		public CRobustify_ErrorNorm_Default<CCTFraction<148, 1000>, CHuberLossd> {
+public:
+	typedef CBaseEdgeImpl<CPlaneOffsetEdge, MakeTypelist(CVertexPlane3D, CVertexPose3D), 2, 6, CBaseEdge::Robust> _TyBase; /**< @brief base class */
+public:
+	__GRAPH_TYPES_ALIGN_OPERATOR_NEW // imposed by the use of eigen, just copy this
+
+	/**
+	 *	@brief default constructor; has no effect
+	 */
+	inline CPlaneOffsetEdge()
+	{}
+
+	/**
+	 *	@brief constructor; converts parsed edge to edge representation
+	 *
+	 *	@tparam CSystem is type of system where this edge is being stored
+	 *
+	 *	@param[in] r_t_edge is parsed edge
+	 *	@param[in,out] r_system is reference to system (used to query edge vertices)
+	 */
+	/*template <class CSystem>
+	CPlaneOffsetEdge(const CParserBase::TEdgePlane &r_t_edge, CSystem &r_system)
+		:_TyBase(r_t_edge.m_n_node_0, r_t_edge.m_n_node_1, r_t_edge.m_v_delta, r_t_edge.m_t_inv_sigma)
+	{
+		m_p_vertex0 = &r_system.template r_Get_Vertex<CVertexPlane3D>(r_t_edge.m_n_node_0, CInitializeNullVertex<CVertexPlane3D>());
+		m_p_vertex1 = &r_system.template r_Get_Vertex<CVertexPose3D>(r_t_edge.m_n_node_1, CInitializeNullVertex<CVertexPose3D>());
+		// get vertices (initialize if required)
+	}*/
+
+	/**
+	 *	@brief constructor; converts parsed edge to edge representation
+	 *
+	 *	@tparam CSystem is type of system where this edge is being stored
+	 *
+	 *	@param[in] n_node0 is (zero-based) index of the plane node
+	 *	@param[in] n_node1 is (zero-based) index of the observing node
+	 *	@param[in] n_node2 is (zero-based) index of the owner node
+	 *	@param[in] n_node3 is (zero-based) index of the offset
+	 *	@param[in] r_v_delta is measurement vector
+	 *	@param[in] r_t_inv_sigma is the information matrix
+	 *	@param[in,out] r_system is reference to system (used to query edge vertices)
+	 */
+	template <class CSystem>
+	CPlaneOffsetEdge(size_t n_node0, size_t n_node1, const Eigen::Matrix<double, 6, 1> &r_v_delta,
+		const Eigen::Matrix<double, 2, 2> &r_t_inv_sigma, CSystem &r_system)
+		:_TyBase(n_node0, n_node1, r_v_delta, r_t_inv_sigma)
+	{
+		m_p_vertex0 = &r_system.template r_Get_Vertex<CVertexPlane3D>(n_node0, CInitializeNullVertex<CVertexPlane3D>());
+		m_p_vertex1 = &r_system.template r_Get_Vertex<CVertexPose3D>(n_node1, CInitializeNullVertex<CVertexPose3D>());
+		// get vertices (initialize if required)
+	}
+
+	inline Eigen::Vector2d PlaneError(const Eigen::Vector4d &plane, const Eigen::Vector6d &line,
+			const Eigen::Vector6d &observer) const
+	{
+		// plane is normal and distance
+		// plane is global
+		// line is Point + Vector
+		// line is local in observer base base
+
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> RtObs = C3DJacobians::VecToPose(observer);	//c2w
+		// poses of vertices
+
+		Eigen::Vector4d pG = plane;
+		// transform plane owner -> global
+
+		Eigen::Vector4d pL = RtObs.transpose() * pG;
+		//std::cout << "loc: " << pL.transpose() << std::endl;
+		// transform plane global -> observer
+
+		Eigen::Vector2d error = Eigen::Vector2d::Zero();
+		error(0) = /*abs*/(pL.head(3).transpose() * line.head(3) + pL(3)) / pL.head(3).norm();
+		//std::cout << "x: " << (pL.head(3).transpose() * line.head(3)) << " " << pL(3) << std::endl;
+		// distance error, abs should not matter
+
+		Eigen::Vector3d dir = line.tail(3)/* - line.head(3)*/;
+		error(1) = /*asin(*/ ((pL.head(3).transpose() * dir) / (pL.head(3).norm() * dir.norm()))(0) /*)*/;
+		// angle error
+
+		// todo: penalize vectors outside of the line segment
+
+		return error;
+	}
+
+	inline void PlanePlus(const Eigen::Vector4d &plane, const Eigen::Vector4d &delta, Eigen::Vector4d &out) const // "smart" plus
+	{
+		Eigen::Vector3d vec = delta.head(3);
+
+		out.head(3) = C3DJacobians::Operator_rot(vec) * plane.head(3);
+		out.tail(1) = plane.tail(1) + delta.tail(1);
+	}
+
+	/**
+	 *	@brief calculates jacobians, expectation and error
+	 *
+	 *	@param[out] r_t_jacobian0 is jacobian, associated with the first vertex
+	 *	@param[out] r_t_jacobian1 is jacobian, associated with the second vertex
+	 *	@param[out] r_v_expectation is expecation vector
+	 *	@param[out] r_v_error is error vector
+	 */
+	inline void Calculate_Jacobians_Expectation_Error(Eigen::Matrix<double, 2, 4> &r_t_jacobian0,
+			Eigen::Matrix<double, 2, 6> &r_t_jacobian1, Eigen::Matrix<double, 2, 1> &r_v_expectation,
+			Eigen::Matrix<double, 2, 1> &r_v_error) const // change dimensionality of eigen types, if required
+	/*inline void Calculate_Jacobians_Expectation_Error(_TyBase::_TyJacobianTuple &r_t_jacobian_tuple,
+		Eigen::Matrix<double, 2, 1> &r_v_expectation,
+		Eigen::Matrix<double, 2, 1> &r_v_error) const // change dimensionality of eigen types, if required*/
+	{
+		//std:: cout << m_p_vertex0->r_v_State().transpose() << std::endl;
+		//std:: cout << m_p_vertex1->r_v_State().transpose() << std::endl;
+
+		r_v_expectation = PlaneError(m_p_vertex0->r_v_State(),
+				m_v_measurement, m_p_vertex1->r_v_State());
+		r_v_error = r_v_expectation;
+		// compute error
+		//std:: cout << r_v_error.transpose() << std::endl;
+
+		//std::cout << "errG " << r_v_error.transpose() << std::endl;
+
+		const double delta = 1e-9;
+		const double scalar = 1.0 / (delta);
+
+		Eigen::Matrix<double, 2, 4> &J0 = r_t_jacobian0;
+		Eigen::Matrix<double, 2, 6> &J1 = r_t_jacobian1;
+
+		Eigen::Matrix<double, 6, 6> Eps;
+		Eps = Eigen::Matrix<double, 6, 6>::Identity() * delta; // faster, all memory on stack
+
+		for(int j = 0; j < 4; ++ j) {
+			Eigen::Matrix<double, 4, 1> p_delta;
+			PlanePlus(m_p_vertex0->r_v_State(), Eps.col(j).head(4), p_delta);
+			//p_delta = m_vertex_ptr.Get<0>()->r_v_State() + Eps.col(j).head(4);
+			J0.col(j) = (r_v_expectation - PlaneError(p_delta, m_v_measurement, m_p_vertex1->r_v_State())) * scalar;
+		}
+		// J0
+
+		for(int j = 0; j < 6; ++ j) {
+			Eigen::Matrix<double, 6, 1> p_delta;
+			C3DJacobians::Relative_to_Absolute(m_p_vertex1->r_v_State(), Eps.col(j), p_delta);
+			J1.col(j) = (r_v_expectation - PlaneError(m_p_vertex0->r_v_State(), m_v_measurement, p_delta)) * scalar;
+		}
+		// J1
+
+		/*std::cout << J0 << std::endl << std::endl;
+		std::cout << J1 << std::endl << std::endl;*/
+		//std::cout << J2 << std::endl << std::endl;
+	}
+
+	/**
+	 *	@brief calculates \f$\chi^2\f$ error
+	 *	@return Returns (unweighted) \f$\chi^2\f$ error for this edge.
+	 */
+	inline double f_Chi_Squared_Error() const
+	{
+		Eigen::Matrix<double, 2, 1> v_error;
+		v_error = PlaneError(m_p_vertex0->r_v_State(),
+				m_v_measurement, m_p_vertex1->r_v_State());
+		// calculates the expectation, error and the jacobians
+
+		return (v_error.transpose() * m_t_sigma_inv).dot(v_error); // ||z_i - h_i(O_i)||^2 lambda_i
+	}
+};
+
+/**
+ *	@brief SE(3) edge
+ */
 class CPlaneOffsetEdge_Local : public CBaseEdgeImpl<CPlaneOffsetEdge_Local, MakeTypelist(CVertexPlane3D, CVertexPose3D), 2/* dist, angle */, 6, CBaseEdge::Robust>,
 		public CRobustify_ErrorNorm_Default<CCTFraction<148, 1000>, CHuberLossd> {
 public:
