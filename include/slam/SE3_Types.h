@@ -1032,10 +1032,12 @@ public:
 		Eigen::Matrix<double, 1, 1> &r_v_expectation, Eigen::Matrix<double, 1, 1> &r_v_error) const // change dimensionality of eigen types, if required
 	{
 		Eigen::Matrix3d R = C3DJacobians::Operator_rot(m_p_vertex0->r_v_State().tail(3));
-		Eigen::Vector3d v = R * m_v_measurement; // this should be close to [0, 1, 0]
+		Eigen::Vector3d v = R * m_v_measurement.normalized(); // this should be close to [0, 1, 0]
 		//r_v_error(0) = 1.0 - v.transpose() * Eigen::Vector3d(0, 1, 0);
 		r_v_error(0) = acos( (v.transpose() * Eigen::Vector3d(0, 1, 0))(0) );
 		// transform measrement vector to world
+
+		//std::cout << v.transpose() << " | " << ((v.transpose() * Eigen::Vector3d(0, 1, 0))(0)) << " | " <<  r_v_error(0) << std::endl;
 
 		const double delta = 1e-9;
 		const double scalar = 1.0 / (delta);
@@ -1047,8 +1049,8 @@ public:
 			Eigen::Matrix<double, 6, 1> p_delta, d1;
 			C3DJacobians::Relative_to_Absolute(m_p_vertex0->r_v_State(), Eps.col(j), p_delta);
 
-			Eigen::Matrix3d R = C3DJacobians::Operator_rot(p_delta.tail(3));
-			Eigen::Vector3d v = R * m_v_measurement; // this should be close to [0, 1, 0]
+			R = C3DJacobians::Operator_rot(p_delta.tail(3));
+			v = R * m_v_measurement.normalized(); // this should be close to [0, 1, 0]
 			Eigen::Matrix<double, 1, 1> err;
 			//err(0) = 1.0 - v.transpose() * Eigen::Vector3d(0, 1, 0);
 			err(0) = acos( (v.transpose() * Eigen::Vector3d(0, 1, 0))(0) );
