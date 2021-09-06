@@ -29,8 +29,8 @@
 #define __EIGENVALUES_BUILD_UNIT_TESTS
 
 #include "slam/BlockMatrix.h"
-#include "eigen/Eigen/Core"
-#include "eigen/Eigen/Eigenvalues"
+#include "Eigen/Core"
+#include "Eigen/Eigenvalues"
 #include <complex>
 #include <numeric>
 #include <vector>
@@ -419,7 +419,7 @@ protected:
 	}
 };
 
-#include "eigen/Eigen/Sparse"
+#include "Eigen/Sparse"
 //#include "slam/LinearSolver_Cholmod.h"
 
 /**

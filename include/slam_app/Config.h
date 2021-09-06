@@ -23,8 +23,8 @@
  */
 
 //#include <csparse/cs.hpp>
-//#include "eigen/Eigen/Dense"
-//#include "eigen/Eigen/Core"
+//#include "Eigen/Dense"
+//#include "Eigen/Core"
 #include <stdio.h>
 #include <time.h>
 #if defined(_WIN32) || defined(_WIN64)

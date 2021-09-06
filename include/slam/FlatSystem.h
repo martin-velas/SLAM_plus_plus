@@ -296,7 +296,7 @@
  *
  */
 
-#include "eigen/Eigen/Core"
+#include "Eigen/Core"
 #include "slam/TypeList.h"
 #include "slam/Segregated.h"
 #include "slam/BlockMatrix.h"

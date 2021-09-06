@@ -59,9 +59,9 @@
  *	@{
  */
 
-#include "eigen/Eigen/Core"
-#include "eigen/Eigen/Geometry"
-#include "eigen/Eigen/SVD"
+#include "Eigen/Core"
+#include "Eigen/Geometry"
+#include "Eigen/SVD"
 #include "slam/Unused.h"
 #include "slam/BlockMatrixBase.h" // DimensionCheck()
 

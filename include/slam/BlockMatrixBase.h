@@ -207,9 +207,9 @@
 #pragma message("warning: CUberBlockMatrix fixed block size operations supressed (results may vary)")
 #endif // __UBER_BLOCK_MATRIX_SUPRESS_FBS
 
-#include "eigen/Eigen/Core"
-#include "eigen/Eigen/LU" // dense matrix inverse
-#include "eigen/Eigen/Cholesky" // dense Cholesky
+#include "Eigen/Core"
+#include "Eigen/LU" // dense matrix inverse
+#include "Eigen/Cholesky" // dense Cholesky
 
 #if !defined(__UBER_BLOCK_MATRIX_ALIGN_BLOCK_MEMORY) && \
 	defined(EIGEN_VECTORIZE) && !defined(EIGEN_DONT_VECTORIZE) && \

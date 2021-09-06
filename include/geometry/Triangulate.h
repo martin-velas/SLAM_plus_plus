@@ -25,8 +25,8 @@
  *	@{
  */
 
-#include "eigen/Eigen/Core"
-#include "eigen/Eigen/LU" // dense matrix inverse
+#include "Eigen/Core"
+#include "Eigen/LU" // dense matrix inverse
 
 /**
  *	@brief a precise algorithm based on algebraic solution of the triangulation problem

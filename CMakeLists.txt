@@ -525,19 +525,21 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 # if doing 64-bit build, we need CAMD with both DLONG and NLONG to be able to run short CHOLMOD
 IF(SLAM_P_P_SHORT_CHOLMOD AND CMAKE_SIZEOF_VOID_P EQUAL 8 AND NOT SLAM_P_P_32BIT_BUILD)
-	SET(SLAM_P_P_LIBRARIES slampp_base csparse cxsparse camd_dlong cholmod eigen ${CUDA_LIBRARIES_IFENABLED})
-	SET(SLAM_EXAMPLE_LIBRARIES slampp_base csparse cxsparse camd_dlong cholmod eigen ${CUDA_LIBRARIES_IFENABLED})
+	SET(SLAM_P_P_LIBRARIES slampp_base csparse cxsparse camd_dlong cholmod ${CUDA_LIBRARIES_IFENABLED})
+	SET(SLAM_EXAMPLE_LIBRARIES slampp_base csparse cxsparse camd_dlong cholmod ${CUDA_LIBRARIES_IFENABLED})
 ELSE(SLAM_P_P_SHORT_CHOLMOD AND CMAKE_SIZEOF_VOID_P EQUAL 8 AND NOT SLAM_P_P_32BIT_BUILD)
-	SET(SLAM_P_P_LIBRARIES slampp_base csparse cxsparse cholmod eigen ${CUDA_LIBRARIES_IFENABLED})
-	SET(SLAM_EXAMPLE_LIBRARIES slampp_base csparse cxsparse cholmod eigen ${CUDA_LIBRARIES_IFENABLED})
+	SET(SLAM_P_P_LIBRARIES slampp_base csparse cxsparse cholmod ${CUDA_LIBRARIES_IFENABLED})
+	SET(SLAM_EXAMPLE_LIBRARIES slampp_base csparse cxsparse cholmod ${CUDA_LIBRARIES_IFENABLED})
 ENDIF(SLAM_P_P_SHORT_CHOLMOD AND CMAKE_SIZEOF_VOID_P EQUAL 8 AND NOT SLAM_P_P_32BIT_BUILD)
+
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
 
 # Include project headers.
 IF(SLAM_P_P_EIGEN33)
 	INCLUDE_DIRECTORIES(
 	  ${CUDA_INCLUDE_IFENABLED}
 	  ${PROJECT_SOURCE_DIR}/include/
-	  ${PROJECT_SOURCE_DIR}/include/eigen33/
 	  ${PROJECT_SOURCE_DIR}/external/Ceres/include/
 	  ${PROJECT_SOURCE_DIR}/external/Ceres/internal/
 	  ${PROJECT_SOURCE_DIR}/external/NIST_BLAS/include/
@@ -547,7 +549,6 @@ ELSE(SLAM_P_P_EIGEN33)
 	INCLUDE_DIRECTORIES(
 	  ${CUDA_INCLUDE_IFENABLED}
 	  ${PROJECT_SOURCE_DIR}/include/
-	  ${PROJECT_SOURCE_DIR}/include/eigen32/
 	  ${PROJECT_SOURCE_DIR}/external/Ceres/include/
 	  ${PROJECT_SOURCE_DIR}/external/Ceres/internal/
 	  ${PROJECT_SOURCE_DIR}/external/NIST_BLAS/include/

@@ -64,7 +64,7 @@
 #include <set>
 #include "slam/TypeList.h"
 //#include "slam/Integer.h" // included from slam/TypeList.h
-#include "eigen/Eigen/Core"
+#include "Eigen/Core"
 
 /** \addtogroup parser
  *	@{

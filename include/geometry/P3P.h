@@ -38,11 +38,11 @@
 #include <utility> // std::pair
 #include <algorithm> // std::min()
 #include "geometry/PolySolve.h"
-#include "eigen/Eigen/Core"
-#include "eigen/Eigen/Geometry"
-//#include "eigen/Eigen/QR" // did not use QR finally
-#include "eigen/Eigen/LU" // PNP uses LU
-#include "eigen/Eigen/Eigenvalues" // PNP uses eigenvalues to solve nasty polynomials
+#include "Eigen/Core"
+#include "Eigen/Geometry"
+//#include "Eigen/QR" // did not use QR finally
+#include "Eigen/LU" // PNP uses LU
+#include "Eigen/Eigenvalues" // PNP uses eigenvalues to solve nasty polynomials
 #include <complex>
 
 /** \addtogroup geom

@@ -25,7 +25,7 @@
 //#include <float.h> // included from slam/BlockMatrix.h
 #include "slam/BlockMatrix.h" // DimensionCheck
 #include "slam/Debug.h" // _finite(), _isnan()
-//#include "eigen/Eigen/Cholesky" // included from slam/BlockMatrix.h
+//#include "Eigen/Cholesky" // included from slam/BlockMatrix.h
 
 /** \addtogroup se2
  *	@{

@@ -36,9 +36,9 @@
  *	@{
  */
 
-#include "eigen/Eigen/Core"
-#include "eigen/Eigen/SVD"
-#include "eigen/Eigen/Geometry"
+#include "Eigen/Core"
+#include "Eigen/SVD"
+#include "Eigen/Geometry"
 #include "slam/BlockMatrixBase.h" // DimensionCheck()
 
 // inject the 8D vector type into Eigen namespace

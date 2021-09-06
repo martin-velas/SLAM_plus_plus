@@ -30,10 +30,10 @@
 
 #include <vector>
 #include <utility>
-#include "eigen/Eigen/Core"
-#include "eigen/Eigen/SVD"
-#include "eigen/Eigen/LU"
-#include "eigen/Eigen/Eigenvalues"
+#include "Eigen/Core"
+#include "Eigen/SVD"
+#include "Eigen/LU"
+#include "Eigen/Eigenvalues"
 #include <complex>
 
 /** \addtogroup geom

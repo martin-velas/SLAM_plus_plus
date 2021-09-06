@@ -23,7 +23,7 @@
 #include "slam/SE2_Types.h" // SE(2) types
 #include "slam/Marginals.h" // covariance calculation
 #include "slam/Distances.h" // distance calculation
-#include "eigen/Eigen/SVD" // JacobiSVD
+#include "Eigen/SVD" // JacobiSVD
 
 /**
  *	@brief parsed edge data

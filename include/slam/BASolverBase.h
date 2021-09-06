@@ -33,7 +33,7 @@
 //#include <math.h> // included from slam/BlockMatrix.h
 //#include <float.h> // included from slam/BlockMatrix.h
 #include "slam/BlockMatrix.h"
-//#include "eigen/Eigen/Cholesky" // included from slam/BlockMatrix.h
+//#include "Eigen/Cholesky" // included from slam/BlockMatrix.h
 #include "slam/3DSolverBase.h" // conversions between axis angles and rotation matrices
 #include <iostream>
 

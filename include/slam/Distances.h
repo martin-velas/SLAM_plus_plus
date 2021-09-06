@@ -24,7 +24,7 @@
 #include "slam/BlockMatrix.h"
 //#include "slam/Timer.h" // included from slam/BlockMatrix.h
 //#include "slam/Integer.h" // included from slam/BlockMatrix.h
-//#include "eigen/Eigen/Core" // included from slam/BlockMatrix.h
+//#include "Eigen/Core" // included from slam/BlockMatrix.h
 
 /** \addtogroup covs
  *	@{

@@ -32,7 +32,7 @@
 #include "slam/Distances.h" // distance calculation
 #include "slam_app/ParsePrimitives.h"
 #include "slam/Parser.h"
-#include "eigen/Eigen/SVD" // JacobiSVD
+#include "Eigen/SVD" // JacobiSVD
 #include "slam/MemUsage.h"
 
 /**

@@ -24,7 +24,7 @@
 #include "slam/BlockMatrix.h" // CDeriveMatrixType
 #include "slam/3DSolverBase.h" // not sure what is needed from here, maybe nothing
 #include "slam/BASolverBase.h" // smart intrinsics plus
-#include "eigen/Eigen/QR"
+#include "Eigen/QR"
 #include "geometry/DistortionModel.h"
 
 

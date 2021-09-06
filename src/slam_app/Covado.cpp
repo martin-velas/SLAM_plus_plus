@@ -957,7 +957,7 @@ public:
 #ifdef __TEST_VECTOR_REFS
 
 #include "slam/BlockMatrixBase.h"
-#include "eigen/Eigen/Core"
+#include "Eigen/Core"
 #include <iostream>
 
 class CTestEigenMapConversions {

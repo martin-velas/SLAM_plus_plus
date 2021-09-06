@@ -161,20 +161,20 @@
 
 //#include <math.h> // included from slam/BlockMatrix.h
 //#include <float.h> // included from slam/BlockMatrix.h
-#include "eigen/Eigen/Core"
+#include "Eigen/Core"
 #include "slam/BlockMatrix.h"
 //#include "slam/Debug.h"
-//#include "eigen/Eigen/Cholesky" // included from slam/BlockMatrix.h
+//#include "Eigen/Cholesky" // included from slam/BlockMatrix.h
 #if 1
-#include "eigen/Eigen/Geometry" // quaternions
+#include "Eigen/Geometry" // quaternions
 #else // 1
-#include "eigen/Eigen/src/Core/util/DisableStupidWarnings.h"
-#include "eigen/Eigen/src/Geometry/RotationBase.h"
-#include "eigen/Eigen/src/Geometry/Quaternion.h" // quaternions
+#include "Eigen/src/Core/util/DisableStupidWarnings.h"
+#include "Eigen/src/Geometry/RotationBase.h"
+#include "Eigen/src/Geometry/Quaternion.h" // quaternions
 #ifdef EIGEN_VECTORIZE_SSE
-#include "eigen/Eigen/src/Geometry/arch/Geometry_SSE.h"
+#include "Eigen/src/Geometry/arch/Geometry_SSE.h"
 #endif // EIGEN_VECTORIZE_SSE
-#include "eigen/Eigen/src/Core/util/ReenableStupidWarnings.h"
+#include "Eigen/src/Core/util/ReenableStupidWarnings.h"
 // works in windows but not in linux
 #endif // 1
 

@@ -21,8 +21,8 @@
  *	@date 2016
  */
 
-#include "eigen/Eigen/Core"
-#include "eigen/Eigen/LU"
+#include "Eigen/Core"
+#include "Eigen/LU"
 #include "slam/Integer.h"
 #include <vector>
 #include <algorithm>
