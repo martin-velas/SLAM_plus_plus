@@ -401,6 +401,29 @@ ELSE(NOT SLAM_P_P_USE_MARCH_NATIVE)
 	mark_as_advanced(FORCE SLAM_P_P_USE_SSE3) # hide from the user but do not delete from cache
 ENDIF(NOT SLAM_P_P_USE_MARCH_NATIVE)
 
+OPTION(SLAM_FRONTEND_USE_PCL "Use PCL." "OFF")
+IF(SLAM_FRONTEND_USE_PCL)
+	FIND_PACKAGE(PCL 1.8 REQUIRED)
+	if( PCL_FOUND )
+		# [C/C++]>[General]>[Additional Include Directories]
+		#include_directories( ${PCL_INCLUDE_DIRS} )
+
+		# [C/C++]>[Preprocessor]>[Preprocessor Definitions]
+		add_definitions( ${PCL_DEFINITIONS} )
+
+		# For Use Not PreCompiled Features 
+		#add_definitions( -DPCL_NO_PRECOMPILE )
+
+		# [Linker]>[General]>[Additional Library Directories]
+		link_directories( ${PCL_LIBRARY_DIRS} )
+
+		# [Linker]>[Input]>[Additional Dependencies]
+		#target_link_libraries( project ${PCL_LIBRARIES} )
+		#SET(SLAM_EXAMPLE_LIBRARIES ${SLAM_EXAMPLE_LIBRARIES} ${PCL_LIBRARIES})
+		#SET(SLAM_P_P_LIBRARIES ${SLAM_P_P_LIBRARIES} ${PCL_LIBRARIES})	
+	endif()
+ENDIF(SLAM_FRONTEND_USE_PCL)
+
 # find CUDA
 OPTION(GPU_ENABLED "Use GPU acceleration for SLAM++." FALSE)
 if(GPU_ENABLED)
@@ -526,10 +549,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 # if doing 64-bit build, we need CAMD with both DLONG and NLONG to be able to run short CHOLMOD
 IF(SLAM_P_P_SHORT_CHOLMOD AND CMAKE_SIZEOF_VOID_P EQUAL 8 AND NOT SLAM_P_P_32BIT_BUILD)
 	SET(SLAM_P_P_LIBRARIES slampp_base csparse cxsparse camd_dlong cholmod eigen ${CUDA_LIBRARIES_IFENABLED})
-	SET(SLAM_EXAMPLE_LIBRARIES slampp_base csparse cxsparse camd_dlong cholmod eigen ${CUDA_LIBRARIES_IFENABLED})
+	SET(SLAM_EXAMPLE_LIBRARIES slampp_base csparse cxsparse camd_dlong cholmod eigen boost_system ${CUDA_LIBRARIES_IFENABLED} ${PCL_LIBRARIES})
 ELSE(SLAM_P_P_SHORT_CHOLMOD AND CMAKE_SIZEOF_VOID_P EQUAL 8 AND NOT SLAM_P_P_32BIT_BUILD)
 	SET(SLAM_P_P_LIBRARIES slampp_base csparse cxsparse cholmod eigen ${CUDA_LIBRARIES_IFENABLED})
-	SET(SLAM_EXAMPLE_LIBRARIES slampp_base csparse cxsparse cholmod eigen ${CUDA_LIBRARIES_IFENABLED})
+	SET(SLAM_EXAMPLE_LIBRARIES slampp_base csparse cxsparse cholmod eigen boost_system ${CUDA_LIBRARIES_IFENABLED} ${PCL_LIBRARIES})
 ENDIF(SLAM_P_P_SHORT_CHOLMOD AND CMAKE_SIZEOF_VOID_P EQUAL 8 AND NOT SLAM_P_P_32BIT_BUILD)
 
 # Include project headers.
@@ -542,7 +565,8 @@ IF(SLAM_P_P_EIGEN33)
 	  ${PROJECT_SOURCE_DIR}/external/Ceres/internal/
 	  ${PROJECT_SOURCE_DIR}/external/NIST_BLAS/include/
 	  ${PROJECT_SOURCE_DIR}/external/g2o/
-	  ${PROJECT_SOURCE_DIR}/include/cholmod/SuiteSparse/)
+	  ${PROJECT_SOURCE_DIR}/include/cholmod/SuiteSparse/
+	  ${PCL_INCLUDE_DIRS})
 ELSE(SLAM_P_P_EIGEN33)
 	INCLUDE_DIRECTORIES(
 	  ${CUDA_INCLUDE_IFENABLED}
@@ -552,7 +576,8 @@ ELSE(SLAM_P_P_EIGEN33)
 	  ${PROJECT_SOURCE_DIR}/external/Ceres/internal/
 	  ${PROJECT_SOURCE_DIR}/external/NIST_BLAS/include/
 	  ${PROJECT_SOURCE_DIR}/external/g2o/
-	  ${PROJECT_SOURCE_DIR}/include/cholmod/SuiteSparse/)
+	  ${PROJECT_SOURCE_DIR}/include/cholmod/SuiteSparse/
+	  ${PCL_INCLUDE_DIRS})
 ENDIF(SLAM_P_P_EIGEN33)
 
 # Path to supplied dependency libraries.
@@ -572,7 +597,7 @@ IF(SLAM_P_P_HAVE_IGRAPH)
 	ADD_SUBDIRECTORY(external/igraph) # need this for testing
 	INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/external/igraph/include/)
 	SET(SLAM_P_P_LIBRARIES ${SLAM_P_P_LIBRARIES} igraph)
-	SET(SLAM_EXAMPLE_LIBRARIES ${SLAM_P_P_LIBRARIES} igraph)
+	SET(SLAM_EXAMPLE_LIBRARIES ${SLAM_EXAMPLE_LIBRARIES} igraph)
 ENDIF(SLAM_P_P_HAVE_IGRAPH)
 
 ADD_SUBDIRECTORY(include)
