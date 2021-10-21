@@ -1037,9 +1037,9 @@ public:
 		r_v_error(0) = acos( (v.normalized().transpose() * Eigen::Vector3d(0, 1, 0))(0) );
 		// transform measrement vector to world
 
-		std::cout << R << std::endl;
+		/*std::cout << R << std::endl;
 		std::cout << m_v_measurement.normalized().transpose() << std::endl;
-		std::cout << v.transpose() << " | " << ((v.transpose() * Eigen::Vector3d(0, 1, 0))(0)) << " | " <<  r_v_error(0) << std::endl;
+		std::cout << v.transpose() << " | " << ((v.transpose() * Eigen::Vector3d(0, 1, 0))(0)) << " | " <<  r_v_error(0) << std::endl;*/
 
 		const double delta = 1e-9;
 		const double scalar = 1.0 / (delta);

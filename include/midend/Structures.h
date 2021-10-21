@@ -1444,12 +1444,34 @@ class CScanCorrector
 {
 private:
 	CStructureManager manager;
+	int n_iFrames;
 	bool b_verbose;
+
+	std::vector<CTimeFrame> fms;
+	Eigen::Matrix<double, 4, 4, Eigen::DontAlign> residualTransform = Eigen::Matrix4d::Identity();
 public:
-	CScanCorrector(CInputData &inputData, bool verbose):
+	CScanCorrector(CInputData &inputData, int iFrames = 10, bool verbose = true):
 		manager(inputData),
+		n_iFrames(iFrames),
 		b_verbose(verbose)
 	{}
+	CScanCorrector(const CScanCorrector &r_other):
+		manager(r_other.manager),
+		n_iFrames(r_other.n_iFrames),
+		b_verbose(r_other.b_verbose),
+		fms(r_other.fms),
+		residualTransform(r_other.residualTransform)
+	{}
+	CScanCorrector &operator =(const CScanCorrector &r_other)
+	{
+		manager = r_other.manager;
+		n_iFrames = r_other.n_iFrames;
+		b_verbose = r_other.b_verbose;
+		fms = r_other.fms;
+		residualTransform = r_other.residualTransform;
+
+		return *this;
+	}
 
 	Eigen::Matrix4d StolenComputeTransformationWeighted(
 	    const MatrixXd &source_coresp_points,
@@ -1688,6 +1710,198 @@ public:
 		return a + t * (b - a);
 	}
 
+	void AddFrame(vector<CMeasurement2> measurements) {
+		if(fms.size() > 1)
+			fms.erase(fms.begin() + 0);
+		// keep only 2 last frames here
+
+		CTimeFrame frame(0, 0, 0);	// new time frame
+		for(int a = 0; a < measurements.size(); ++a) {
+			shared_ptr<CMeasurement2> m(new CMeasurement2(measurements[a]));
+			frame.r_Measurements().push_back(m);
+		}
+
+		fms.push_back(frame);
+		// store actual frame temporarily
+	}
+
+	void AddFrameCorrespondences(std::vector<std::pair<int, int> > matches) {
+		Eigen::MatrixXd ptsLeft(3, matches.size());
+		Eigen::MatrixXd ptsRight(3, matches.size());
+
+		for(int b = 0; b < matches.size(); ++b)
+		{
+			Vector3d p0 = fms[0].r_Measurements()[matches[b].first]->position;
+			p0 = manager.r_Tf().TransformPoint(p0, fms[0].r_Measurements()[matches[b].first]->lidarId == 0 ? tflidar0 : tflidar1,
+					tfbase);
+			// point to baseframe
+			ptsLeft.col(b) = p0;
+
+			Vector3d p1 = fms[1].r_Measurements()[matches[b].second]->position;
+			p1 = manager.r_Tf().TransformPoint(p1, fms[1].r_Measurements()[matches[b].second]->lidarId == 0 ? tflidar0 : tflidar1,
+					tfbase);
+			// point to baseframe
+			ptsRight.col(b) = p1;
+		}
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> transform = StolenComputeTransformationWeighted(ptsLeft, ptsRight);
+		if(b_verbose)
+			std::cout << "Initial TF: \n" << transform << std::endl << std::endl;
+		// estimate transform
+
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> fromRt = Eigen::Matrix<double, 4, 4, Eigen::DontAlign>::Identity();
+		if(manager.r_v_Frames().size() > 0)
+			fromRt = manager.r_v_Frames().back()->r_Pose().r_Pc2w() * residualTransform;
+		C3DPose fromPose; fromPose.setPc2w(fromRt);
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> toRt = fromRt * transform;
+		C3DPose toPose; toPose.setPc2w(toRt);
+
+		for(int a = 0; a < n_iFrames; ++a)
+		{
+			Eigen::Vector6d imm = Eigen::Vector6d::Zero();
+			for(size_t i = 0; i < imm.rows(); ++i)
+				imm(i) = lerp(fromPose.v_Representation_6D()(i), toPose.v_Representation_6D()(i), (1.0 / n_iFrames) * a);
+
+			//std::cout << imm.transpose() << std::endl;
+			manager.AddFrame(manager.r_v_Frames().size() / n_iFrames, (a % n_iFrames) / (double)n_iFrames);
+			manager.r_v_Frames().back()->r_Pose().setRepresentation_6D(imm);
+			// store frame
+		}
+		// add the frames into the system
+		for(int a = 0; a < fms[0].r_Measurements().size(); ++a)
+		{
+			shared_ptr<CMeasurement2> m = fms[0].r_Measurements()[a];
+			int id = manager.r_v_Frames().size() - n_iFrames + floor(m->phase / (1.0 / n_iFrames));
+			if(id >= manager.r_v_Frames().size())
+				id = manager.r_v_Frames().size() - 1;
+
+			m->SetOwner(manager.r_v_Frames()[id]);
+			manager.r_v_Frames()[id]->r_Measurements().push_back(m);
+			// store measurement
+			manager.r_v_Frames()[manager.r_v_Frames().size() - n_iFrames]->r_MeasurementRefs().push_back(
+					std::pair<int, int>(id, manager.r_v_Frames()[id]->r_Measurements().size()-1));
+			// store its position
+		}
+		// store corresponding measurements
+
+		residualTransform = manager.r_v_Frames().back()->r_Pose().r_Pw2c() * toRt;
+		// save residual transform
+
+		int refs = 0;
+		int news = 0;
+		for(int b = 0; b < matches.size(); ++b)
+		{
+			shared_ptr<CMeasurement2> m0 = fms[0].r_Measurements()[matches[b].first];
+			shared_ptr<CMeasurement2> m1 = fms[1].r_Measurements()[matches[b].second];
+			// make references
+
+			/*if(duplicities[matches[b].first])
+				continue;
+			duplicities[matches[b].first] = true;*/
+
+			if(m0->p_Structure() != nullptr && m1->p_Structure() == nullptr)
+			{
+				m0->p_Structure()->AddReferee(m1);
+				m1->SetStructurePtr(m0->p_Structure());
+				refs ++;
+			}
+			// m0 is structure
+			else if(m0->p_Structure() == nullptr && m1->p_Structure() != nullptr)
+			{
+				m1->p_Structure()->AddReferee(m0);
+				m0->SetStructurePtr(m1->p_Structure());
+				refs ++;
+			}
+			if(m0->p_Structure() == nullptr && m1->p_Structure() == nullptr)
+			{
+				Vector4d p0 = Vector4d::Ones();
+				p0.head(3) = m0->position;
+				p0 = manager.r_Tf().TransformPoint(p0, m0->lidarId == 0 ? tflidar0 : tflidar1, tfbase);
+				// point to baseframe
+
+				Vector3d o0 = m0->orientation;
+				o0 = manager.r_Tf().TransformOrientation(o0, m0->lidarId == 0 ? tflidar0 : tflidar1, tfbase);
+				o0 = fromRt.block(0, 0, 3, 3) * o0;
+				Vector3d o1 = m1->orientation;
+				o1 = manager.r_Tf().TransformOrientation(o1, m1->lidarId == 0 ? tflidar0 : tflidar1, tfbase);
+				o1 = toRt.block(0, 0, 3, 3) * o1;
+				Vector3d n0 = o0.cross(o1);
+				n0 = fromRt.inverse().block(0, 0, 3, 3) * n0;
+				// compute normal from cross products of orientations
+
+				Vector4d plane = Vector4d::Ones();
+				plane.head(3) = n0.normalized();
+				// normal vector
+				plane(3) = - plane.head(3).transpose() * p0.head(3);
+				// plane in in baseframe
+				// compute and initialize plane
+
+				std::shared_ptr<CStructure> p_str(new CStructure(2 /* baseframe */, plane));
+				// create structure
+				p_str->SetOwner(m0->p_Owner());
+				// add structure referees
+				manager.r_v_Structure().push_back(p_str);
+				// add structure
+				m0->SetStructurePtr(p_str);
+				m1->SetStructurePtr(p_str);
+				// add pointer to structure
+				p_str->AddReferee(m0);
+				p_str->AddReferee(m1);
+				// set the links
+				news ++;
+			}
+		}
+		// build 3D structure
+	}
+
+	void AddInterFrameCorrespondences(int id, std::vector<std::pair<int, int> > imatches) {
+		int idx = id * n_iFrames;
+
+		for(int a = 0; a < imatches.size(); ++a)
+		{
+			shared_ptr<CMeasurement2> m0 = manager.r_v_Frames()[idx]->r_Measurements()[imatches[a].first];
+			shared_ptr<CMeasurement2> m1 = manager.r_v_Frames()[idx]->r_Measurements()[imatches[a].second];
+
+			if(m0->p_Structure() != nullptr)
+			{
+				m0->p_Structure()->AddReferee(m1);
+
+				if(m1->p_Structure() == nullptr)
+					m1->SetStructurePtr(m0->p_Structure());
+			} else if(m1->p_Structure() != nullptr)
+			{
+				m1->p_Structure()->AddReferee(m0);
+
+				if(m0->p_Structure() == nullptr)
+					m0->SetStructurePtr(m1->p_Structure());
+			}
+		}
+		// create inter frame references
+	}
+
+	void AddHistoryCorrespondence(int history, int actual, std::vector<std::pair<int, int> > matches) {
+		shared_ptr<CTimeFrame> f0 = manager.r_v_Frames()[history * n_iFrames];
+
+		for(int i = 0; i < matches.size(); ++i)
+		{
+			//std::pair<int, int> ids = f0->r_MeasurementRefs()[matches[i].first];
+			shared_ptr<CMeasurement2> m0 = f0->r_Measurements()[matches[i].first];
+			shared_ptr<CMeasurement2> m1 = fms[1].r_Measurements()[matches[i].second];
+			// make references
+
+			if(m0->p_Structure() != nullptr && m1->p_Structure() == nullptr)
+			{
+				m0->p_Structure()->AddReferee(m1);
+				m1->SetStructurePtr(m0->p_Structure());
+			}
+			// m0 is structure
+			else if(m0->p_Structure() == nullptr && m1->p_Structure() != nullptr)
+			{
+				m1->p_Structure()->AddReferee(m0);
+				m0->SetStructurePtr(m1->p_Structure());
+			}
+		}
+	}
+
 	/**
 	 *	@brief optimizes range of data
 	 *	@param from id of starting frame (included)
@@ -1916,16 +2130,16 @@ public:
 				break;
 		}
 
-		OptimizeOffset(manager, n_iterations, f_threshold);
+		OptimizeOffset(n_iterations, f_threshold);
 		// optimize
-		ExportData(manager, from, to, exportFrom, exportTo, iFrames);
+		//ExportData(from, to, exportFrom, exportTo, iFrames);
 		// export
 
 		//std::cout << "done" << std::endl;
 		// optimize here
 	}
 
-	float OptimizeOffset(CStructureManager &manager, int n_iterations = 15, double f_threshold = 1e-3)
+	float OptimizeOffset(int n_iterations = 15, double f_threshold = 1e-3)
 	{
 		typedef MakeTypelist_Safe((CVertexPose3D, CVertexPlane3D)) TVertexTypelist_SE3;
 		typedef MakeTypelist_Safe((CEdgePose3D, CEdgeNormal23D, CPlaneOffsetEdge_Local, CPlaneOffsetEdge_Global)) TEdgeTypelist_SE3;
@@ -1965,6 +2179,8 @@ public:
 
 			if(a == 0) {
 				m_system.r_Add_Edge(CEdgePose3D(0, 1, Eigen::Matrix<double, 6, 1>::Zero(), info0, m_system));
+				std::cout  << "EDGE " << " 0" << " 1" << " " <<
+							Eigen::Matrix<double, 6, 1>::Zero().transpose() << std::endl;
 			}
 			// set up connection to zero vertex
 
@@ -1980,6 +2196,8 @@ public:
 				relpos.setPc2w(rel);
 				m_system.r_Add_Edge(CEdgePose3D(manager.r_v_Frames()[a - 1]->n_SystemId(), manager.r_v_Frames()[a]->n_SystemId(),
 						relpos.v_Representation_6D(), info, m_system));
+				std::cout  << "EDGE " << manager.r_v_Frames()[a - 1]->n_SystemId() << " " << manager.r_v_Frames()[a]->n_SystemId() << " " <<
+										relpos.v_Representation_6D().transpose() << std::endl;
 			}
 			// add basic edges
 		}
@@ -1987,8 +2205,12 @@ public:
 
 		m_system.r_Get_Vertex<CVertexPose3D>(-1, manager.r_Tf().Aa_TransformC2W(tflidar0));
 		int l0Id = -1;//systemId;
+		std::cout  << "VX0 " << "-1" << " " <<
+								manager.r_Tf().Aa_TransformC2W(tflidar0).transpose() << std::endl;
 		//systemId ++;
 		m_system.r_Get_Vertex<CVertexPose3D>(-2, manager.r_Tf().Aa_TransformC2W(tflidar1));
+		std::cout  << "VX1 " << "-2" << " " <<
+								manager.r_Tf().Aa_TransformC2W(tflidar0).transpose() << std::endl;
 		int l1Id = -2;//systemId;
 		//systemId ++;
 		// add calibration
@@ -2003,9 +2225,13 @@ public:
 
 			m_system.r_Get_Vertex<CVertexPlane3D>(systemId, s->r_Plane());
 			s->SetSystemId(systemId);
+			std::cout  << "PLANE " << systemId << " " <<
+									s->r_Plane().transpose() << std::endl;
 
 			m_system.r_Add_Edge(CPlaneOffsetEdge_Local(s->n_SystemId(), s->r_RefereeAt(0)->lidarId == 0 ? l0Id : l1Id,
 					s->r_RefereeAt(0)->v_Measurement().head(6), info2, m_system));
+			std::cout << "L: " << s->n_SystemId() << " " << (s->r_RefereeAt(0)->lidarId == 0 ? l0Id : l1Id) << " " << s->r_RefereeAt(0)->v_Measurement().transpose() << std::endl;
+
 			// t0
 
 			for(int b = 1; b < s->r_Referees().size(); ++b)
@@ -2018,6 +2244,8 @@ public:
 									s->r_RefereeAt(0)->p_Owner()->n_SystemId(),
 									s->r_RefereeAt(b)->lidarId == 0 ? l0Id : l1Id,
 									s->r_RefereeAt(b)->v_Measurement().head(6), info2, m_system));
+				std::cout << "G: " << s->n_SystemId() << " " << s->r_RefereeAt(b)->p_Owner()->n_SystemId() << " " << s->r_RefereeAt(0)->p_Owner()->n_SystemId() <<
+						" " << (s->r_RefereeAt(b)->lidarId == 0 ? l0Id : l1Id) << " " << s->r_RefereeAt(b)->v_Measurement().head(6).transpose() << std::endl;
 				// t1
 			}
 
@@ -2067,24 +2295,22 @@ public:
 		return m_solver.f_Chi_Squared_Error_Denorm();
 	}
 
-	void ExportData(CStructureManager &manager, int start, int end, int from, int to, bool iFrames)
+	std::vector<Eigen::Matrix<double, 4, 4, Eigen::DontAlign> > ExportData(int start, std::string inDir, std::string outDir,
+																		   const std::vector<bool> &b_export = std::vector<bool>())
 	{
-		int pFrom = from - start;
-		int pTo = to - start;
-
-		if(b_verbose)
-			std::cout << "Export from " << from << " to " << to << std::endl;
-
-		for(int a = pFrom; a <= pTo; ++a)
+		for(int a = 0; a < manager.r_v_Frames().size() / n_iFrames; ++a)
 		{
+			if(b_export.size() > a && !b_export[a])
+				continue;
+			// skip exports if required
+
 			for(int c = 0; c < 2; ++c)
 			{
-				std::string namex;//("/mnt/ssd/isolony/dataset/GEO/lines-uncorrected/point-clouds-synced/");
-				namex = manager.r_Data().lidarPath;
+				std::string namex(inDir);//("/mnt/ssd/isolony/dataset/GEO/lines-uncorrected/point-clouds-synced/");
 				char buffer [50];
 				sprintf(buffer, "%06d.%d.pcd", start + a, c + 1);
 				namex = namex + std::string(buffer);
-				std::string outf(manager.r_Data().outputPath);
+				std::string outf(outDir);
 				outf = outf + std::string(buffer);
 
 				pcl::PointCloud<velodyne_pointcloud::PointXYZIRP> pts;
@@ -2101,26 +2327,26 @@ public:
 					// position
 
 					double phase = pts[b].phase;
-					int id = floor(phase / (1.0 / iFrames));
-					if(id >= iFrames)
-						id = iFrames - 1;
-					Eigen::Matrix4d base_pos = manager.r_v_Frames()[a * iFrames]->r_Pose().r_Pw2c();
-					Eigen::Matrix4d pos_inv = manager.r_v_Frames()[a * iFrames + id]->r_Pose().r_Pc2w();
-					Eigen::Matrix<double, 6, 1> pos1 = manager.r_v_Frames()[a * iFrames + id]->r_Pose().v_Representation_6D();
-					Eigen::Matrix<double, 6, 1> pos2 = manager.r_v_Frames()[a * iFrames + id + 1]->r_Pose().v_Representation_6D();
+					int id = floor(phase / (1.0 / n_iFrames));
+					if(id >= n_iFrames)
+						id = n_iFrames - 1;
+					Eigen::Matrix4d base_pos = manager.r_v_Frames()[a * n_iFrames]->r_Pose().r_Pw2c();
+					Eigen::Matrix4d pos_inv = manager.r_v_Frames()[a * n_iFrames + id]->r_Pose().r_Pc2w();
+					Eigen::Matrix<double, 6, 1> pos1 = manager.r_v_Frames()[a * n_iFrames + id]->r_Pose().v_Representation_6D();
+					Eigen::Matrix<double, 6, 1> pos2 = manager.r_v_Frames()[a * n_iFrames + id + 1]->r_Pose().v_Representation_6D();
 					//Eigen::Matrix<double, 6, 1> pos0 = pos1;
-					Eigen::Matrix<double, 6, 1> pos;
-					//if(a * iFrames + id > 0)
-					//	pos0 = manager.r_v_Frames()[a * iFrames + id - 1]->r_Pose().v_Representation_6D();
+					//Eigen::Matrix<double, 6, 1> pos;
+					//if(a * n_iFrames + id > 0)
+					//	pos0 = manager.r_v_Frames()[a * n_iFrames + id - 1]->r_Pose().v_Representation_6D();
 
-					double nph = (phase - id * (1.0 / iFrames)) * iFrames;
-					pos = (1.0 - nph) * pos1 + nph * pos2;
+					double nph = (phase - id * (1.0 / n_iFrames)) * n_iFrames;
+					//pos = (1.0 - nph) * pos1 + nph * pos2;
 
 
 					std::vector<Eigen::Affine3f, Eigen::aligned_allocator<Eigen::Affine3f> > control_poses;
 					for(int c = -1; c < 3; ++c)
 					{
-						int nid = a * iFrames + id + c;
+						int nid = a * n_iFrames + id + c;
 						if(nid < 0)
 							nid = 0;
 						if(nid > manager.r_v_Frames().size() - 1)
@@ -2157,6 +2383,14 @@ public:
 			}
 		}
 		// output first half corrected
+
+		std::vector<Eigen::Matrix<double, 4, 4, Eigen::DontAlign> > out;
+		for(int a = 0; a < manager.r_v_Frames().size(); ++a) {
+			out.push_back(manager.r_v_Frames()[a]->r_Pose().r_Pc2w());
+		}
+		// export the poses
+
+		return out;
 	}
 };
 
