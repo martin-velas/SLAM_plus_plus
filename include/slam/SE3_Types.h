@@ -558,10 +558,14 @@ public:
 		_ASSERTE(n_node0 < n_node1 || // either the vertices are ordered
 			(n_node0 > n_node1 && r_system.n_Vertex_Num() > n_node0)); // or they are not, but then both need to be in the system (a reversed loop closure)
 
+		//std::cout << "IN " << r_v_delta.transpose() << std::endl;
+
 		m_p_vertex0 = &r_system.template r_Get_Vertex<CVertexPose3D>(n_node0, CInitializeNullVertex<>());
 		m_p_vertex1 = &r_system.template r_Get_Vertex<CVertexPose3D>(n_node1,
 			CRelative_to_Absolute_XYZ_Initializer(m_p_vertex0->r_v_State(), r_v_delta));
 		// get vertices (initialize if required)
+
+		//std::cout << "IN2 " << r_v_delta.transpose() << std::endl;
 
 		//_ASSERTE(r_system.r_Vertex_Pool()[n_node0].n_Dimension() == 6); // get the vertices from the vertex pool to ensure a correct type is used, do not use m_p_vertex0 / m_p_vertex1 for this
 		//_ASSERTE(r_system.r_Vertex_Pool()[n_node1].n_Dimension() == 6);
@@ -604,7 +608,9 @@ public:
 		C3DJacobians::Absolute_to_Relative(m_p_vertex0->r_v_State(),
 			m_p_vertex1->r_v_State(), r_v_expectation, r_t_jacobian0, r_t_jacobian1);
 		// calculates the expectation and the jacobians
-
+		/*std::cout << r_v_expectation.transpose() << std::endl;
+		std::cout << r_t_jacobian0 << std::endl;
+		std::cout << r_t_jacobian1 << std::endl;*/
 #if 0
 		//C3DJacobians::Absolute_to_Relative(r_v_expectation, m_v_measurement, r_v_error); // this is slightly different, the inverse quat is on the left side, here we have it on the right.
 		C3DJacobians::Relative_to_Absolute(m_v_measurement, -r_v_expectation, r_v_error); // this allows for inverse on the right but we need to manually "conjugate" the pose by flipping the sign.
@@ -1056,6 +1062,135 @@ public:
 			Eigen::Matrix<double, 1, 1> err;
 			//err(0) = 1.0 - v.transpose() * Eigen::Vector3d(0, 1, 0);
 			err(0) = acos( (v.transpose() * Eigen::Vector3d(0, 1, 0))(0) );
+
+			r_t_jacobian0.col(j) = -(err - r_v_error) * scalar;
+			// we expect zero
+		}
+		// compute jacobians
+
+		//std::cout << r_t_jacobian0 << std::endl << std::endl;
+	}
+
+	/**
+	 *	@brief calculates \f$\chi^2\f$ error
+	 *	@return Returns (unweighted) \f$\chi^2\f$ error for this edge.
+	 */
+	inline double f_Chi_Squared_Error() const
+	{
+		Eigen::Matrix<double, 1, 6> p_jacobi[1];
+		Eigen::Matrix<double, 1, 1> v_expectation, v_error;
+		Calculate_Jacobian_Expectation_Error(p_jacobi[0], v_expectation, v_error);
+		// calculates the expectation, error and the jacobians
+
+		return (v_error.transpose() * m_t_sigma_inv).dot(v_error); // ||z_i - h_i(O_i)||^2 lambda_i
+	}
+};
+
+/**
+ *	@brief SE(3) pose-pose edge
+ */
+class CEdgeNormal3D_Z : public CBaseEdgeImpl<CEdgeNormal3D_Z, MakeTypelist(CVertexPose3D), 1, 3/*, CBaseEdge::Robust*/>/*,
+		public CRobustify_ErrorNorm_Default<CCTFraction<148, 100>, CHuberLossd>*/{
+public:
+	typedef CBaseEdgeImpl<CEdgeNormal3D_Z, MakeTypelist(CVertexPose3D), 1, 3/*, CBaseEdge::Robust*/> _TyBase; /**< @brief base edge type */
+
+public:
+	__GRAPH_TYPES_ALIGN_OPERATOR_NEW // imposed by the use of eigen, just copy this
+
+	/**
+	 *	@brief default constructor; has no effect
+	 */
+	inline CEdgeNormal3D_Z()
+	{}
+
+	/*template <class CSystem>
+	CEdgeNormal3D(const CParserBase::TEdge3DNormal &r_t_edge, CSystem &r_system)
+		:_TyBase(r_t_edge.m_n_node_0, r_t_edge.m_v_delta, r_t_edge.m_t_inv_sigma)
+	{
+		m_p_vertex0 = &r_system.template r_Get_Vertex<CVertexPose3D>(r_t_edge.m_n_node_0, CInitializeNullVertex<CVertexPose3D>());
+		// get vertices (initialize if required)
+	}*/
+
+	/*template <class CSystem>
+	CEdgeNormal3D(const CParserBase::TEdge3DSelf &r_t_edge, CSystem &r_system)
+		:_TyBase(r_t_edge.m_n_node_0, r_t_edge.m_v_delta, r_t_edge.m_t_inv_sigma)
+	{
+		m_p_vertex0 = &r_system.template r_Get_Vertex<CVertexPose3D>(r_t_edge.m_n_node_0, C_Absolute_Initializer(r_t_edge.m_v_delta));
+		// get vertices (initialize if required)
+	}*/
+
+	/**
+	 *	@brief constructor; converts parsed edge to edge representation
+	 *
+	 *	@tparam CSystem is type of system where this edge is being stored
+	 *
+	 *	@param[in] n_node0 is (zero-based) index of the first (origin) node
+	 *	@param[in] n_node1 is (zero-based) index of the second (endpoint) node
+	 *	@param[in] r_v_delta is measurement vector
+	 *	@param[in] r_t_inv_sigma is the information matrix
+	 *	@param[in,out] r_system is reference to system (used to query edge vertices)
+	 */
+	template <class CSystem>
+	CEdgeNormal3D_Z(size_t n_node0, const Eigen::Matrix<double, 3, 1> &r_v_delta,
+		const Eigen::Matrix<double, 1, 1> &r_t_inv_sigma, CSystem &r_system)
+		:_TyBase(n_node0, r_v_delta, r_t_inv_sigma)
+	{
+		m_p_vertex0 = &r_system.template r_Get_Vertex<CVertexPose3D>(n_node0, CInitializeNullVertex<CVertexPose3D>());
+		// get vertices (initialize if required)
+
+		//_ASSERTE(r_system.r_Vertex_Pool()[n_node0].n_Dimension() == 6); // get the vertices from the vertex pool to ensure a correct type is used, do not use m_p_vertex0 / m_p_vertex1 for this
+		//_ASSERTE(r_system.r_Vertex_Pool()[n_node1].n_Dimension() == 6);
+		// make sure the dimensionality is correct (might not be)
+		// this fails with const vertices, for obvious reasons. with the thunk tables this can be safely removed.
+	}
+
+	/**
+	 *	@brief updates the edge with a new measurement
+	 *
+	 *	@param[in] r_v_delta is new measurement vector
+	 *	@param[in] r_t_inv_sigma is new information matrix
+	 */
+	inline void Update(const Eigen::Matrix<double, 3, 1> &r_v_delta, const Eigen::Matrix<double, 1, 1> &r_t_inv_sigma) // for some reason this needs to be here, although the base already implements this
+	{
+		_TyBase::Update(r_v_delta, r_t_inv_sigma);
+	}
+
+	/**
+	 *	@brief calculates jacobians, expectation and error
+	 *
+	 *	@param[out] r_t_jacobian0 is jacobian, associated with the first vertex
+	 *	@param[out] r_t_jacobian1 is jacobian, associated with the second vertex
+	 *	@param[out] r_v_expectation is expecation vector
+	 *	@param[out] r_v_error is error vector
+	 */
+	inline void Calculate_Jacobian_Expectation_Error(Eigen::Matrix<double, 1, 6> &r_t_jacobian0,
+		Eigen::Matrix<double, 1, 1> &r_v_expectation, Eigen::Matrix<double, 1, 1> &r_v_error) const // change dimensionality of eigen types, if required
+	{
+		Eigen::Matrix3d R = C3DJacobians::Operator_rot(m_p_vertex0->r_v_State().tail(3));
+		Eigen::Vector3d v = R * m_v_measurement.normalized(); // this should be close to [0, 0, 1]
+		//r_v_error(0) = 1.0 - v.transpose() * Eigen::Vector3d(0, 0, 1);
+		r_v_error(0) = acos( (v.normalized().transpose() * Eigen::Vector3d(0, 0, 1))(0) );
+		// transform measrement vector to world
+
+		/*std::cout << R << std::endl;
+		std::cout << m_v_measurement.normalized().transpose() << std::endl;
+		std::cout << v.transpose() << " | " << ((v.transpose() * Eigen::Vector3d(0, 0, 1))(0)) << " | " <<  r_v_error(0) << std::endl;*/
+
+		const double delta = 1e-9;
+		const double scalar = 1.0 / (delta);
+
+		Eigen::Matrix<double, 6, 6> Eps;
+		Eps = Eigen::Matrix<double, 6, 6>::Identity() * delta; // faster, all memory on stack
+
+		for(int j = 0; j < 6; ++ j) {
+			Eigen::Matrix<double, 6, 1> p_delta, d1;
+			C3DJacobians::Relative_to_Absolute(m_p_vertex0->r_v_State(), Eps.col(j), p_delta);
+
+			R = C3DJacobians::Operator_rot(p_delta.tail(3));
+			v = R * m_v_measurement.normalized(); // this should be close to [0, 1, 0]
+			Eigen::Matrix<double, 1, 1> err;
+			//err(0) = 1.0 - v.transpose() * Eigen::Vector3d(0, 1, 0);
+			err(0) = acos( (v.transpose() * Eigen::Vector3d(0, 0, 1))(0) );
 
 			r_t_jacobian0.col(j) = -(err - r_v_error) * scalar;
 			// we expect zero
@@ -4475,6 +4610,141 @@ public:
 /**
  *	@brief SE(3) pose-landmark edge
  */
+class CEdgeBearingBearing3D : public CBaseEdgeImpl<CEdgeBearingBearing3D, MakeTypelist(CVertexPose3D, CVertexPose3D), 3, 6, CBaseEdge::Robust>,
+    public CRobustify_ErrorNorm_Default<CCTFraction<296, 1000>, CHuberLossd> {
+public:
+    typedef CBaseEdgeImpl<CEdgeBearingBearing3D, MakeTypelist(CVertexPose3D, CVertexPose3D), 3, 6, CBaseEdge::Robust> _TyBase; /**< @brief base edge type */
+public:
+	__GRAPH_TYPES_ALIGN_OPERATOR_NEW // imposed by the use of eigen, just copy this
+
+	/**
+	 *	@brief default constructor; has no effect
+	 */
+	inline CEdgeBearingBearing3D()
+	{}
+
+	/**
+	 *	@brief constructor; converts parsed edge to edge representation
+	 *
+	 *	@tparam CSystem is type of system where this edge is being stored
+	 *
+	 *	@param[in] n_node0 is (zero-based) index of the first (origin) node
+	 *	@param[in] n_node1 is (zero-based) index of the second (endpoint) node
+	 *	@param[in] r_v_delta is measurement vector
+	 *	@param[in] r_t_inv_sigma is the information matrix
+	 *	@param[in,out] r_system is reference to system (used to query edge vertices)
+	 */
+	template <class CSystem>
+	CEdgeBearingBearing3D(size_t n_node0, size_t n_node1, const Eigen::Matrix<double, 6, 1> &r_v_delta,
+		const Eigen::Matrix<double, 3, 3> &r_t_inv_sigma, CSystem &r_system)
+		:_TyBase(n_node0, n_node1, r_v_delta, r_t_inv_sigma)
+	{
+		//fprintf(stderr, "%f %f %f\n", r_t_edge.m_v_delta(0), r_t_edge.m_v_delta(1), r_t_edge.m_v_delta(2));
+
+		m_p_vertex0 = &r_system.template r_Get_Vertex<CVertexPose3D>(n_node0, CInitializeNullVertex<>());
+		m_p_vertex1 = &r_system.template r_Get_Vertex<CVertexPose3D>(n_node1, CInitializeNullVertex<>());
+		// get vertices (initialize if required)
+
+		//_ASSERTE(r_system.r_Vertex_Pool()[n_node0].n_Dimension() == 6); // get the vertices from the vertex pool to ensure a correct type is used, do not use m_p_vertex0 / m_p_vertex1 for this
+		//_ASSERTE(r_system.r_Vertex_Pool()[n_node1].n_Dimension() == 3);
+		// make sure the dimensionality is correct (might not be)
+		// this fails with const vertices, for obvious reasons. with the thunk tables this can be safely removed.
+	}
+
+    /**
+	 *	@brief updates the edge with a new measurement
+	 *
+	 *	@param[in] r_v_delta is new measurement vector
+	 *	@param[in] r_t_inv_sigma is new information matrix
+	 */
+	inline void Update(const Eigen::Matrix<double, 6, 1> &r_v_delta, const Eigen::Matrix<double, 3, 3> &r_t_inv_sigma)
+	{
+		_TyBase::Update(r_v_delta, r_t_inv_sigma);
+	}
+
+    /**
+	 *	@brief calculates jacobians, expectation and error
+	 *
+	 *	@param[out] r_t_jacobian0 is jacobian, associated with the first vertex
+	 *	@param[out] r_t_jacobian1 is jacobian, associated with the second vertex
+	 *	@param[out] r_v_expectation is expecation vector
+	 *	@param[out] r_v_error is error vector
+	 */
+	inline void Calculate_Jacobians_Expectation_Error(Eigen::Matrix<double, 3, 6> &r_t_jacobian0,
+		Eigen::Matrix<double, 3, 6> &r_t_jacobian1, Eigen::Matrix<double, 3, 1> &r_v_expectation,
+		Eigen::Matrix<double, 3, 1> &r_v_error) const // change dimensionality of eigen types, if required
+	{
+        Eigen::Matrix3d R0 = C3DJacobians::Operator_rot(m_p_vertex0->r_v_State().tail(3));
+        Eigen::Matrix3d R1 = C3DJacobians::Operator_rot(m_p_vertex1->r_v_State().tail(3));
+        //Eigen::Matrix3d rel = R0.inverse() * R1;
+
+        //angle = std::atan2(a.cross(b).norm(), a.dot(b));
+        Eigen::Vector3d v0 = R0 * m_v_measurement.head(3).normalized();
+        v0 = R1.inverse() * v0;
+        //Eigen::Vector3d v1 = m_v_measurement.tail(3);
+        r_v_expectation = v0;/*atan2(v0.cross(v1).norm(), v0.dot(v1))*/;
+        
+        //std::cout << m_v_measurement.head(3).transpose() << " | " << v0.transpose() << " <> " << v1.transpose() << " >>> " << r_v_error(0) << std::endl;
+
+        const double delta = 1e-9;
+		const double scalar = 1.0 / (delta);
+
+		Eigen::Matrix<double, 6, 6> Eps;
+		Eps = Eigen::Matrix<double, 6, 6>::Identity() * delta; // faster, all memory on stack
+
+		for(int j = 0; j < 6; ++ j) {
+			Eigen::Matrix<double, 6, 1> p_delta;
+            Eigen::Matrix<double, 3, 1> dst;
+			C3DJacobians::Relative_to_Absolute(m_p_vertex0->r_v_State(), Eps.col(j), p_delta);
+
+            Eigen::Matrix3d Rtmp = C3DJacobians::Operator_rot(p_delta.tail(3));
+
+            dst = Rtmp * m_v_measurement.head(3).normalized();
+            dst = R1.inverse() * dst;
+
+            //double err = atan2(v0.cross(v1).norm(), v0.dot(v1));
+            //r_t_jacobian0.col(j)(0) = (r_v_error(0) - err) * scalar;
+            r_t_jacobian0.col(j) = (dst - r_v_expectation) * scalar;
+		}
+
+        for(int j = 0; j < 6; ++ j) {
+			Eigen::Matrix<double, 6, 1> p_delta;
+            Eigen::Matrix<double, 3, 1> dst;
+			C3DJacobians::Relative_to_Absolute(m_p_vertex1->r_v_State(), Eps.col(j), p_delta);
+
+            Eigen::Matrix3d Rtmp = C3DJacobians::Operator_rot(p_delta.tail(3));
+
+            dst = R0 * m_v_measurement.head(3).normalized();
+            dst = Rtmp.inverse() * dst;
+
+            //double err = atan2(v0.cross(v1).norm(), v0.dot(v1));
+            //r_t_jacobian1.col(j)(0) = (r_v_error(0) - err) * scalar;
+            r_t_jacobian1.col(j) = (dst - r_v_expectation) * scalar;
+		}
+
+        r_v_error = m_v_measurement.tail(3).normalized() - r_v_expectation;
+        //std::cout << m_v_measurement.head(3).transpose() << " | " << v0.transpose() << " <> " << m_v_measurement.tail(3).transpose() << " >>> " << r_v_error.transpose() << std::endl;
+	}
+
+	/**
+	 *	@brief calculates \f$\chi^2\f$ error
+	 *	@return Returns (unweighted) \f$\chi^2\f$ error for this edge.
+	 */
+	inline double f_Chi_Squared_Error() const
+	{
+		Eigen::Matrix<double, 3, 6> p_jacobi0;
+		Eigen::Matrix<double, 3, 6> p_jacobi1;
+		Eigen::Matrix<double, 3, 1> v_expectation, v_error;
+		Calculate_Jacobians_Expectation_Error(p_jacobi0, p_jacobi1, v_expectation, v_error);
+		// calculates the expectation, error and the jacobians
+
+		return (v_error.transpose() * m_t_sigma_inv).dot(v_error); // ||z_i - h_i(O_i)||^2 lambda_i
+	}
+};
+
+/**
+ *	@brief SE(3) pose-landmark edge
+ */
 class CEdgePoseLandmark3D : public CBaseEdgeImpl<CEdgePoseLandmark3D, MakeTypelist(CVertexPose3D, CVertexLandmark3D), 3> {
 public:
 	/**
@@ -4630,6 +4900,336 @@ public:
 		Eigen::Matrix<double, 3, 3> p_jacobi1;
 		Eigen::Matrix<double, 3, 1> v_expectation, v_error;
 		Calculate_Jacobians_Expectation_Error(p_jacobi0, p_jacobi1, v_expectation, v_error);
+		// calculates the expectation, error and the jacobians
+
+		return (v_error.transpose() * m_t_sigma_inv).dot(v_error); // ||z_i - h_i(O_i)||^2 lambda_i
+	}
+};
+
+/**
+ *	@brief SE(3) edge
+ */
+class CEdgePoseLandmark_Local : public CBaseEdgeImpl<CEdgePoseLandmark_Local, MakeTypelist(CVertexLandmark3D), 3/* dist, angle */, 3> {
+public:
+	typedef CBaseEdgeImpl<CEdgePoseLandmark_Local, MakeTypelist(CVertexLandmark3D), 3, 3> _TyBase; /**< @brief base class */
+public:
+	__GRAPH_TYPES_ALIGN_OPERATOR_NEW // imposed by the use of eigen, just copy this
+
+	/**
+	 *	@brief default constructor; has no effect
+	 */
+	inline CEdgePoseLandmark_Local()
+	{}
+
+	/**
+	 *	@brief constructor; converts parsed edge to edge representation
+	 *
+	 *	@tparam CSystem is type of system where this edge is being stored
+	 *
+	 *	@param[in] n_node0 is (zero-based) index of the landmark
+	 *	@param[in] r_v_delta is measurement vector
+	 *	@param[in] r_t_inv_sigma is the information matrix
+	 *	@param[in,out] r_system is reference to system (used to query edge vertices)
+	 */
+	template <class CSystem>
+	CEdgePoseLandmark_Local(size_t n_node0, const Eigen::Matrix<double, 3, 1> &r_v_delta,
+		const Eigen::Matrix<double, 3, 3> &r_t_inv_sigma, CSystem &r_system)
+		:_TyBase(n_node0, r_v_delta, r_t_inv_sigma)
+	{
+		m_p_vertex0 = &r_system.template r_Get_Vertex<CVertexLandmark3D>(n_node0, CInitializeNullVertex<CVertexLandmark3D>());
+		// get vertices (initialize if required)
+	}
+
+	/**
+	 *	@brief calculates jacobians, expectation and error
+	 *
+	 *	@param[out] r_t_jacobian0 is jacobian, associated with the first vertex
+	 *	@param[out] r_v_expectation is expecation vector
+	 *	@param[out] r_v_error is error vector
+	 */
+	inline void Calculate_Jacobian_Expectation_Error(Eigen::Matrix<double, 3, 3> &r_t_jacobian0,
+		Eigen::Matrix<double, 3, 1> &r_v_expectation,
+		Eigen::Matrix<double, 3, 1> &r_v_error) const // change dimensionality of eigen types, if required
+	{
+
+		r_v_expectation = m_p_vertex0->r_v_State();
+		r_v_error = m_v_measurement - r_v_expectation;
+		//std::cout << m_p_vertex0->r_v_State().transpose() << " >> " << r_v_error.transpose() << std::endl;
+
+		const double delta = 1e-9;
+		const double scalar = 1.0 / (delta);
+
+		Eigen::Matrix<double, 3, 3> Eps;
+		Eps = Eigen::Matrix<double, 3, 3>::Identity() * delta; // faster, all memory on stack
+
+		for(int j = 0; j < 3; ++ j) {
+			Eigen::Matrix<double, 3, 1> p_delta;
+			p_delta = m_p_vertex0->r_v_State() + Eps.col(j).head(3);
+			r_t_jacobian0.col(j) = (-r_v_expectation + m_p_vertex0->r_v_State()) * scalar;
+		}
+		// compute jacobians
+	}
+
+	/**
+	 *	@brief calculates \f$\chi^2\f$ error
+	 *	@return Returns (unweighted) \f$\chi^2\f$ error for this edge.
+	 */
+	inline double f_Chi_Squared_Error() const
+	{
+		Eigen::Matrix<double, 3, 1> v_error;
+		v_error = m_p_vertex0->r_v_State() - m_v_measurement;
+		// calculates the expectation, error and the jacobians
+
+		return (v_error.transpose() * m_t_sigma_inv).dot(v_error); // ||z_i - h_i(O_i)||^2 lambda_i
+	}
+};
+
+/**
+ *	@brief SE(3) edge
+ */
+class CEdgePoseLandmark_Other : public CBaseEdgeImpl<CEdgePoseLandmark_Other, MakeTypelist(CVertexLandmark3D, CVertexPose3D, CVertexPose3D), 3/* dist, angle */, 3> {
+public:
+	typedef CBaseEdgeImpl<CEdgePoseLandmark_Other, MakeTypelist(CVertexLandmark3D, CVertexPose3D, CVertexPose3D), 3, 3> _TyBase; /**< @brief base class */
+public:
+	__GRAPH_TYPES_ALIGN_OPERATOR_NEW // imposed by the use of eigen, just copy this
+
+	/**
+	 *	@brief default constructor; has no effect
+	 */
+	inline CEdgePoseLandmark_Other()
+	{}
+
+	/**
+	 *	@brief constructor; converts parsed edge to edge representation
+	 *
+	 *	@tparam CSystem is type of system where this edge is being stored
+	 *
+	 *	@param[in] n_node0 is (zero-based) index of the landmark
+	 *	@param[in] n_node1 is (zero-based) index of the observing node
+	 *	@param[in] n_node2 is (zero-based) index of the owner node
+	 *	@param[in] r_v_delta is measurement vector
+	 *	@param[in] r_t_inv_sigma is the information matrix
+	 *	@param[in,out] r_system is reference to system (used to query edge vertices)
+	 */
+	template <class CSystem>
+	CEdgePoseLandmark_Other(size_t n_node0, size_t n_node1, size_t n_node2, const Eigen::Matrix<double, 3, 1> &r_v_delta,
+		const Eigen::Matrix<double, 3, 3> &r_t_inv_sigma, CSystem &r_system)
+		:_TyBase(typename _TyBase::_TyVertexIndexTuple(n_node0, n_node1, n_node2), r_v_delta, r_t_inv_sigma)
+	{
+		m_vertex_ptr.Get<0>() = &r_system.template r_Get_Vertex<CVertexLandmark3D>(n_node0, CInitializeNullVertex<CVertexLandmark3D>());
+		m_vertex_ptr.Get<1>() = &r_system.template r_Get_Vertex<CVertexPose3D>(n_node1, CInitializeNullVertex<CVertexPose3D>());
+		m_vertex_ptr.Get<2>() = &r_system.template r_Get_Vertex<CVertexPose3D>(n_node2, CInitializeNullVertex<CVertexPose3D>());
+		// get vertices (initialize if required)
+	}
+
+	inline Eigen::Vector3d GetExpectation(const Eigen::Vector3d &landmark, const Eigen::Vector6d &observer,
+			const Eigen::Vector6d &owner) const
+	{
+		Eigen::Vector4d pt = Eigen::Vector4d::Ones();
+		pt.head(3) = landmark;
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> RtObs = C3DJacobians::VecToPose(observer);	//c2w
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> RtOwn = C3DJacobians::VecToPose(owner);		//c2w
+		// poses of vertices
+
+		Eigen::Vector4d pG = RtOwn * pt;
+		// transform plane owner -> global
+
+		Eigen::Vector4d pL = RtObs.inverse() * pG;
+		// transform plane global -> observer
+
+		return pL.head(3);
+	}
+
+	/**
+	 *	@brief calculates jacobians, expectation and error
+	 *
+	 *	@param[out] r_t_jacobian0 is jacobian, associated with the first vertex
+	 *	@param[out] r_t_jacobian1 is jacobian, associated with the second vertex
+	 *	@param[out] r_v_expectation is expecation vector
+	 *	@param[out] r_v_error is error vector
+	 */
+	inline void Calculate_Jacobians_Expectation_Error(_TyBase::_TyJacobianTuple &r_t_jacobian_tuple,
+		Eigen::Matrix<double, 3, 1> &r_v_expectation,
+		Eigen::Matrix<double, 3, 1> &r_v_error) const // change dimensionality of eigen types, if required
+	{
+		r_v_expectation = GetExpectation(m_vertex_ptr.Get<0>()->r_v_State(),
+				m_vertex_ptr.Get<1>()->r_v_State(), m_vertex_ptr.Get<2>()->r_v_State());
+		r_v_error = m_v_measurement - r_v_expectation;
+		// compute error
+
+		//std::cout << "errG " << r_v_error.transpose() << std::endl;
+		//std::cout << r_v_expectation.transpose() << " | " << m_v_measurement.transpose() << " << " << r_v_error.transpose() << std::endl;
+
+		const double delta = 1e-9;
+		const double scalar = 1.0 / (delta);
+
+		Eigen::Matrix<double, 3, 3> &J0 = r_t_jacobian_tuple.Get<0>();
+		Eigen::Matrix<double, 3, 6> &J1 = r_t_jacobian_tuple.Get<1>();
+		Eigen::Matrix<double, 3, 6> &J2 = r_t_jacobian_tuple.Get<2>();
+
+		Eigen::Matrix<double, 6, 6> Eps;
+		Eps = Eigen::Matrix<double, 6, 6>::Identity() * delta; // faster, all memory on stack
+
+		for(int j = 0; j < 3; ++ j) {
+			Eigen::Matrix<double, 3, 1> p_delta = m_vertex_ptr.Get<0>()->r_v_State() + Eps.col(j).head(3);
+			J0.col(j) = (-r_v_expectation + GetExpectation(p_delta, m_vertex_ptr.Get<1>()->r_v_State(),
+					m_vertex_ptr.Get<2>()->r_v_State())) * scalar;
+		}
+		// J0
+
+		for(int j = 0; j < 6; ++ j) {
+			Eigen::Matrix<double, 6, 1> p_delta;
+			C3DJacobians::Relative_to_Absolute(m_vertex_ptr.Get<1>()->r_v_State(), Eps.col(j), p_delta);
+			J1.col(j) = (-r_v_expectation + GetExpectation(m_vertex_ptr.Get<0>()->r_v_State(), p_delta,
+					m_vertex_ptr.Get<2>()->r_v_State())) * scalar;
+		}
+		// J1
+
+		for(int j = 0; j < 6; ++ j) {
+			Eigen::Matrix<double, 6, 1> p_delta;
+			C3DJacobians::Relative_to_Absolute(m_vertex_ptr.Get<2>()->r_v_State(), Eps.col(j), p_delta);
+			J2.col(j) = (-r_v_expectation + GetExpectation(m_vertex_ptr.Get<0>()->r_v_State(), 
+					m_vertex_ptr.Get<1>()->r_v_State(),	p_delta)) * scalar;
+		}
+		// J2
+
+		/*std::cout << J0 << std::endl;
+		std::cout << J1 << std::endl;
+		std::cout << J2 << std::endl;*/
+	}
+
+	/**
+	 *	@brief calculates \f$\chi^2\f$ error
+	 *	@return Returns (unweighted) \f$\chi^2\f$ error for this edge.
+	 */
+	inline double f_Chi_Squared_Error() const
+	{
+		Eigen::Matrix<double, 3, 1> v_error;
+		v_error = m_v_measurement - GetExpectation(m_vertex_ptr.Get<0>()->r_v_State(),
+				m_vertex_ptr.Get<1>()->r_v_State(), m_vertex_ptr.Get<2>()->r_v_State());
+		// calculates the expectation, error and the jacobians
+
+		return (v_error.transpose() * m_t_sigma_inv).dot(v_error); // ||z_i - h_i(O_i)||^2 lambda_i
+	}
+};
+/**
+ *	@brief SE(3) edge
+ */
+class CEdgePoseLandmarkBearing_Other : public CBaseEdgeImpl<CEdgePoseLandmarkBearing_Other, MakeTypelist(CVertexLandmark3D, CVertexPose3D, CVertexPose3D), 3/* dist, angle */, 3> {
+public:
+	typedef CBaseEdgeImpl<CEdgePoseLandmarkBearing_Other, MakeTypelist(CVertexLandmark3D, CVertexPose3D, CVertexPose3D), 3, 3> _TyBase; /**< @brief base class */
+public:
+	__GRAPH_TYPES_ALIGN_OPERATOR_NEW // imposed by the use of eigen, just copy this
+
+	/**
+	 *	@brief default constructor; has no effect
+	 */
+	inline CEdgePoseLandmarkBearing_Other()
+	{}
+
+	/**
+	 *	@brief constructor; converts parsed edge to edge representation
+	 *
+	 *	@tparam CSystem is type of system where this edge is being stored
+	 *
+	 *	@param[in] n_node0 is (zero-based) index of the landmark
+	 *	@param[in] n_node1 is (zero-based) index of the observing node
+	 *	@param[in] n_node2 is (zero-based) index of the owner node
+	 *	@param[in] r_v_delta is measurement vector
+	 *	@param[in] r_t_inv_sigma is the information matrix
+	 *	@param[in,out] r_system is reference to system (used to query edge vertices)
+	 */
+	template <class CSystem>
+	CEdgePoseLandmarkBearing_Other(size_t n_node0, size_t n_node1, size_t n_node2, const Eigen::Matrix<double, 3, 1> &r_v_delta,
+		const Eigen::Matrix<double, 3, 3> &r_t_inv_sigma, CSystem &r_system)
+		:_TyBase(typename _TyBase::_TyVertexIndexTuple(n_node0, n_node1, n_node2), r_v_delta, r_t_inv_sigma)
+	{
+		m_vertex_ptr.Get<0>() = &r_system.template r_Get_Vertex<CVertexLandmark3D>(n_node0, CInitializeNullVertex<CVertexLandmark3D>());
+		m_vertex_ptr.Get<1>() = &r_system.template r_Get_Vertex<CVertexPose3D>(n_node1, CInitializeNullVertex<CVertexPose3D>());
+		m_vertex_ptr.Get<2>() = &r_system.template r_Get_Vertex<CVertexPose3D>(n_node2, CInitializeNullVertex<CVertexPose3D>());
+		// get vertices (initialize if required)
+	}
+
+	inline Eigen::Vector3d GetExpectation(const Eigen::Vector3d &landmark, const Eigen::Vector6d &observer,
+			const Eigen::Vector6d &owner) const
+	{
+		Eigen::Vector4d pt = Eigen::Vector4d::Ones();
+		pt.head(3) = landmark;
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> RtObs = C3DJacobians::VecToPose(observer);	//c2w
+		Eigen::Matrix<double, 4, 4, Eigen::DontAlign> RtOwn = C3DJacobians::VecToPose(owner);		//c2w
+		// poses of vertices
+
+		Eigen::Vector4d pG = RtOwn * pt;
+		// transform plane owner -> global
+
+		Eigen::Vector4d pL = RtObs.inverse() * pG;
+		// transform plane global -> observer
+
+		return pL.head(3);
+	}
+
+	/**
+	 *	@brief calculates jacobians, expectation and error
+	 *
+	 *	@param[out] r_t_jacobian0 is jacobian, associated with the first vertex
+	 *	@param[out] r_t_jacobian1 is jacobian, associated with the second vertex
+	 *	@param[out] r_v_expectation is expecation vector
+	 *	@param[out] r_v_error is error vector
+	 */
+	inline void Calculate_Jacobians_Expectation_Error(_TyBase::_TyJacobianTuple &r_t_jacobian_tuple,
+		Eigen::Matrix<double, 3, 1> &r_v_expectation,
+		Eigen::Matrix<double, 3, 1> &r_v_error) const // change dimensionality of eigen types, if required
+	{
+		r_v_expectation = (GetExpectation(m_vertex_ptr.Get<0>()->r_v_State(),
+				m_vertex_ptr.Get<1>()->r_v_State(), m_vertex_ptr.Get<2>()->r_v_State())).normalized();
+		r_v_error = m_v_measurement.normalized() - r_v_expectation.normalized();
+		// compute error
+
+		//std::cout << "errG " << r_v_error.transpose() << std::endl;
+
+		const double delta = 1e-9;
+		const double scalar = 1.0 / (delta);
+
+		Eigen::Matrix<double, 3, 3> &J0 = r_t_jacobian_tuple.Get<0>();
+		Eigen::Matrix<double, 3, 6> &J1 = r_t_jacobian_tuple.Get<1>();
+		Eigen::Matrix<double, 3, 6> &J2 = r_t_jacobian_tuple.Get<2>();
+
+		Eigen::Matrix<double, 6, 6> Eps;
+		Eps = Eigen::Matrix<double, 6, 6>::Identity() * delta; // faster, all memory on stack
+
+		for(int j = 0; j < 3; ++ j) {
+			Eigen::Matrix<double, 3, 1> p_delta = m_vertex_ptr.Get<0>()->r_v_State() + Eps.col(j).head(3);
+			J0.col(j) = (-r_v_expectation + GetExpectation(p_delta, m_vertex_ptr.Get<1>()->r_v_State(),
+					m_vertex_ptr.Get<2>()->r_v_State()).normalized()) * scalar;
+		}
+		// J0
+
+		for(int j = 0; j < 6; ++ j) {
+			Eigen::Matrix<double, 6, 1> p_delta;
+			C3DJacobians::Relative_to_Absolute(m_vertex_ptr.Get<1>()->r_v_State(), Eps.col(j), p_delta);
+			J1.col(j) = (-r_v_expectation + GetExpectation(m_vertex_ptr.Get<0>()->r_v_State(), p_delta,
+					m_vertex_ptr.Get<2>()->r_v_State()).normalized()) * scalar;
+		}
+		// J1
+
+		for(int j = 0; j < 6; ++ j) {
+			Eigen::Matrix<double, 6, 1> p_delta;
+			C3DJacobians::Relative_to_Absolute(m_vertex_ptr.Get<2>()->r_v_State(), Eps.col(j), p_delta);
+			J2.col(j) = (-r_v_expectation + GetExpectation(m_vertex_ptr.Get<0>()->r_v_State(), 
+					m_vertex_ptr.Get<1>()->r_v_State(),	p_delta).normalized()) * scalar;
+		}
+		// J2
+	}
+
+	/**
+	 *	@brief calculates \f$\chi^2\f$ error
+	 *	@return Returns (unweighted) \f$\chi^2\f$ error for this edge.
+	 */
+	inline double f_Chi_Squared_Error() const
+	{
+		Eigen::Matrix<double, 3, 1> v_error;
+		v_error = m_v_measurement.normalized() - GetExpectation(m_vertex_ptr.Get<0>()->r_v_State(),
+				m_vertex_ptr.Get<1>()->r_v_State(), m_vertex_ptr.Get<2>()->r_v_State()).normalized();
 		// calculates the expectation, error and the jacobians
 
 		return (v_error.transpose() * m_t_sigma_inv).dot(v_error); // ||z_i - h_i(O_i)||^2 lambda_i
