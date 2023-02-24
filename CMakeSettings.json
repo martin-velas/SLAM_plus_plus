@@ -1,0 +1,27 @@
+﻿{
+  "configurations": [
+    {
+      "name": "x64-Debug",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "Eigen3_DIR",
+          "value": "C:/lib/vcpkg/packages/eigen3_x64-windows/share/eigen3",
+          "type": "PATH"
+        },
+        {
+          "name": "SLAM_P_P_MAIN_APP_USE_CONST_VERTICES",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ]
+    }
+  ]
+}
